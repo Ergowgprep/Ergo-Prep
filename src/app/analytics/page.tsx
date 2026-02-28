@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 import { Btn, Card, Ctn, Mono, Hdr, PB, ThemeToggle } from "@/components/ui";
 
 type Attempt = { section: string; correct: boolean; created_at: string; mode: string };
@@ -18,8 +17,6 @@ export default function AnalyticsPage() {
   const [hist, setHist] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch attempts from Supabase (with auto-retry)
-  const [retryCount, setRetryCount] = useState(0);
   useEffect(() => {
     const fetchAttempts = async () => {
       if (!profile) {
@@ -27,32 +24,18 @@ export default function AnalyticsPage() {
         return;
       }
       try {
-        const { data, error } = await supabase
-          .from("attempts")
-          .select("section, correct, created_at, mode")
-          .eq("user_id", profile.id)
-          .order("created_at", { ascending: false });
-
-        if (!error && data) {
+        const res = await fetch("/api/attempts?fields=section,correct,created_at,mode");
+        if (res.ok) {
+          const { data } = await res.json();
           setHist(data);
-          setLoading(false);
-        } else if (retryCount < 3) {
-          console.warn(`Attempts fetch failed, retrying (${retryCount + 1}/3)...`);
-          setTimeout(() => setRetryCount((r) => r + 1), 1500);
-        } else {
-          setLoading(false);
         }
       } catch (err) {
         console.error("Failed to fetch attempts:", err);
-        if (retryCount < 3) {
-          setTimeout(() => setRetryCount((r) => r + 1), 1500);
-        } else {
-          setLoading(false);
-        }
       }
+      setLoading(false);
     };
     fetchAttempts();
-  }, [profile, authLoading, retryCount]);
+  }, [profile, authLoading]);
 
   const sp: Record<string, { c: number; t: number }> = {};
   SECTIONS.forEach((s) => (sp[s] = { c: 0, t: 0 }));
@@ -65,14 +48,12 @@ export default function AnalyticsPage() {
   const tot = hist.length;
   const cor = hist.filter((a) => a.correct).length;
 
-  // Recent trend (last 50 vs prior 50)
   const recent50 = hist.slice(0, 50);
   const prior50 = hist.slice(50, 100);
   const recentAcc = recent50.length > 0 ? Math.round((recent50.filter((a) => a.correct).length / recent50.length) * 100) : 0;
   const priorAcc = prior50.length > 0 ? Math.round((prior50.filter((a) => a.correct).length / prior50.length) * 100) : 0;
   const trend = recent50.length > 0 && prior50.length > 0 ? recentAcc - priorAcc : 0;
 
-  // Strongest and weakest sections
   const sectionAccuracies = SECTIONS.map((s) => ({
     section: s,
     pct: sp[s].t > 0 ? Math.round((sp[s].c / sp[s].t) * 100) : -1,
@@ -102,7 +83,6 @@ export default function AnalyticsPage() {
       />
       <Ctn style={{ padding: "44px 28px" }}>
         <div style={{ maxWidth: 840, margin: "0 auto" }}>
-          {/* Tab switcher */}
           <div style={{ display: "flex", gap: 3, background: c.mtBg, borderRadius: 12, padding: 3, marginBottom: 28 }}>
             {[
               { id: "performance", l: "📊 Performance" },
@@ -119,7 +99,6 @@ export default function AnalyticsPage() {
             ))}
           </div>
 
-          {/* Performance tab */}
           {tab === "performance" && (
             <div className="s1">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
@@ -135,7 +114,6 @@ export default function AnalyticsPage() {
                 ))}
               </div>
 
-              {/* Trend + Strongest/Weakest */}
               {tot > 0 && (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
                   {trend !== 0 && (
@@ -174,7 +152,6 @@ export default function AnalyticsPage() {
             </div>
           )}
 
-          {/* Sections tab */}
           {tab === "sections" && (
             <div className="s1">
               {SECTIONS.map((sec) => {
@@ -193,7 +170,6 @@ export default function AnalyticsPage() {
             </div>
           )}
 
-          {/* Tips tab */}
           {tab === "tips" && (
             <div className="s1">
               {tot < 5 ? (
@@ -205,7 +181,6 @@ export default function AnalyticsPage() {
                 </Card>
               ) : (
                 <>
-                  {/* Weak sections to focus on */}
                   {SECTIONS.filter((s) => {
                     const p = sp[s];
                     return p.t > 0 && (p.c / p.t) < 0.75;

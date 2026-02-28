@@ -68,26 +68,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCachedProfile(p);
   }, []);
 
-  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
+  const fetchProfile = useCallback(async (_userId: string): Promise<Profile | null> => {
     if (fetchingProfile.current) return null;
     fetchingProfile.current = true;
 
-    for (let i = 0; i < 3; i++) {
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", userId)
-          .single();
-
-        if (data) {
-          fetchingProfile.current = false;
-          return data as Profile;
-        }
-        if (error && i < 2) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
-      } catch {
-        if (i < 2) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+    try {
+      const res = await fetch("/api/profile");
+      if (res.ok) {
+        const { profile } = await res.json();
+        fetchingProfile.current = false;
+        return profile as Profile;
       }
+    } catch (err) {
+      console.error("Profile fetch error:", err);
     }
 
     fetchingProfile.current = false;

@@ -5,7 +5,6 @@ import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Icons } from "@/components/ui";
 import { useAuth } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 
 const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "Postgraduate", "Graduate / Alumni"];
 
@@ -44,15 +43,25 @@ export default function OnboardingPage() {
     if (!canSubmit || !user) return;
     setLoading(true);
 
-    const { error } = await supabase.from("profiles").update({
-      name: name.trim(),
-      university: uni.trim(),
-      course: course.trim(),
-      year_of_study: year,
-    }).eq("id", user.id);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          university: uni.trim(),
+          course: course.trim(),
+          year_of_study: year,
+        }),
+      });
 
-    if (error) {
-      console.error("Onboarding save error:", error);
+      if (!res.ok) {
+        console.error("Onboarding save error:", await res.text());
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      console.error("Onboarding save error:", err);
       setLoading(false);
       return;
     }
@@ -67,7 +76,6 @@ export default function OnboardingPage() {
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
         <div style={{ width: "100%", maxWidth: 480, animation: "fu .5s ease both" }}>
 
-          {/* Logo + heading */}
           <div style={{ textAlign: "center", marginBottom: 34 }}>
             <div style={{
               width: 46, height: 46, background: c.ac, borderRadius: 12,
@@ -94,7 +102,6 @@ export default function OnboardingPage() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {/* Name */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>First Name</label>
                 <input
@@ -108,7 +115,6 @@ export default function OnboardingPage() {
                 />
               </div>
 
-              {/* University */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>University</label>
                 <input
@@ -122,7 +128,6 @@ export default function OnboardingPage() {
                 />
               </div>
 
-              {/* Course */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>Course / Degree</label>
                 <input
@@ -136,7 +141,6 @@ export default function OnboardingPage() {
                 />
               </div>
 
-              {/* Year of Study */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 8 }}>Year of Study</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -166,7 +170,6 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Submit */}
               <Btn full sz="lg" disabled={!canSubmit || loading} onClick={handleSubmit} style={{ marginTop: 6 }}>
                 {loading ? (
                   <div style={{

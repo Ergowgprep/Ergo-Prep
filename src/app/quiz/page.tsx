@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 import { Btn, Card, Ctn, Mono, PB, Icons, ConfirmModal } from "@/components/ui";
 
 type Question = {
@@ -72,28 +71,20 @@ function QuizContent() {
       }
 
       try {
-        const fetchPromises = secs.map(async (sec) => {
-          const need = quotas[sec] || 0;
-          if (need === 0) return { data: [], error: null };
-          
-          const fetchLimit = Math.min(need * 4, 200);
-          return supabase
-            .from("questions")
-            .select("id, section, passage_text, question_text, options, correct_answer, explanation")
-            .eq("section", sec)
-            .limit(fetchLimit);
+        const sectionRequests = secs
+          .filter((sec) => (quotas[sec] || 0) > 0)
+          .map((sec) => ({ section: sec, limit: Math.min((quotas[sec] || 0) * 4, 200) }));
+
+        const res = await fetch("/api/questions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sections: sectionRequests }),
         });
 
-        const responses = await Promise.all(fetchPromises);
-
-        // If the component unmounted while fetching, STOP here and do nothing.
         if (!isMounted) return;
 
-        const allData: Question[] = [];
-        for (const res of responses) {
-          if (res.error) throw res.error;
-          if (res.data) allData.push(...(res.data as Question[]));
-        }
+        if (!res.ok) throw new Error("Failed to fetch questions");
+        const { data: allData } = await res.json() as { data: Question[] };
 
         if (!allData.length) {
           setError(true);
@@ -207,9 +198,13 @@ function QuizContent() {
     if (user) {
       const attempts = Array.from(aMap.entries()).map(([qId, a]) => {
         const question = qs.find((q) => q.id === qId);
-        return { user_id: user.id, question_id: qId, section: question?.section || "", selected_answer: a.s, correct: a.c, mode };
+        return { question_id: qId, section: question?.section || "", selected_answer: a.s, correct: a.c, mode };
       });
-      supabase.from("attempts").insert(attempts).then(({ error }) => { if (error) console.error("Error saving attempts:", error); });
+      fetch("/api/attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ attempts }),
+      }).catch((err) => console.error("Error saving attempts:", err));
     }
 
     sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: aMap.size, percentage: pct, timeSpent: ts, sectionBreakdown: sb, incorrectQuestions: iq }));

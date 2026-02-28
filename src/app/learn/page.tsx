@@ -1,5 +1,6 @@
 "use client";
 import type { JSX } from "react";
+import { useAuth } from "@/lib/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
@@ -35,7 +36,8 @@ export default function LearnPage() {
   const [exitConfirm, setEC] = useState(false);
 
   // TODO: Replace with real state from Supabase
-  const hasAcc = false;
+  const { profile } = useAuth();
+  const hasAcc = !!(profile?.access_expires_at && new Date(profile.access_expires_at) > new Date());
 
   const ac = secInfo.Arguments.color;
   const lc = secInfo["Logic Essentials"].color;
@@ -750,7 +752,7 @@ export default function LearnPage() {
     // Slide 9/11 — Judge the Logic, Not the World (Interactive)
     { render: () => <div>
       <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 9 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Judge the Logic, Not the World</h2>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Stick to the Prompt</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> I am travelling to Paris tomorrow, so I will visit the Eiffel Tower.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Paris is the capital of France.</p>
@@ -953,67 +955,157 @@ export default function LearnPage() {
   // ============================================================================
   const itc = secInfo.Interpretation.color;
   const interpretationSlides = [
+    // Slide 1/12 — Welcome to Interpretations (Informative)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>introduction</span>
-      <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Interpretation</h2>
-      <p style={{ fontSize: 15, lineHeight: 1.85, color: c.fgS }}>Interpretation is similar to Deduction but with a softer standard. Instead of absolute certainty, you ask: does this conclusion follow <strong style={{ color: c.fg }}>beyond a reasonable doubt</strong>?</p>
-      <p style={{ fontSize: 15, lineHeight: 1.85, color: c.fgS, marginTop: 14 }}>Think of it as: would a <strong style={{ color: c.fg }}>reasonable person</strong> accept this conclusion based on the data?</p>
-    </div> },
-    { render: () => <div>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Deduction vs Interpretation</h2>
-      <div style={{ display: "grid", gap: 12 }}>
-        <div style={{ padding: 16, background: dc + "0A", borderRadius: 12, border: "1px solid " + dc + "20" }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: dc, marginBottom: 4 }}>Deduction</h3>
-          <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>Must be 100% logically certain. Mathematical precision.</p>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 12</span>
+      <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Interpretations</h2>
+      <div style={{ display: "grid", gap: 14 }}>
+        <div style={{ padding: 16, background: itc + "0A", borderRadius: 12, border: "1px solid " + itc + "20" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: itc, marginBottom: 6 }}>The Goal</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>In this section, you are given a short passage and a proposed conclusion. You must decide if the conclusion logically follows <strong style={{ color: c.fg }}>beyond a reasonable doubt</strong>.</p>
         </div>
         <div style={{ padding: 16, background: itc + "0A", borderRadius: 12, border: "1px solid " + itc + "20" }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: itc, marginBottom: 4 }}>Interpretation</h3>
-          <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>Must be reasonable and well-supported. Beyond a reasonable doubt.</p>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: itc, marginBottom: 6 }}>Pay attention to the rules!</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>In Deductions, conclusions must follow strictly and necessarily from the passage. In Interpretations, they only need to follow beyond a reasonable doubt.</p>
         </div>
       </div>
-    </div> },
-    { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>exercise</span>
-      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
-        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>&ldquo;In a class of 30, 24 students passed the exam. The class average was 72%.&rdquo;</p>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Judge each conclusion independently. Once you finish evaluating Conclusion 1, erase it from your brain. Do not let it influence Conclusion 2. Your only source of truth is the original paragraph.</p>
       </div>
-      <MCQ qKey="int1" question='"More than half the class passed."' opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText="24 out of 30 is 80%. Beyond reasonable doubt, more than half passed. Conclusion Follows." />
     </div> },
+
+    // Slide 2/12 — Calibrating "Reasonable" Doubt (Interactive)
     { render: () => <div>
-      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
-        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>&ldquo;In a class of 30, 24 students passed the exam. The class average was 72%.&rdquo;</p>
-      </div>
-      <MCQ qKey="int2" question='"The exam was easy."' opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText="A high pass rate does not prove the exam was easy. The students might have studied hard. Does Not Follow." />
-    </div> },
-    { render: () => <div>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Working with Data</h2>
-      <div style={{ padding: 16, background: itc + "0A", borderRadius: 12, border: "1px solid " + itc + "20", marginBottom: 18 }}>
-        <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Interpretation questions often include numbers. The key is reading them <strong style={{ color: c.fg }}>precisely</strong> and not adding your own assumptions.</p>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Calibrating &ldquo;Reasonable&rdquo; Doubt</h2>
+      <div style={{ padding: 14, background: itc + "0A", borderRadius: 10, border: "1px solid " + itc + "20", marginBottom: 14 }}>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Rule:</strong> The official test asks you to find conclusions that follow &ldquo;beyond a reasonable doubt,&rdquo; explicitly stating they do not have to follow &ldquo;absolutely and necessarily.&rdquo;</p>
       </div>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
-        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>&ldquo;Company A&apos;s revenue grew 15% in 2023. Company B&apos;s revenue grew 25% in 2023.&rdquo;</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> To board the international flight from London to Tokyo, passengers are required by airline policy to present a valid passport to the agent at the departure gate. Sarah boarded this flight yesterday and arrived in Tokyo this morning.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> Sarah presented a valid passport at the departure gate.</p>
       </div>
-      <MCQ qKey="int3" question='"Company B earned more money than Company A in 2023."' opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText="Growth RATE is not total revenue. If A started at £10M (+15% = £11.5M) and B started at £2M (+25% = £2.5M), A still earned far more. Does Not Follow." />
+      <MCQ qKey="int1" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText={"In pure, strict logic (like the Deductions section), you might argue: \"What if she bribed the gate agent? What if she snuck through an air vent?\" Technically, those scenarios are possible. But Interpretations test reasonable deduction. It is beyond a reasonable doubt that a passenger on an international flight followed the mandatory boarding procedure. Don't let hyper-paranoia ruin a perfectly good inference!"} />
     </div> },
+
+    // Slide 3/12 — The "Correlation vs. Causation" Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>exercise</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The &ldquo;Correlation vs. Causation&rdquo; Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
-        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>&ldquo;85% of employees surveyed said they prefer working from home. The survey was sent to all 500 employees and 200 responded.&rdquo;</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Campus canteens replaced meat options with plant-based alternatives. This transition coincided with a 15% reduction in the university&apos;s carbon footprint.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> The reduction in meat sales led to the reduced carbon footprint.</p>
       </div>
-      <MCQ qKey="int4" question='"The majority of the company prefers working from home."' opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText="Only 200 of 500 responded (40%). Those who prefer home may have been more motivated to respond. We cannot generalise from a self-selected sample. Does Not Follow." />
+      <MCQ qKey="int2" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText={"The text says the events \"coincided\" (happened at the same time). It actively avoids saying one caused the other. Even though real-world knowledge tells you less meat equals less carbon, the test requires strict adherence to the text. The university might have installed solar panels at the exact same time!"} />
     </div> },
+
+    // Slide 4/12 — The Overlapping Sets Trap (Interactive)
     { render: () => <div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Key Interpretation Rules</h2>
-      <div style={{ display: "grid", gap: 10 }}>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Overlapping Sets Trap</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> A survey found that 72% of remote workers report high job satisfaction, but 40% of those same remote workers report feeling isolated.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> Some remote workers experience both high job satisfaction and feelings of isolation.</p>
+      </div>
+      <MCQ qKey="int3" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText={"This is pure maths disguised as text. If you add 72% and 40%, you get 112%. Because a population cannot exceed 100%, there is a forced overlap of at least 12%. Therefore, \"some\" workers must be in both categories. (Check the Logic Essentials slides for more detail!)"} />
+    </div> },
+
+    // Slide 5/12 — The Scope Shift (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Scope Shift</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> In the 17th century, the Dutch East India Company burned their own warehouses of nutmeg to create artificial scarcity. This kept the price of nutmeg in London higher than the price of gold for a decade.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> The limitation of supply meant that nutmeg was more valuable than gold in general.</p>
+      </div>
+      <MCQ qKey="int4" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText={"Watch the geographic scope! The passage limits the high price specifically to \"London.\" The conclusion applies this \"in general\" (not just limited to London). At the source where it was grown, nutmeg was likely very cheap. You cannot apply a localised data point to the entire world."} />
+    </div> },
+
+    // Slide 6/12 — The Absolute Guarantee Trap (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Absolute Guarantee Trap</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Graduates with basic Python or SQL literacy are currently commanding starting salaries 10% higher than their non-technical peers.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> Learning to code guarantees a graduate a higher starting salary.</p>
+      </div>
+      <MCQ qKey="int5" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText={"The text describes a general trend across a population (\"are currently commanding\"). The conclusion uses the word \"guarantees,\" which implies zero exceptions. A graduate could learn Python and still fail a job interview, resulting in a salary of zero. Trends are not guarantees."} />
+    </div> },
+
+    // Slide 7/12 — The Rational Actor Principle (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Rational Actor Principle</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Global manufacturing firms saved billions with &lsquo;Just-in-Time&rsquo; inventory. However, following recent disruptions, 60% of these firms are pivoting to &lsquo;Just-in-Case&rsquo; models, willingly accepting much higher warehousing costs.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> For the majority of these firms, the financial impact of a supply chain disruption is calculated to be greater than the expense of extra storage.</p>
+      </div>
+      <MCQ qKey="int6" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText={"In Interpretation questions involving businesses, assume they act rationally. If a majority (60%) voluntarily accept a known high cost (warehousing), it is beyond a reasonable doubt that they are doing so to avoid an even larger cost (disruption)."} />
+    </div> },
+
+    // Slide 8/12 — The "Proof of Opposite" / Ignorance Trap (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The &ldquo;Proof of Opposite&rdquo; Trap</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Despite extensive testing over the last year by independent cybersecurity firms, no one has been able to prove that the bank&apos;s new encrypted database can be breached by external hackers.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> The bank&apos;s new encrypted database is immune to external hacking.</p>
+      </div>
+      <MCQ qKey="int7" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText={"Absence of evidence is not evidence of the opposite. Just because the testers haven't found a way to hack it yet, does not mean they have proven it cannot be hacked. It simply means a vulnerability remains undiscovered. Failing to prove \"Option A\" does not automatically prove \"Option B\"."} />
+    </div> },
+
+    // Slide 9/12 — Proof by Survival (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 9 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Proof by Survival</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> By 1860, the American South supplied 75% of the world&apos;s cotton to Britain. When the US Civil War blocked exports, British mills did not go bankrupt; they rapidly invested in India and Egypt.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> The British textile industry was not entirely dependent on the American South.</p>
+      </div>
+      <MCQ qKey="int8" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText={"This is \"Proof by Falsification.\" If the mills were entirely dependent, the loss of 75% of their supply would have destroyed them. Because they survived by pivoting to other countries, the dependency is proven to be flexible, not strict."} />
+    </div> },
+
+    // Slide 10/12 — The Inverse Logic Fallacy (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 10 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Inverse Logic Fallacy</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> In 1850, the whale oil industry collapsed not because of regulation, but because the discovery of petroleum provided a cheaper alternative.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> Since the industry collapsed after petroleum was discovered, stopping petroleum production today would restore the whale oil industry to its 1850 status.</p>
+      </div>
+      <MCQ qKey="int9" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[1]} expText={"Just because A caused B (petroleum caused the collapse), does not mean removing A reverses B (no petroleum = no collapse). Today, we have electricity, solar, and LED lights. Reversing the cause does not magically erase time and return things to their original state."} />
+    </div> },
+
+    // Slide 11/12 — Definitional Equivalence (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: itc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: itc + "15", display: "inline-block", marginBottom: 16 }}>slide 11 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Definitional Equivalence</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Marcus commutes 90 minutes each way to his office in central London. Since his employer allowed two days of remote work (working from home) per week, Marcus reports feeling less fatigued on those days.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> On the days Marcus works from home, he does not commute to central London.</p>
+      </div>
+      <MCQ qKey="int10" question="Does the conclusion follow?" opts={["Conclusion Follows", "Conclusion Does Not Follow"]} correctArr={[0]} expText={"Some conclusions follow simply by definition. The definition of \"working from home\" is performing your duties at your residence instead of travelling to the office. The states are mutually exclusive."} />
+    </div> },
+
+    // Slide 12/12 — Cheat Sheet
+    { render: () => <div>
+      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Interpretations Cheat Sheet</h2>
+      <div style={{ display: "grid", gap: 8 }}>
         {[
-          { rule: "Beyond reasonable doubt", tip: "Not 100% certain, but would a reasonable person accept it?" },
-          { rule: "Rate ≠ Amount", tip: "A higher percentage growth does not mean a larger total." },
-          { rule: "Sample matters", tip: "Who responded? How many? Self-selected samples are unreliable." },
-          { rule: "Scope of conclusion", tip: "If the conclusion goes beyond what the data covers, it Does Not Follow." },
+          { rule: "Reasonable Doubt", tip: "Not hyper-paranoid strict logic — would a reasonable person accept it?" },
+          { rule: "Correlation ≠ Causation", tip: "\"Coincided\" or \"alongside\" does not mean one caused the other." },
+          { rule: "Overlapping Sets", tip: "If two percentages from the same group exceed 100%, overlap is forced." },
+          { rule: "Scope Shift", tip: "A conclusion that widens the passage's scope (local → global) Does Not Follow." },
+          { rule: "Trends ≠ Guarantees", tip: "\"Generally\" or \"on average\" does not mean 100% of the time." },
+          { rule: "Rational Actors", tip: "Assume businesses/people act in their own rational interest." },
+          { rule: "Absence ≠ Proof", tip: "Failing to prove X does not prove the opposite of X." },
+          { rule: "Proof by Survival", tip: "If something survives the removal of a factor, it wasn't entirely dependent on it." },
+          { rule: "Inverse Fallacy", tip: "Removing a cause does not reverse its effect — time moves forward." },
+          { rule: "Definitions", tip: "Some conclusions follow purely from the meaning of the words used." },
         ].map((r, i) => (
-          <div key={i} style={{ padding: "12px 16px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
-            <div style={{ fontWeight: 700, fontSize: 13.5, marginBottom: 3, color: itc }}>{r.rule}</div>
-            <div style={{ fontSize: 12.5, color: c.fgS, lineHeight: 1.5 }}>{r.tip}</div>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "155px 1fr", padding: "11px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, alignItems: "start", gap: 16 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: itc, fontFamily: fonts.m }}>{r.rule}</span>
+            <span style={{ fontSize: 12.5, color: c.fgS, lineHeight: 1.55 }}>{r.tip}</span>
           </div>
         ))}
       </div>

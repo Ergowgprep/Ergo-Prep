@@ -7,7 +7,6 @@ import {
   Btn, Card, Ctn, Mono, Hdr, Logo, PB, ThemeToggle, Icons,
 } from "@/components/ui";
 import { useAuth } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -41,28 +40,21 @@ export default function DashboardPage() {
     return () => clearInterval(i);
   }, [exp]);
 
-  // Fetch real history from Supabase (with inline retry)
+    // Fetch history via API
   const [hist, setHist] = useState<{ section: string; correct: boolean }[]>([]);
   useEffect(() => {
     if (!profile) return;
     let cancelled = false;
 
     const fetchHist = async () => {
-      for (let attempt = 0; attempt < 3; attempt++) {
-        if (cancelled) return;
-        try {
-          const { data, error } = await supabase
-            .from("attempts")
-            .select("section, correct")
-            .eq("user_id", profile.id);
-          if (!error && data) {
-            if (!cancelled) setHist(data);
-            return;
-          }
-        } catch (err) {
-          console.warn(`History fetch attempt ${attempt + 1} failed:`, err);
+      try {
+        const res = await fetch("/api/attempts?fields=section,correct");
+        if (res.ok) {
+          const { data } = await res.json();
+          if (!cancelled) setHist(data);
         }
-        if (attempt < 2) await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+      } catch (err) {
+        console.warn("History fetch failed:", err);
       }
     };
 

@@ -40,9 +40,9 @@ export default function Home() {
   const [actTest, setAT] = useState(0);
   useEffect(() => { const iv = setInterval(() => setAT((p) => (p + 1) % 3), 5000); return () => clearInterval(iv); }, []);
   const tests = [
-    { nm: "Sophie L.", rl: "Law Applicant, UCL", tx: "Went from 58% to 81% in two weeks. The mock tests are genuinely harder than the real thing — which is exactly what you want." },
-    { nm: "James K.", rl: "Graduate Scheme, Deloitte", tx: "The analytics showed me I was weakest in Assumptions. Focused there for a day and jumped 15 percentage points overall." },
-    { nm: "Priya M.", rl: "Trainee Solicitor, Clifford Chance", tx: "£2 for six hours is absurd value. I used it the night before my assessment and felt completely prepared." },
+    { nm: "Name", rl: "Uni/Job", tx: "Testimonial" },
+    { nm: "Name", rl: "Uni/Job", tx: "Testimonial" },
+    { nm: "Name", rl: "Uni/Job", tx: "Testimonial" },
   ];
 
   // Demo
@@ -93,7 +93,7 @@ export default function Home() {
               </span>
             </h1>
             <p style={{ fontSize: "clamp(16px,2.2vw,20px)", lineHeight: 1.7, color: c.fgS, maxWidth: 520, margin: "0 auto 44px", animation: "fu 1s ease both" }}>
-              1,500+ Watson-Glaser style questions. <span style={{ color: c.ac, fontWeight: 700 }}>£2</span>.*
+              1,500+ Watson-Glaser style questions. <span style={{ color: c.ac, fontWeight: 700 }}>£1.99</span>.*
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", animation: "fu 1.2s ease both" }}>
               <Btn sz="lg" onClick={() => router.push(isIn ? "/pricing" : "/login")} style={{ padding: "16px 32px", fontSize: 16 }}>Start from £1.99 {Icons.arr}</Btn>
@@ -148,7 +148,7 @@ export default function Home() {
                   }}>{f.ic}</div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8, letterSpacing: "-.01em" }}>{f.t}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.7, color: c.fgS }}>
-                    {f.hl ? <>Unlock 1,500+ official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£2</span>. No subscriptions.</> : f.d}
+                    {f.hl ? <>Unlock ~1,500 official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£1.99</span>. No subscriptions.</> : f.d}
                   </p>
                 </div>
               );
@@ -333,7 +333,7 @@ export default function Home() {
             }} />
             <div style={{ position: "relative", zIndex: 2 }}>
               <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, letterSpacing: "-.025em", marginBottom: 14 }}>Ready to think sharper?</h2>
-              <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £2.</p>
+              <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £1.99.</p>
               <Btn sz="lg" onClick={() => router.push("/pricing")} style={{ fontSize: 17, padding: "16px 36px" }}>
                 Get Started — from £1.99 {Icons.arr}
               </Btn>

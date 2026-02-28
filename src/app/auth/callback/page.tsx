@@ -15,17 +15,20 @@ export default function AuthCallback() {
         return;
       }
       if (session?.user) {
-        // Check if user has completed onboarding
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("university")
-          .eq("id", session.user.id)
-          .single();
-
-        if (!profile?.university) {
+        try {
+          const res = await fetch("/api/profile");
+          if (res.ok) {
+            const { profile } = await res.json();
+            if (!profile?.university) {
+              router.push("/onboarding");
+            } else {
+              router.push("/dashboard");
+            }
+          } else {
+            router.push("/onboarding");
+          }
+        } catch {
           router.push("/onboarding");
-        } else {
-          router.push("/dashboard");
         }
       } else {
         router.push("/login");

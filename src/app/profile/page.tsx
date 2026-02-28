@@ -5,7 +5,6 @@ import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Hdr, ThemeToggle, Icons } from "@/components/ui";
 import { useAuth } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 
 const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "Postgraduate", "Graduate / Alumni"];
 
@@ -47,15 +46,25 @@ export default function ProfilePage() {
     setLoading(true);
     setSaved(false);
 
-    const { error } = await supabase.from("profiles").update({
-      name: name.trim(),
-      university: uni.trim(),
-      course: course.trim(),
-      year_of_study: year,
-    }).eq("id", user.id);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          university: uni.trim(),
+          course: course.trim(),
+          year_of_study: year,
+        }),
+      });
 
-    if (error) {
-      console.error("Profile save error:", error);
+      if (!res.ok) {
+        console.error("Profile save error:", await res.text());
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      console.error("Profile save error:", err);
       setLoading(false);
       return;
     }
@@ -95,7 +104,6 @@ export default function ProfilePage() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {/* Name */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>First Name</label>
                 <input
@@ -109,7 +117,6 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* University */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>University</label>
                 <input
@@ -123,7 +130,6 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* Course */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>Course / Degree</label>
                 <input
@@ -137,7 +143,6 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* Year of Study */}
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 8 }}>Year of Study</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -167,7 +172,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Save / Cancel */}
               <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
                 <Btn v="outline" full onClick={() => router.push("/dashboard")}>Cancel</Btn>
                 <Btn full disabled={!canSubmit || loading} onClick={handleSave}>
@@ -186,7 +190,6 @@ export default function ProfilePage() {
             </div>
           </Card>
 
-          {/* Logout section */}
           <div style={{ marginTop: 20, padding: "18px 24px", background: c.card, borderRadius: 14, border: `1px solid ${c.bd}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Log out</p>
