@@ -7,8 +7,8 @@ import { Btn, Card, Ctn, Mono, PB, Icons } from "@/components/ui";
 
 type SectionBreakdown = { section: string; correct: number; total: number; percentage: number };
 type ReviewQuestion = {
-  id: number; section: string; passageText: string; questionText: string;
-  options: string[]; correctAnswer: string; explanation: string; userAnswer: string; correct: boolean;
+  id: number; section: string; passage_text: string; question_text: string;
+  options: string[]; correct_answer: string; explanation: string; userAnswer: string; correct: boolean;
 };
 type QuizResults = {
   totalCorrect: number; totalQuestions: number; percentage: number; timeSpent: number;
@@ -55,25 +55,25 @@ export default function ResultsPage() {
               <Btn v="outline" onClick={() => sRV(false)}>← Summary</Btn>
             </div>
             {rq.map((q, i) => (
-              <Card key={i} hover style={{ marginBottom: 12 }}>
+              <Card key={i} hover style={{ marginBottom: 12, borderLeft: `3px solid ${q.correct ? c.gn : c.rd}` }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: c.mt }}>{q.section}</span>
                   <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 999, color: "#fff", background: q.correct ? c.gn : c.rd }}>{q.correct ? "Correct" : "Incorrect"}</span>
                 </div>
-                {q.passageText && (
-                  <div style={{ background: c.mtBg, padding: 12, borderRadius: 10, margin: "8px 0", fontSize: 13.5, lineHeight: 1.7, color: c.fgS }}>{q.passageText}</div>
+                {q.passage_text && (
+                  <div style={{ background: c.mtBg, padding: 12, borderRadius: 10, margin: "8px 0", fontSize: 13.5, lineHeight: 1.7, color: c.fgS }}>{q.passage_text}</div>
                 )}
-                <h4 style={{ fontWeight: 600, margin: "8px 0", fontSize: 13.5, lineHeight: 1.5 }}>{q.questionText}</h4>
+                <h4 style={{ fontWeight: 600, margin: "8px 0", fontSize: 13.5, lineHeight: 1.5 }}>{q.question_text}</h4>
                 {q.options.map((o, j) => (
                   <div key={j} style={{
                     padding: "7px 12px", borderRadius: 8, marginBottom: 2, fontSize: 13,
-                    border: `1.5px solid ${o === q.correctAnswer ? c.gn : o === q.userAnswer ? c.rd : c.bd}`,
-                    background: o === q.correctAnswer ? c.gnS : o === q.userAnswer ? c.rdS : "transparent",
+                    border: `1.5px solid ${o === q.correct_answer ? c.gn : o === q.userAnswer ? c.rd : c.bd}`,
+                    background: o === q.correct_answer ? c.gnS : o === q.userAnswer ? c.rdS : "transparent",
                     display: "flex", justifyContent: "space-between", alignItems: "center",
                   }}>
                     <span>{o}</span>
-                    {o === q.correctAnswer && Icons.check(c.gn)}
-                    {o === q.userAnswer && o !== q.correctAnswer && Icons.x(c.rd)}
+                    {o === q.correct_answer && Icons.check(c.gn)}
+                    {o === q.userAnswer && o !== q.correct_answer && Icons.x(c.rd)}
                   </div>
                 ))}
                 <div style={{ background: c.blS, borderLeft: `3px solid ${c.bl}`, padding: 12, borderRadius: "0 8px 8px 0", marginTop: 8 }}>
