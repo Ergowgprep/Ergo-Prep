@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { attempts } = await req.json() as {
-      attempts: { question_id: number; section: string; selected_answer: string; correct: boolean; mode: string }[];
+      attempts: { question_id: number; section: string; selected_answer: string; correct: boolean; mode: string; session_id?: string }[];
     };
 
     if (!attempts || !Array.isArray(attempts)) {
@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
       selected_answer: a.selected_answer,
       correct: a.correct,
       mode: a.mode,
+      session_id: a.session_id ?? null,
     }));
 
     const { error } = await supabase.from("attempts").insert(rows);

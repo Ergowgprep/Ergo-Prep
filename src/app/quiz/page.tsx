@@ -177,14 +177,12 @@ function QuizContent() {
     sSub(true);
     const tc = Array.from(aMap.values()).filter((a) => a.c).length;
     const ts = Math.floor((Date.now() - st) / 1000);
-    const pct = aMap.size > 0 ? Math.round((tc / aMap.size) * 100) : 0;
+    const pct = qs.length > 0 ? Math.round((tc / qs.length) * 100) : 0;
     const sm = new Map<string, { c: number; t: number }>();
     grp.forEach((g) => g.qs.forEach((q) => {
       const a = aMap.get(q.id);
-      if (a) {
-        const x = sm.get(q.section) || { c: 0, t: 0 };
-        sm.set(q.section, { c: x.c + (a.c ? 1 : 0), t: x.t + 1 });
-      }
+      const x = sm.get(q.section) || { c: 0, t: 0 };
+      sm.set(q.section, { c: x.c + (a?.c ? 1 : 0), t: x.t + 1 });
     }));
     const sb = Array.from(sm.entries()).map(([s, d]) => ({
       section: s, correct: d.c, total: d.t, percentage: d.t > 0 ? Math.round((d.c / d.t) * 100) : 0,
@@ -192,7 +190,7 @@ function QuizContent() {
     const iq: (Question & { userAnswer: string })[] = [];
     grp.forEach((g) => g.qs.forEach((q) => {
       const a = aMap.get(q.id);
-      if (a && !a.c) iq.push({ ...q, userAnswer: a.s });
+      if (a) iq.push({ ...q, userAnswer: a.s });
     }));
 
     if (user) {
@@ -200,22 +198,50 @@ function QuizContent() {
         const question = qs.find((q) => q.id === qId);
         return { question_id: qId, section: question?.section || "", selected_answer: a.s, correct: a.c, mode };
       });
-      fetch("/api/attempts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ attempts }),
-      }).catch((err) => console.error("Error saving attempts:", err));
+      (async () => {
+        try {
+          let sessionId: string | undefined;
+          const sessionRes = await fetch("/api/sessions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              mode,
+              sections: sectionsParam.split(","),
+              total_questions: aMap.size,
+              score: tc,
+            }),
+          });
+          if (sessionRes.ok) {
+            const { id } = await sessionRes.json() as { id: string };
+            sessionId = id;
+          }
+          await fetch("/api/attempts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ attempts: attempts.map((a) => ({ ...a, session_id: sessionId })) }),
+          });
+        } catch (err) {
+          console.error("Error saving session/attempts:", err);
+        }
+      })();
     }
 
-    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: aMap.size, percentage: pct, timeSpent: ts, sectionBreakdown: sb, incorrectQuestions: iq }));
+    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: qs.length, percentage: pct, timeSpent: ts, sectionBreakdown: sb, incorrectQuestions: iq }));
     router.push("/results");
-  }, [aMap, grp, qs, st, mode, user, router]);
+  }, [aMap, grp, qs, st, mode, sectionsParam, user, router]);
 
   useEffect(() => {
     if (mode !== "test" || sub) return;
     const i = setInterval(() => { sTL((p) => { if (p <= 1000) { fin(); return 0; } return p - 1000; }); }, 1000);
     return () => clearInterval(i);
   }, [mode, sub, fin]);
+
+  useEffect(() => {
+    if (sub) return;
+    const block = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key === "c") e.preventDefault(); };
+    document.addEventListener("keydown", block);
+    return () => document.removeEventListener("keydown", block);
+  }, [sub]);
 
   const g = grp[gi]; const q = g?.qs[qi]; const totQ = qs.length;
   const cur = grp.slice(0, gi).reduce((s, g) => s + g.qs.length, 0) + qi + 1;
@@ -284,7 +310,7 @@ function QuizContent() {
         </Ctn>
       </div>
       <Ctn style={{ padding: "28px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28, maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
           <div style={{ position: "sticky", top: 75, alignSelf: "start" }}>
             <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}` }}><div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5, color: c.ac, marginBottom: 12 }}>{q.section}</div><p style={{ fontSize: 14.5, lineHeight: 1.85, whiteSpace: "pre-wrap", color: c.fgS }}>{g.pt}</p></Card>
           </div>
@@ -317,7 +343,7 @@ function QuizContent() {
       <ConfirmModal open={ed} title="Exit Mock Test?" body="Your progress will be lost and this attempt will not be saved." confirmText="Exit Test" cancelText="Continue Test" onConfirm={() => router.push("/dashboard")} onCancel={() => sED(false)} />
       <ConfirmModal open={exitConfirm} title="Exit Practice?" body={`You have answered ${aMap.size} of ${totQ} questions.`} confirmText="Exit" cancelText="Keep Practising" onConfirm={() => router.push("/dashboard")} onCancel={() => setExC(false)} />
       <ConfirmModal open={skipConfirm} title="Skip this question?" body="You haven't answered this question yet." confirmText="Skip" cancelText="Go back" variant="primary" onConfirm={() => { setSC(false); nxt(); }} onCancel={() => setSC(false)} />
-      <ConfirmModal open={submitConfirm} title="Submit your test?" body={`You have answered ${aMap.size} of ${totQ} questions.`} confirmText="Submit Test" cancelText="Review Answers" variant="primary" onConfirm={() => { setSubC(false); fin(); }} onCancel={() => setSubC(false)} />
+      <ConfirmModal open={submitConfirm} title={aMap.size < totQ ? `${totQ - aMap.size} question${totQ - aMap.size === 1 ? "" : "s"} unanswered` : "Submit your test?"} body={aMap.size < totQ ? `You've only answered ${aMap.size} of ${totQ} questions. Unanswered questions will be marked incorrect.` : `You've answered all ${totQ} questions.`} confirmText={aMap.size < totQ ? "Submit Anyway" : "Submit Test"} cancelText="Review Answers" variant="primary" onConfirm={() => { setSubC(false); fin(); }} onCancel={() => setSubC(false)} />
     </div>
   );
 }
