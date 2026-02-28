@@ -187,10 +187,10 @@ function QuizContent() {
     const sb = Array.from(sm.entries()).map(([s, d]) => ({
       section: s, correct: d.c, total: d.t, percentage: d.t > 0 ? Math.round((d.c / d.t) * 100) : 0,
     }));
-    const iq: (Question & { userAnswer: string })[] = [];
+    const rq: (Question & { userAnswer: string; correct: boolean })[] = [];
     grp.forEach((g) => g.qs.forEach((q) => {
       const a = aMap.get(q.id);
-      if (a) iq.push({ ...q, userAnswer: a.s });
+      if (a) rq.push({ ...q, userAnswer: a.s, correct: a.c });
     }));
 
     if (user) {
@@ -226,7 +226,7 @@ function QuizContent() {
       })();
     }
 
-    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: qs.length, percentage: pct, timeSpent: ts, sectionBreakdown: sb, incorrectQuestions: iq }));
+    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: qs.length, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq }));
     router.push("/results");
   }, [aMap, grp, qs, st, mode, sectionsParam, user, router]);
 
