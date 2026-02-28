@@ -6,13 +6,13 @@ import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Mono, PB, Icons } from "@/components/ui";
 
 type SectionBreakdown = { section: string; correct: number; total: number; percentage: number };
-type IncorrectQuestion = {
+type ReviewQuestion = {
   id: number; section: string; passageText: string; questionText: string;
-  options: string[]; correctAnswer: string; explanation: string; userAnswer: string;
+  options: string[]; correctAnswer: string; explanation: string; userAnswer: string; correct: boolean;
 };
 type QuizResults = {
   totalCorrect: number; totalQuestions: number; percentage: number; timeSpent: number;
-  sectionBreakdown: SectionBreakdown[]; incorrectQuestions: IncorrectQuestion[];
+  sectionBreakdown: SectionBreakdown[]; reviewQuestions: ReviewQuestion[];
 };
 
 export default function ResultsPage() {
@@ -40,7 +40,7 @@ export default function ResultsPage() {
     );
   }
 
-  const { totalCorrect: tc, totalQuestions: tq, percentage: pct, timeSpent: ts, sectionBreakdown: sb, incorrectQuestions: iq } = qr;
+  const { totalCorrect: tc, totalQuestions: tq, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq } = qr;
   const gr = pct >= 90 ? { l: "Excellent", c: c.gn } : pct >= 75 ? { l: "Good", c: c.bl } : pct >= 60 ? { l: "Pass", c: c.ac } : { l: "Needs Work", c: c.rd };
   const fT = (s: number) => `${Math.floor(s / 60)}m ${s % 60}s`;
 
@@ -54,9 +54,12 @@ export default function ResultsPage() {
               <h1 style={{ fontFamily: fonts.d, fontSize: 26, fontStyle: "italic" }}>Review</h1>
               <Btn v="outline" onClick={() => sRV(false)}>← Summary</Btn>
             </div>
-            {iq.map((q, i) => (
+            {rq.map((q, i) => (
               <Card key={i} hover style={{ marginBottom: 12 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: c.rd }}>{q.section}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: c.mt }}>{q.section}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 999, color: "#fff", background: q.correct ? c.gn : c.rd }}>{q.correct ? "Correct" : "Incorrect"}</span>
+                </div>
                 {q.passageText && (
                   <div style={{ background: c.mtBg, padding: 12, borderRadius: 10, margin: "8px 0", fontSize: 13.5, lineHeight: 1.7, color: c.fgS }}>{q.passageText}</div>
                 )}
@@ -96,10 +99,9 @@ export default function ResultsPage() {
             <p style={{ color: c.fgS, fontSize: 14.5 }}>Here&apos;s how you performed</p>
           </div>
           <Card className="s2" style={{ textAlign: "center", marginBottom: 18 }}>
-            <Mono style={{ fontSize: 56, fontWeight: 700, color: gr.c, display: "block", animation: "cu .5s ease-out" }}>{pct}%</Mono>
+            <Mono style={{ fontSize: 56, fontWeight: 700, color: gr.c, display: "block", animation: "cu .5s ease-out" }}>{tc} / {tq}</Mono>
             <div style={{ fontSize: 17, fontWeight: 600, color: gr.c, marginBottom: 12 }}>{gr.l}</div>
             <div style={{ display: "flex", justifyContent: "center", gap: 24, fontSize: 13.5, color: c.mt }}>
-              <span>✓ {tc}/{tq}</span>
               <span>⏱ {fT(ts)}</span>
             </div>
           </Card>
@@ -109,14 +111,14 @@ export default function ResultsPage() {
               <div key={i} style={{ marginBottom: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5, fontSize: 13 }}>
                   <span style={{ fontWeight: 600 }}>{s.section}</span>
-                  <Mono>{s.correct}/{s.total} ({s.percentage}%)</Mono>
+                  <Mono>{s.correct}/{s.total}</Mono>
                 </div>
                 <PB value={s.percentage} color={s.percentage >= 75 ? c.gn : s.percentage >= 50 ? c.ac : c.rd} height={5} />
               </div>
             ))}
           </Card>
           <div className="s4" style={{ display: "flex", gap: 10 }}>
-            <Btn v="outline" full onClick={() => sRV(true)} disabled={!iq.length}>Review ({iq.length})</Btn>
+            <Btn v="outline" full onClick={() => sRV(true)} disabled={!(rq?.length ?? 0)}>Review ({rq?.length ?? 0})</Btn>
             <Btn full onClick={() => router.push("/dashboard")}>Dashboard</Btn>
           </div>
         </div>
