@@ -661,7 +661,7 @@ export default function DashboardPage() {
                     </Mono>
                   ) : (
                     <button
-                      onClick={() => router.push("/analytics")}
+                      onClick={() => router.push("/analytics?tab=profile")}
                       style={{
                         fontSize: 12,
                         fontWeight: 600,

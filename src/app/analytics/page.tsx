@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
@@ -13,7 +13,8 @@ export default function AnalyticsPage() {
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
   const { profile, loading: authLoading } = useAuth();
-  const [tab, sTab] = useState("performance");
+  const searchParams = useSearchParams();
+  const [tab, sTab] = useState(searchParams.get("tab") === "profile" ? "profile" : "performance");
   const [hist, setHist] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
 
