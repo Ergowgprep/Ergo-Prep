@@ -106,7 +106,6 @@ export default function AnalyticsPage() {
           <div style={{ display: "flex", gap: 3, background: c.mtBg, borderRadius: 12, padding: 3, marginBottom: 28 }}>
             {[
               { id: "performance", l: "📊 Performance" },
-              { id: "sections", l: "📐 Sections" },
               { id: "profile", l: "🧠 Logic Profile" },
             ].map((t) => (
               <div key={t.id} onClick={() => sTab(t.id)} style={{
@@ -121,7 +120,8 @@ export default function AnalyticsPage() {
 
           {tab === "performance" && (
             <div className="s1">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
+              {/* Top row: 3 stat cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
                 {[
                   { v: String(tot), l: "Attempted", cl: c.fg },
                   { v: String(cor), l: "Correct", cl: c.gn },
@@ -135,17 +135,20 @@ export default function AnalyticsPage() {
               </div>
 
               {tot > 0 && (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
+                <>
+                  {/* Middle: Full-width Recent Trend pill */}
                   {trend !== 0 && (
-                    <Card hover style={{ textAlign: "center" }}>
-                      <Mono style={{ fontSize: 24, fontWeight: 700, color: trend > 0 ? c.gn : c.rd, display: "block", marginBottom: 3 }}>
+                    <Card hover style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 12, padding: "14px 20px" }}>
+                      <Mono style={{ fontSize: 22, fontWeight: 700, color: trend > 0 ? c.gn : c.rd }}>
                         {trend > 0 ? "↑" : "↓"} {Math.abs(trend)}%
                       </Mono>
-                      <span style={{ fontSize: 12, color: c.mt }}>Recent trend</span>
+                      <span style={{ fontSize: 13, color: c.mt }}>Recent trend (last 50 vs prior 50)</span>
                     </Card>
                   )}
+
+                  {/* Bottom: Strongest + Weakest side by side */}
                   {strongest && weakest && strongest.section !== weakest.section && (
-                    <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
                       <Card hover>
                         <span style={{ fontSize: 11, fontWeight: 600, color: c.gn, textTransform: "uppercase", letterSpacing: 1 }}>Strongest</span>
                         <div style={{ fontSize: 15, fontWeight: 700, marginTop: 4 }}>{strongest.section}</div>
@@ -156,9 +159,29 @@ export default function AnalyticsPage() {
                         <div style={{ fontSize: 15, fontWeight: 700, marginTop: 4 }}>{weakest.section}</div>
                         <Mono style={{ fontSize: 12.5, color: c.mt }}>{weakest.pct}% ({weakest.total} Qs)</Mono>
                       </Card>
-                    </>
+                    </div>
                   )}
-                </div>
+
+                  {/* Section Breakdown */}
+                  <div style={{ marginTop: 12 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: c.fgS, textTransform: "uppercase", letterSpacing: ".1em", display: "block", marginBottom: 10 }}>
+                      Section Breakdown
+                    </span>
+                    {SECTIONS.map((sec) => {
+                      const p = sp[sec];
+                      const pct = p.t > 0 ? Math.round((p.c / p.t) * 100) : 0;
+                      return (
+                        <Card key={sec} hover style={{ marginBottom: 8 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+                            <span style={{ fontWeight: 600, fontSize: 13.5 }}>{sec}</span>
+                            <Mono style={{ fontSize: 12.5, color: c.mt }}>{p.t > 0 ? `${p.c}/${p.t} (${pct}%)` : "No data"}</Mono>
+                          </div>
+                          <PB value={pct} color={pct >= 75 ? c.gn : pct >= 50 ? c.ac : pct > 0 ? c.rd : c.bd} height={5} />
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </>
               )}
 
               {!tot && (
@@ -169,24 +192,6 @@ export default function AnalyticsPage() {
                   <Btn onClick={() => router.push("/dashboard")}>Start</Btn>
                 </Card>
               )}
-            </div>
-          )}
-
-          {tab === "sections" && (
-            <div className="s1">
-              {SECTIONS.map((sec) => {
-                const p = sp[sec];
-                const pct = p.t > 0 ? Math.round((p.c / p.t) * 100) : 0;
-                return (
-                  <Card key={sec} hover style={{ marginBottom: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13.5 }}>{sec}</span>
-                      <Mono style={{ fontSize: 12.5, color: c.mt }}>{p.t > 0 ? `${p.c}/${p.t} (${pct}%)` : "No data"}</Mono>
-                    </div>
-                    <PB value={pct} color={pct >= 75 ? c.gn : pct >= 50 ? c.ac : pct > 0 ? c.rd : c.bd} height={5} />
-                  </Card>
-                );
-              })}
             </div>
           )}
 
