@@ -5,6 +5,7 @@ import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
 import { Btn, Card, Ctn, Mono, PB, Icons, ConfirmModal } from "@/components/ui";
+import { AlertTriangle, Clock as ClockIcon, Target, ClipboardCheck } from "lucide-react";
 
 type Question = {
   id: number;
@@ -280,7 +281,7 @@ function QuizContent() {
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center", maxWidth: 400 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+          <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}><AlertTriangle size={48} color={c.ac} /></div>
           <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>Unable to load Quiz</h2>
           <p style={{ color: c.fgS, fontSize: 14, marginBottom: 24 }}>We had an issue fetching the question bank. Please try again.</p>
           <Btn onClick={() => setRetryTrigger(prev => prev + 1)}>Retry Connection</Btn>
@@ -292,7 +293,7 @@ function QuizContent() {
   if (accessExpired) {
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ textAlign: "center", maxWidth: 400 }}><div style={{ fontSize: 48, marginBottom: 16 }}>⏰</div><h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>Access Expired</h2><p style={{ color: c.fgS, fontSize: 14, marginBottom: 24 }}>Your access pass has expired during this session.</p><div style={{ display: "flex", gap: 10, justifyContent: "center" }}><Btn v="outline" onClick={() => router.push("/dashboard")}>Dashboard</Btn><Btn onClick={() => router.push("/pricing")}>View Plans</Btn></div></div>
+        <div style={{ textAlign: "center", maxWidth: 400 }}><div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}><ClockIcon size={48} color={c.ac} /></div><h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>Access Expired</h2><p style={{ color: c.fgS, fontSize: 14, marginBottom: 24 }}>Your access pass has expired during this session.</p><div style={{ display: "flex", gap: 10, justifyContent: "center" }}><Btn v="outline" onClick={() => router.push("/dashboard")}>Dashboard</Btn><Btn onClick={() => router.push("/pricing")}>View Plans</Btn></div></div>
       </div>
     );
   }
@@ -306,9 +307,9 @@ function QuizContent() {
       <div style={{ borderBottom: `1px solid ${c.bd}`, background: c.gl, backdropFilter: "blur(16px)", position: "sticky", top: 0, zIndex: 50 }}>
         <Ctn style={{ padding: "12px 28px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Btn v="outline" sz="sm" onClick={() => { if (mode === "test" && !sub) sED(true); else if (mode === "practice") setExC(true); else router.push("/dashboard"); }}>Exit</Btn><span style={{ padding: "4px 11px", borderRadius: 8, background: c.acS, fontSize: 12.5, fontWeight: 600, border: `1px solid ${c.ac}12` }}>{mode === "practice" ? "🎯 Practice" : "⏱️ Mock Test"}</span></div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Btn v="outline" sz="sm" onClick={() => { if (mode === "test" && !sub) sED(true); else if (mode === "practice") setExC(true); else router.push("/dashboard"); }}>Exit</Btn><span style={{ padding: "4px 11px", borderRadius: 8, background: c.acS, fontSize: 12.5, fontWeight: 600, border: `1px solid ${c.ac}12` }}>{mode === "practice" ? <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Target size={14} color={c.ac} /> Practice</span> : <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><ClipboardCheck size={14} color={c.ac} /> Mock Test</span>}</span></div>
             <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-              {mode === "test" ? <Mono style={{ fontSize: 13.5, fontWeight: 700, color: tl < 300000 ? c.rd : c.fg }}>⏱ {`${Math.floor(tl / 60000)}:${String(Math.floor((tl % 60000) / 1000)).padStart(2, "0")}`}</Mono> : <span style={{ fontSize: 12.5, color: c.mt }}>{Math.floor((Date.now() - st) / 60000)} min</span>}
+              {mode === "test" ? <Mono style={{ fontSize: 13.5, fontWeight: 700, color: tl < 300000 ? c.rd : c.fg, display: "inline-flex", alignItems: "center", gap: 4 }}><ClockIcon size={16} /> {`${Math.floor(tl / 60000)}:${String(Math.floor((tl % 60000) / 1000)).padStart(2, "0")}`}</Mono> : <span style={{ fontSize: 12.5, color: c.mt }}>{Math.floor((Date.now() - st) / 60000)} min</span>}
               <Mono style={{ fontSize: 12.5, color: c.fgS }}>{cur}/{totQ}</Mono>
             </div>
           </div>

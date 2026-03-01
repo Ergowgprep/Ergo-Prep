@@ -5,6 +5,7 @@ import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
 import { Btn, Card, Ctn, Mono, Hdr, PB, ThemeToggle } from "@/components/ui";
+import { BarChart3, Brain, TrendingUp } from "lucide-react";
 
 type Attempt = { section: string; correct: boolean; created_at: string; mode: string };
 
@@ -106,8 +107,8 @@ export default function AnalyticsPage() {
         <div style={{ maxWidth: 840, margin: "0 auto" }}>
           <div style={{ display: "flex", gap: 3, background: c.mtBg, borderRadius: 12, padding: 3, marginBottom: 28 }}>
             {[
-              { id: "performance", l: "📊 Performance" },
-              { id: "profile", l: "🧠 Logic Profile" },
+              { id: "performance", l: "Performance", icon: <BarChart3 size={16} /> },
+              { id: "profile", l: "Logic Profile", icon: <Brain size={16} /> },
             ].map((t) => (
               <div key={t.id} onClick={() => sTab(t.id)} style={{
                 flex: 1, textAlign: "center", padding: "9px 14px", borderRadius: 10, cursor: "pointer",
@@ -115,7 +116,7 @@ export default function AnalyticsPage() {
                 background: tab === t.id ? c.card : "transparent",
                 color: tab === t.id ? c.fg : c.mt,
                 boxShadow: tab === t.id ? c.sh : "none",
-              }}>{t.l}</div>
+              }}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>{t.icon} {t.l}</span></div>
             ))}
           </div>
 
@@ -187,7 +188,7 @@ export default function AnalyticsPage() {
 
               {!tot && (
                 <Card style={{ textAlign: "center", padding: 44 }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>📈</div>
+                  <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><TrendingUp size={36} color={c.mt} /></div>
                   <h3 style={{ fontWeight: 700, marginBottom: 5, fontSize: 15 }}>No data yet</h3>
                   <p style={{ color: c.mt, fontSize: 13.5, marginBottom: 14 }}>Complete questions to see analytics</p>
                   <Btn onClick={() => router.push("/dashboard")}>Start</Btn>

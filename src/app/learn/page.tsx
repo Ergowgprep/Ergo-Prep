@@ -8,18 +8,28 @@ import { useTheme } from "@/lib/ThemeContext";
 import {
   Btn, Card, Ctn, Mono, Hdr, PB, ThemeToggle, Icons, ConfirmModal,
 } from "@/components/ui";
+import { Brain, Search, GitBranch, Puzzle, Scale, MessageCircle } from "lucide-react";
 
 type SecKey = "Logic Essentials" | "Inference" | "Assumptions" | "Deduction" | "Interpretation" | "Arguments";
 
 const LEARN_SECTIONS: SecKey[] = ["Logic Essentials", ...SECTIONS] as SecKey[];
 
-const secInfo: Record<SecKey, { icon: string; color: string; desc: string; ready: boolean }> = {
-  "Logic Essentials": { icon: "🧠", color: "#0EA5E9", desc: "The rigid rules of quantifiers and connectors. The foundational 'math of words' required for Deduction and Interpretation.", ready: true },
-  Inference: { icon: "🔍", color: "#6366F1", desc: "Evaluate whether evidence supports, contradicts, or is insufficient for a given conclusion.", ready: true },
-  Assumptions: { icon: "🧩", color: "#EC4899", desc: "Identify hidden assumptions that must be true for an argument to hold.", ready: true },
-  Deduction: { icon: "⚖️", color: "#F59E0B", desc: "Determine whether conclusions necessarily follow from the given statements.", ready: true },
-  Interpretation: { icon: "📊", color: "#10B981", desc: "Assess whether conclusions follow beyond a reasonable doubt from the data presented.", ready: true },
-  Arguments: { icon: "💬", color: "#3B82F6", desc: "Distinguish strong, relevant arguments from weak or irrelevant ones.", ready: true },
+const secIcons: Record<SecKey, JSX.Element> = {
+  "Logic Essentials": <Brain size={22} />,
+  Inference: <Search size={22} />,
+  Assumptions: <Puzzle size={22} />,
+  Deduction: <GitBranch size={22} />,
+  Interpretation: <Scale size={22} />,
+  Arguments: <MessageCircle size={22} />,
+};
+
+const secInfo: Record<SecKey, { icon: JSX.Element; color: string; desc: string; ready: boolean }> = {
+  "Logic Essentials": { icon: secIcons["Logic Essentials"], color: "#0EA5E9", desc: "The rigid rules of quantifiers and connectors. The foundational 'math of words' required for Deduction and Interpretation.", ready: true },
+  Inference: { icon: secIcons.Inference, color: "#6366F1", desc: "Evaluate whether evidence supports, contradicts, or is insufficient for a given conclusion.", ready: true },
+  Assumptions: { icon: secIcons.Assumptions, color: "#EC4899", desc: "Identify hidden assumptions that must be true for an argument to hold.", ready: true },
+  Deduction: { icon: secIcons.Deduction, color: "#F59E0B", desc: "Determine whether conclusions necessarily follow from the given statements.", ready: true },
+  Interpretation: { icon: secIcons.Interpretation, color: "#10B981", desc: "Assess whether conclusions follow beyond a reasonable doubt from the data presented.", ready: true },
+  Arguments: { icon: secIcons.Arguments, color: "#3B82F6", desc: "Distinguish strong, relevant arguments from weak or irrelevant ones.", ready: true },
 };
 
 export default function LearnPage() {
@@ -1137,7 +1147,7 @@ export default function LearnPage() {
           left={
             <>
               <Btn v="ghost" sz="sm" onClick={() => (slide > 0 ? setEC(true) : exitLearn())}>← Back</Btn>
-              <span style={{ fontWeight: 600, fontSize: 14.5 }}>{info.icon} {sel}</span>
+              <span style={{ fontWeight: 600, fontSize: 14.5, display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ color: info.color, display: "flex" }}>{info.icon}</span> {sel}</span>
             </>
           }
           right={<ThemeToggle />}
@@ -1212,7 +1222,7 @@ export default function LearnPage() {
                 }}>
                   <div style={{
                     width: 44, height: 44, borderRadius: 12, background: info.color + "15",
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0,
+                    display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: info.color,
                   }}>{info.icon}</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
