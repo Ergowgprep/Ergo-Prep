@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense, useCallback } from "react";
+import { useState, useEffect, Suspense, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -169,12 +169,15 @@ function QuizContent() {
   const [st] = useState(Date.now());
   const [tl, sTL] = useState(40 * 60000);
   const [sub, sSub] = useState(false);
+  const submittingRef = useRef(false);
   const [ed, sED] = useState(false);
   const [skipConfirm, setSC] = useState(false);
   const [submitConfirm, setSubC] = useState(false);
   const [exitConfirm, setExC] = useState(false);
 
   const fin = useCallback(async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     sSub(true);
     const tc = Array.from(aMap.values()).filter((a) => a.c).length;
     const ts = Math.floor((Date.now() - st) / 1000);
