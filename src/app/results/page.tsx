@@ -12,7 +12,7 @@ type ReviewQuestion = {
 };
 type QuizResults = {
   totalCorrect: number; totalQuestions: number; percentage: number; timeSpent: number;
-  sectionBreakdown: SectionBreakdown[]; reviewQuestions: ReviewQuestion[];
+  sectionBreakdown: SectionBreakdown[]; reviewQuestions: ReviewQuestion[]; sessionId?: string;
 };
 
 export default function ResultsPage() {
@@ -40,7 +40,8 @@ export default function ResultsPage() {
     );
   }
 
-  const { totalCorrect: tc, totalQuestions: tq, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq } = qr;
+  const { totalCorrect: tc, totalQuestions: tq, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq, sessionId } = qr;
+  void sessionId; // available for future use (e.g. linking to session detail page)
   const gr = pct >= 90 ? { l: "Excellent", c: c.gn } : pct >= 75 ? { l: "Good", c: c.bl } : pct >= 60 ? { l: "Pass", c: c.ac } : { l: "Needs Work", c: c.rd };
   const fT = (s: number) => `${Math.floor(s / 60)}m ${s % 60}s`;
 
