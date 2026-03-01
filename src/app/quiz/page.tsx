@@ -174,7 +174,7 @@ function QuizContent() {
   const [submitConfirm, setSubC] = useState(false);
   const [exitConfirm, setExC] = useState(false);
 
-  const fin = useCallback(() => {
+  const fin = useCallback(async () => {
     sSub(true);
     const tc = Array.from(aMap.values()).filter((a) => a.c).length;
     const ts = Math.floor((Date.now() - st) / 1000);
@@ -194,40 +194,42 @@ function QuizContent() {
       if (a) rq.push({ ...q, userAnswer: a.s, correct: a.c });
     }));
 
+    let sessionId: string | undefined;
     if (user) {
       const attempts = Array.from(aMap.entries()).map(([qId, a]) => {
         const question = qs.find((q) => q.id === qId);
         return { question_id: qId, section: question?.section || "", selected_answer: a.s, correct: a.c, mode };
       });
-      (async () => {
-        try {
-          let sessionId: string | undefined;
-          const sessionRes = await fetch("/api/sessions", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              mode,
-              sections: sectionsParam.split(","),
-              total_questions: aMap.size,
-              score: tc,
-            }),
-          });
-          if (sessionRes.ok) {
-            const { id } = await sessionRes.json() as { id: string };
-            sessionId = id;
-          }
-          await fetch("/api/attempts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ attempts: attempts.map((a) => ({ ...a, session_id: sessionId })) }),
-          });
-        } catch (err) {
-          console.error("Error saving session/attempts:", err);
+      try {
+        const sessionRes = await fetch("/api/sessions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mode,
+            sections: sectionsParam.split(","),
+            total_questions: aMap.size,
+            score: tc,
+          }),
+        });
+        if (sessionRes.ok) {
+          const { id } = await sessionRes.json() as { id: string };
+          sessionId = id;
         }
-      })();
+      } catch (err) {
+        console.error("Error creating session:", err);
+      }
+      try {
+        await fetch("/api/attempts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ attempts: attempts.map((a) => ({ ...a, session_id: sessionId })) }),
+        });
+      } catch (err) {
+        console.error("Error saving attempts:", err);
+      }
     }
 
-    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: qs.length, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq }));
+    sessionStorage.setItem("quizResults", JSON.stringify({ totalCorrect: tc, totalQuestions: qs.length, percentage: pct, timeSpent: ts, sectionBreakdown: sb, reviewQuestions: rq, sessionId }));
     router.push("/results");
   }, [aMap, grp, qs, st, mode, sectionsParam, user, router]);
 

@@ -1,6 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase-server";
 
+export async function GET() {
+  try {
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("access_expires_at")
+      .eq("id", user.id)
+      .single();
+
+    const hasAccess =
+      profile?.access_expires_at &&
+      new Date(profile.access_expires_at) > new Date();
+
+    if (!hasAccess) {
+      return NextResponse.json({ error: "Access expired" }, { status: 403 });
+    }
+
+    const { data, error } = await supabase
+      .from("test_sessions")
+      .select("id, mode, sections, total_questions, score, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return NextResponse.json({ data: data ?? [] });
+  } catch (err) {
+    console.error("Sessions GET error:", err);
+    return NextResponse.json({ error: "Failed to fetch sessions" }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
