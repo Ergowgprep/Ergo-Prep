@@ -31,6 +31,7 @@ function QuizContent() {
   const sectionsParam = searchParams.get("sections") || SECTIONS.join(",");
   const limitParam = parseInt(searchParams.get("limit") || "10");
   const compParam = searchParams.get("comp");
+  const excludeAttempted = searchParams.get("exclude_attempted") === "true";
 
   const [qs, setQs] = useState<Question[]>([]);
   const [grp, setGrp] = useState<PassageGroup[]>([]);
@@ -78,7 +79,7 @@ function QuizContent() {
         const res = await fetch("/api/questions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sections: sectionRequests }),
+          body: JSON.stringify({ sections: sectionRequests, exclude_attempted: excludeAttempted }),
         });
 
         if (!isMounted) return;
@@ -146,7 +147,7 @@ function QuizContent() {
     
   // ONLY primitive strings/booleans go here. NO objects, NO arrays, NO router.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, hasAccess, mode, sectionsParam, limitParam, compParam, retryTrigger]);
+  }, [authLoading, hasAccess, mode, sectionsParam, limitParam, compParam, excludeAttempted, retryTrigger]);
 
   useEffect(() => {
     if (mode === "learn") return;

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -8,6 +9,8 @@ export default function TestPage() {
   const router = useRouter();
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
+  const [newOnly, setNewOnly] = useState(false);
+  const [newH, sNewH] = useState(false);
 
   const comp = [
     { s: "Inference", n: 5 },
@@ -59,6 +62,38 @@ export default function TestPage() {
             </div>
           </Card>
 
+          {/* New questions only */}
+          <Card className="s3" style={{ marginBottom: 18 }}>
+            <div
+              onClick={() => setNewOnly((p) => !p)}
+              onMouseEnter={() => sNewH(true)}
+              onMouseLeave={() => sNewH(false)}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                cursor: "pointer", borderRadius: 10, padding: "2px 0",
+                background: newH ? c.mtBg : "transparent", transition: "background .15s",
+              }}
+            >
+              <div>
+                <h3 style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 2 }}>New questions only</h3>
+                <p style={{ fontSize: 12.5, color: c.mt, lineHeight: 1.5 }}>
+                  {newOnly ? "Only questions you haven't attempted" : "Includes previously attempted questions"}
+                </p>
+              </div>
+              <div style={{
+                width: 44, height: 24, borderRadius: 12, padding: 2,
+                background: newOnly ? c.ac : c.bd,
+                transition: "background .2s", flexShrink: 0, marginLeft: 14,
+              }}>
+                <div style={{
+                  width: 20, height: 20, borderRadius: 10, background: "#fff",
+                  transition: "transform .2s", transform: newOnly ? "translateX(20px)" : "translateX(0)",
+                  boxShadow: "0 1px 3px rgba(0,0,0,.2)",
+                }} />
+              </div>
+            </div>
+          </Card>
+
           {/* Start button */}
           <Btn full sz="lg"
             onClick={() => {
@@ -68,9 +103,10 @@ export default function TestPage() {
                 limit: "40",
                 comp: JSON.stringify(comp),
               });
+              if (newOnly) params.set("exclude_attempted", "true");
               router.push(`/quiz?${params.toString()}`);
             }}>
-            ⏱️ Start 40-Minute Mock Test
+            Start 40-Minute Mock Test
           </Btn>
           <p style={{ textAlign: "center", fontSize: 12.5, color: c.mt, marginTop: 12 }}>
             Ensure 40 uninterrupted minutes

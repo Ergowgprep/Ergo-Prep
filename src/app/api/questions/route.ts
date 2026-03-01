@@ -23,25 +23,48 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Access expired" }, { status: 403 });
     }
 
-    const { sections } = await req.json() as {
+    const { sections, exclude_attempted } = await req.json() as {
       sections: { section: string; limit: number }[];
+      exclude_attempted?: boolean;
     };
 
     if (!sections || !Array.isArray(sections)) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
+    // Build set of attempted question IDs when exclusion is requested
+    let attemptedIds: Set<number> | null = null;
+    if (exclude_attempted) {
+      const { data: attempts } = await supabase
+        .from("attempts")
+        .select("question_id")
+        .eq("user_id", user.id);
+      if (attempts) {
+        attemptedIds = new Set(attempts.map((a) => a.question_id));
+      }
+    }
+
     const results = await Promise.all(
       sections.map(async ({ section, limit }) => {
         if (limit === 0) return [];
+        const safeLimit = Math.min(limit, 200);
+
         const { data, error } = await supabase
           .from("questions")
           .select("id, section, passage_text, question_text, options, correct_answer, explanation")
           .eq("section", section)
-          .limit(Math.min(limit, 200));
+          .limit(attemptedIds ? safeLimit + attemptedIds.size : safeLimit);
 
         if (error) throw error;
-        return data ?? [];
+        if (!data) return [];
+
+        if (!attemptedIds) return data.slice(0, safeLimit);
+
+        // Prefer unattempted questions, fall back to attempted to fill the limit
+        const fresh = data.filter((q) => !attemptedIds!.has(q.id));
+        if (fresh.length >= safeLimit) return fresh.slice(0, safeLimit);
+        const attempted = data.filter((q) => attemptedIds!.has(q.id));
+        return [...fresh, ...attempted].slice(0, safeLimit);
       })
     );
 
