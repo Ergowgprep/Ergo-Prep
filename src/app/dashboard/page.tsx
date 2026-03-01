@@ -83,6 +83,27 @@ export default function DashboardPage() {
     Arguments: "#3B82F6",
   };
 
+  // Fetch recent sessions
+  type Session = { id: string; mode: string; sections: string[]; total_questions: number; score: number; created_at: string };
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [hovSess, setHS] = useState<number | null>(null);
+  useEffect(() => {
+    if (!profile || !hasAcc) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/sessions");
+        if (res.ok) {
+          const { data } = await res.json();
+          if (!cancelled) setSessions((data as Session[]).slice(0, 3));
+        }
+      } catch (err) {
+        console.warn("Sessions fetch failed:", err);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [profile, hasAcc]);
+
   const [hovMode, setHM] = useState<number | null>(null);
 
   const modes = [
@@ -506,6 +527,77 @@ export default function DashboardPage() {
                   );
                 })}
               </div>
+
+              {/* Recent Tests */}
+              {sessions.length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: c.mt,
+                      textTransform: "uppercase",
+                      letterSpacing: ".1em",
+                      display: "block",
+                      marginBottom: 10,
+                    }}
+                  >
+                    Recent Tests
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {sessions.map((s, i) => {
+                      const dt = new Date(s.created_at);
+                      const fmt = dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+                      const isH = hovSess === i;
+                      return (
+                        <div
+                          key={s.id}
+                          onMouseEnter={() => setHS(i)}
+                          onMouseLeave={() => setHS(null)}
+                          onClick={() => router.push(`/review?session_id=${s.id}`)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: "16px 20px",
+                            borderRadius: 14,
+                            background: isH ? c.cardH : c.card,
+                            border: "1px solid " + (isH ? c.bdH : c.bd),
+                            cursor: "pointer",
+                            transition: "all .2s",
+                            transform: isH ? "translateY(-2px)" : "translateY(0)",
+                            boxShadow: isH ? c.shM : "none",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                            <div style={{
+                              padding: "4px 10px",
+                              borderRadius: 8,
+                              background: s.mode === "test" ? c.acS : c.gnS,
+                              fontSize: 11,
+                              fontWeight: 700,
+                              color: s.mode === "test" ? c.ac : c.gn,
+                              textTransform: "capitalize",
+                            }}>
+                              {s.mode}
+                            </div>
+                            <div>
+                              <div style={{ fontSize: 13.5, fontWeight: 600, marginBottom: 2 }}>{fmt}</div>
+                              <div style={{ fontSize: 11.5, color: c.mt }}>{s.sections.join(", ")}</div>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <Mono style={{ fontSize: 16, fontWeight: 700 }}>
+                              {s.score} / {s.total_questions}
+                            </Mono>
+                            <span style={{ color: c.mt, display: "flex" }}>{Icons.arr}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Section Progress */}
               <div

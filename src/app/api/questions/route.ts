@@ -1,6 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase-server";
 
+export async function GET(req: NextRequest) {
+  try {
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("access_expires_at")
+      .eq("id", user.id)
+      .single();
+
+    const hasAccess =
+      profile?.access_expires_at &&
+      new Date(profile.access_expires_at) > new Date();
+
+    if (!hasAccess) {
+      return NextResponse.json({ error: "Access expired" }, { status: 403 });
+    }
+
+    const idsParam = req.nextUrl.searchParams.get("ids");
+    if (!idsParam) {
+      return NextResponse.json({ error: "Missing ids parameter" }, { status: 400 });
+    }
+
+    const ids = idsParam.split(",").map(Number).filter((n) => !isNaN(n));
+    if (ids.length === 0) {
+      return NextResponse.json({ error: "Invalid ids" }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from("questions")
+      .select("id, section, passage_text, question_text, options, correct_answer, explanation")
+      .in("id", ids);
+
+    if (error) throw error;
+
+    return NextResponse.json({ data: data ?? [] });
+  } catch (err) {
+    console.error("Questions GET error:", err);
+    return NextResponse.json({ error: "Failed to fetch questions" }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
