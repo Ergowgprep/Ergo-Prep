@@ -8,15 +8,6 @@ import {
 } from "@/components/ui";
 import { useAuth } from "@/lib/AuthContext";
 
-type Session = {
-  id: string;
-  mode: string;
-  sections: string[];
-  total_questions: number;
-  score: number;
-  created_at: string;
-};
-
 export default function DashboardPage() {
   const router = useRouter();
   const { theme } = useTheme();
@@ -68,25 +59,6 @@ export default function DashboardPage() {
     };
 
     fetchHist();
-    return () => { cancelled = true; };
-  }, [profile]);
-
-  const [sessions, setSessions] = useState<Session[]>([]);
-  useEffect(() => {
-    if (!profile) return;
-    let cancelled = false;
-    const fetchSessions = async () => {
-      try {
-        const res = await fetch("/api/sessions");
-        if (res.ok) {
-          const { data } = await res.json();
-          if (!cancelled) setSessions(data);
-        }
-      } catch (err) {
-        console.warn("Sessions fetch failed:", err);
-      }
-    };
-    fetchSessions();
     return () => { cancelled = true; };
   }, [profile]);
 
@@ -680,96 +652,6 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-
-              {/* Recent Tests */}
-              {sessions.length > 0 && (
-                <div
-                  style={{
-                    padding: 28,
-                    borderRadius: 20,
-                    background: c.card,
-                    border: "1px solid " + c.bd,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: 18,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      {Icons.trend(c.fgS)}
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 700,
-                          color: c.fgS,
-                          textTransform: "uppercase",
-                          letterSpacing: ".1em",
-                        }}
-                      >
-                        Recent Tests
-                      </span>
-                    </div>
-                    <Btn v="ghost" sz="sm" onClick={() => router.push("/analytics")}>
-                      View all
-                    </Btn>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {sessions.slice(0, 5).map((s) => {
-                      const pctScore =
-                        s.total_questions > 0
-                          ? Math.round((s.score / s.total_questions) * 100)
-                          : 0;
-                      const date = new Date(s.created_at);
-                      const dateStr = date.toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                      });
-                      return (
-                        <div
-                          key={s.id}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "14px 16px",
-                            borderRadius: 12,
-                            background: c.mtBg,
-                            border: "1px solid " + c.bd,
-                          }}
-                        >
-                          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                            <span style={{ fontSize: 18 }}>
-                              {s.mode === "test" ? "⏱️" : "🎯"}
-                            </span>
-                            <div>
-                              <div style={{ fontSize: 13.5, fontWeight: 600 }}>
-                                {s.mode === "test" ? "Mock Test" : "Practice"} —{" "}
-                                {s.sections.join(", ")}
-                              </div>
-                              <div style={{ fontSize: 11.5, color: c.mt, marginTop: 2 }}>
-                                {dateStr} · {s.total_questions} questions
-                              </div>
-                            </div>
-                          </div>
-                          <Mono
-                            style={{
-                              fontSize: 15,
-                              fontWeight: 700,
-                              color: pctScore >= 75 ? c.gn : pctScore >= 50 ? c.ac : c.rd,
-                            }}
-                          >
-                            {pctScore}%
-                          </Mono>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </>
           ) : (
             <>
