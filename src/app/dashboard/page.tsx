@@ -72,6 +72,7 @@ export default function DashboardPage() {
   }, [profile]);
 
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [hovSess, setHS] = useState<number | null>(null);
   useEffect(() => {
     if (!profile) return;
     let cancelled = false;
@@ -110,27 +111,6 @@ export default function DashboardPage() {
     Interpretation: "#10B981",
     Arguments: "#3B82F6",
   };
-
-  // Fetch recent sessions
-  type Session = { id: string; mode: string; sections: string[]; total_questions: number; score: number; created_at: string };
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [hovSess, setHS] = useState<number | null>(null);
-  useEffect(() => {
-    if (!profile || !hasAcc) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/sessions");
-        if (res.ok) {
-          const { data } = await res.json();
-          if (!cancelled) setSessions((data as Session[]).slice(0, 3));
-        }
-      } catch (err) {
-        console.warn("Sessions fetch failed:", err);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [profile, hasAcc]);
 
   const [hovMode, setHM] = useState<number | null>(null);
 
