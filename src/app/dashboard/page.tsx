@@ -124,7 +124,7 @@ export default function DashboardPage() {
   const profileRanked = unlocked
     ? SECTIONS.map((sec) => {
         const accuracy = sc[sec] > 0 ? secCorrect[sec] / sc[sec] : 0;
-        return { section: sec, priority: (1 - accuracy) * (TEST_WEIGHTS[sec] / 40) };
+        return { section: sec, accuracy, priority: (1 - accuracy) * (TEST_WEIGHTS[sec] / 40) };
       }).sort((a, b) => b.priority - a.priority)
     : [];
 
@@ -626,7 +626,7 @@ export default function DashboardPage() {
               {/* Logic Profile */}
               <div
                 style={{
-                  padding: "24px 28px",
+                  padding: 28,
                   borderRadius: 20,
                   background: c.card,
                   border: "1px solid " + c.bd,
@@ -638,7 +638,7 @@ export default function DashboardPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    marginBottom: unlocked ? 4 : 14,
+                    marginBottom: unlocked ? 22 : 14,
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -655,10 +655,31 @@ export default function DashboardPage() {
                       Logic Profile
                     </span>
                   </div>
-                  {!unlocked && (
+                  {!unlocked ? (
                     <Mono style={{ fontSize: 13, color: c.mt }}>
                       {totC}/{SECTIONS.length * REQ}
                     </Mono>
+                  ) : (
+                    <button
+                      onClick={() => router.push("/analytics")}
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: c.ac,
+                        cursor: "pointer",
+                        border: "none",
+                        background: "none",
+                        fontFamily: fonts.b,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        padding: 0,
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
+                    >
+                      View full profile {Icons.arr}
+                    </button>
                   )}
                 </div>
 
@@ -692,52 +713,77 @@ export default function DashboardPage() {
                     />
                   </>
                 ) : (
-                  <>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(5,1fr)",
+                      gap: 10,
+                    }}
+                  >
                     {profileRanked.map((item, i) => {
-                      const rank = i + 1;
-                      const col = rank <= 2 ? c.rd : rank === 3 ? c.ac : c.gn;
+                      const col = i < 2 ? c.rd : i === 2 ? c.ac : c.gn;
+                      const label = i < 2 ? "High Priority" : i === 2 ? "Focus" : "On Track";
+                      const accPct = Math.round(item.accuracy * 100);
                       return (
-                        <div
-                          key={item.section}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "9px 0",
-                            borderBottom: i < profileRanked.length - 1 ? "1px solid " + c.bd : "none",
-                          }}
-                        >
-                          <Mono style={{ fontSize: 13, fontWeight: 700, color: c.mt, width: 18, textAlign: "center" }}>
-                            {rank}
-                          </Mono>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: col, flexShrink: 0 }} />
-                          <span style={{ fontSize: 13.5, fontWeight: 600, flex: 1 }}>{item.section}</span>
+                        <div key={item.section} style={{ textAlign: "center" }}>
+                          <div
+                            style={{
+                              width: 56,
+                              height: 56,
+                              margin: "0 auto 8px",
+                              position: "relative",
+                            }}
+                          >
+                            <svg width="56" height="56" viewBox="0 0 56 56">
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="24"
+                                fill="none"
+                                stroke={c.bd}
+                                strokeWidth="3.5"
+                              />
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="24"
+                                fill="none"
+                                stroke={col}
+                                strokeWidth="3.5"
+                                strokeLinecap="round"
+                                strokeDasharray={`${accPct * 1.508} 150.8`}
+                                transform="rotate(-90 28 28)"
+                                style={{
+                                  transition:
+                                    "stroke-dasharray .6s cubic-bezier(.16,1,.3,1)",
+                                }}
+                              />
+                            </svg>
+                            <Mono
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%,-50%)",
+                                fontSize: 12,
+                                fontWeight: 700,
+                              }}
+                            >
+                              {accPct}%
+                            </Mono>
+                          </div>
+                          <div
+                            style={{ fontSize: 11.5, fontWeight: 600, marginBottom: 2 }}
+                          >
+                            {item.section}
+                          </div>
+                          <div style={{ fontSize: 10, fontWeight: 600, color: col }}>
+                            {label}
+                          </div>
                         </div>
                       );
                     })}
-                    <div style={{ paddingTop: 14, marginTop: 6 }}>
-                      <button
-                        onClick={() => router.push("/analytics")}
-                        style={{
-                          fontSize: 12.5,
-                          fontWeight: 600,
-                          color: c.ac,
-                          cursor: "pointer",
-                          border: "none",
-                          background: "none",
-                          fontFamily: fonts.b,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          padding: 0,
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
-                      >
-                        View full profile {Icons.arr}
-                      </button>
-                    </div>
-                  </>
+                  </div>
                 )}
               </div>
 
