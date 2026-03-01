@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Hdr, ThemeToggle } from "@/components/ui";
+import { Target } from "lucide-react";
 
 export default function PracticePage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function PracticePage() {
         left={
           <>
             <Btn v="ghost" sz="sm" onClick={() => router.push("/dashboard")}>← Back</Btn>
-            <span style={{ fontWeight: 600, fontSize: 14.5 }}>🎯 Practice Setup</span>
+            <span style={{ fontWeight: 600, fontSize: 14.5, display: "inline-flex", alignItems: "center", gap: 6 }}><Target size={18} color={c.gn} /> Practice Setup</span>
           </>
         }
         right={<ThemeToggle />}

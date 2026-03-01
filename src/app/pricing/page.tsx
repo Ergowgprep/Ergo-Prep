@@ -5,6 +5,7 @@ import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { useAuth } from "@/lib/AuthContext";
 import { Btn, Card, Ctn, Hdr, IB, Mono, ThemeToggle, Icons } from "@/components/ui";
+import { Lightbulb } from "lucide-react";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function PricingPage() {
           maxWidth: 700, margin: "0 auto 36px", padding: "16px 22px", borderRadius: 12,
           background: c.acS, border: `1px solid ${c.ac}25`, display: "flex", alignItems: "center", gap: 12,
         }}>
-          <span style={{ fontSize: 20 }}>💡</span>
+          <Lightbulb size={20} color={c.ac} />
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>
             Every plan includes <strong style={{ color: c.fg }}>the exact same features</strong> — all 1,500+ questions, every mode, full analytics. The only difference is how long your access lasts.
           </p>
