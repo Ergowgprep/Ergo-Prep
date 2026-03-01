@@ -236,13 +236,13 @@ export default function AnalyticsPage() {
                     const col = rank <= 2 ? c.rd : rank === 3 ? c.ac : c.gn;
                     const bg = rank <= 2 ? c.rdS : rank === 3 ? c.acS : c.gnS;
                     const label = rank <= 2 ? "High Priority" : rank === 3 ? "Medium" : "Low Priority";
-                    const weightLabel = item.testQuestions >= 10 ? "heavily weighted" : item.testQuestions >= 6 ? "moderately weighted" : "lightly weighted";
-                    const accLabel = item.accuracy < 50 ? "Low" : item.accuracy < 75 ? "Moderate" : "High";
+                    const weightPct = (item.testQuestions / 40) * 100;
+                    const weightLabel = weightPct >= 20 ? "heavily weighted" : "lightly weighted";
                     const explanation = rank <= 2
-                      ? `${accLabel} accuracy on a ${weightLabel} section — focus here`
+                      ? `Low accuracy on a ${weightLabel} section (${weightPct}%) — focus here`
                       : rank === 3
-                        ? `${accLabel} accuracy on a ${weightLabel} section — room to improve`
-                        : `${accLabel} accuracy on a ${weightLabel} section — looking solid`;
+                        ? `Moderate accuracy on a ${weightLabel} section (${weightPct}%) — room to improve`
+                        : "Solid accuracy — looking good here";
                     return (
                       <Card key={item.section} hover style={{ marginBottom: 8, padding: "18px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -257,10 +257,8 @@ export default function AnalyticsPage() {
                                   {label}
                                 </span>
                               </div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                                <Mono style={{ fontSize: 12.5, color: c.fg }}>{item.accuracy}% accuracy</Mono>
-                                <span style={{ fontSize: 12, color: c.mt }}>{item.testQuestions}/40 questions on real test</span>
-                              </div>
+                              <Mono style={{ fontSize: 12.5, color: c.fg, display: "block", marginBottom: 2 }}>{item.accuracy}% accuracy</Mono>
+                              <span style={{ fontSize: 11.5, color: c.mt, display: "block", marginBottom: 4 }}>Test weighting: {weightPct}%</span>
                               <p style={{ fontSize: 12, color: c.fgS, margin: 0 }}>{explanation}</p>
                             </div>
                           </div>
