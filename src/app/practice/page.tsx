@@ -85,7 +85,7 @@ export default function PracticePage() {
               style={{ width: "100%", accentColor: c.gn }} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
               <span style={{ fontSize: 11, color: c.mt }}>5</span>
-              <span style={{ fontSize: 11, color: c.mt }}>20</span>
+              <span style={{ fontSize: 11, color: c.mt }}>50</span>
             </div>
           </Card>
 

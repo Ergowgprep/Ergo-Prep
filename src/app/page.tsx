@@ -109,7 +109,7 @@ export default function Home() {
               </div>
               <div>
                 <span style={{ fontSize: 12.5, color: c.mt }}>Trusted by </span>
-                <Mono style={{ fontSize: 12.5, color: c.ac, fontWeight: 700 }}>2,400+</Mono>
+                <Mono style={{ fontSize: 12.5, color: c.ac, fontWeight: 700 }}>xxxx</Mono>
                 <span style={{ fontSize: 12.5, color: c.mt }}> candidates across the UK</span>
               </div>
             </div>

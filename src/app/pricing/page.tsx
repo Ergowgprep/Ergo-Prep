@@ -63,7 +63,7 @@ export default function PricingPage() {
         {/* Heading */}
         <div className="s1" style={{ textAlign: "center", marginBottom: 44 }}>
           <h1 style={{ fontSize: 30, fontWeight: 700, letterSpacing: "-.02em", marginBottom: 10 }}>Simple pricing</h1>
-          <p style={{ fontSize: 15, color: c.fgS }}>No subscriptions. No hidden fees. Just pick your window.</p>
+          <p style={{ fontSize: 15, color: c.fgS }}>No subscriptions. Just pick your window.</p>
         </div>
 
         {/* Banner */}
@@ -141,7 +141,7 @@ export default function PricingPage() {
         }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>I cannot afford this</h3>
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.75, marginBottom: 20 }}>
-            Ergo&apos;s mission is to level the playing field. If you cannot afford my product, it is yours for free — just reach out to me with some details.
+            Ergo&apos;s mission is to level the playing field. If you cannot afford our product, we can provide a pass for free — just reach out with some details.
           </p>
           <Btn v="outline" onClick={() => window.open("mailto:hello@ergoprep.co.uk", "_blank")}>Contact us</Btn>
         </div>
