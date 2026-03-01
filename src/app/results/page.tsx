@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Mono, PB, Icons } from "@/components/ui";
+import { Clock } from "lucide-react";
 
 type SectionBreakdown = { section: string; correct: number; total: number; percentage: number };
 type ReviewQuestion = {
@@ -103,7 +104,7 @@ export default function ResultsPage() {
             <Mono style={{ fontSize: 56, fontWeight: 700, color: gr.c, display: "block", animation: "cu .5s ease-out" }}>{tc} / {tq}</Mono>
             <div style={{ fontSize: 17, fontWeight: 600, color: gr.c, marginBottom: 12 }}>{gr.l}</div>
             <div style={{ display: "flex", justifyContent: "center", gap: 24, fontSize: 13.5, color: c.mt }}>
-              <span>⏱ {fT(ts)}</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Clock size={14} color={c.mt} /> {fT(ts)}</span>
             </div>
           </Card>
           <Card className="s3" style={{ marginBottom: 18 }}>

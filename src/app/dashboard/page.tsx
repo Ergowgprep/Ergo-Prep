@@ -6,6 +6,7 @@ import { useTheme } from "@/lib/ThemeContext";
 import {
   Btn, Card, Ctn, Mono, Hdr, Logo, PB, ThemeToggle, Icons,
 } from "@/components/ui";
+import { BookOpen, Target, ClipboardCheck, Brain } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
 type Session = {
@@ -132,7 +133,7 @@ export default function DashboardPage() {
 
   const modes = [
     {
-      e: "🎓",
+      Icon: BookOpen,
       t: "Learning Mode",
       d: "Guided lessons on each section type",
       bg: d ? "#6366F115" : "#6366F10A",
@@ -141,7 +142,7 @@ export default function DashboardPage() {
       pg: "/learn",
     },
     {
-      e: "🎯",
+      Icon: Target,
       t: "Practice Mode",
       d: "Timed drills with 1,500+ questions",
       bg: d ? "#10B98115" : "#10B9810A",
@@ -150,7 +151,7 @@ export default function DashboardPage() {
       pg: "/practice",
     },
     {
-      e: "⏱️",
+      Icon: ClipboardCheck,
       t: "Mock Test",
       d: "Full 40-question exam simulation",
       bg: d ? c.ac + "15" : c.ac + "0A",
@@ -512,7 +513,7 @@ export default function DashboardPage() {
                         }}
                       />
                       <div style={{ position: "relative", zIndex: 1 }}>
-                        <div style={{ fontSize: 28, marginBottom: 14 }}>{m.e}</div>
+                        <div style={{ marginBottom: 14 }}><m.Icon size={24} color={m.accent} /></div>
                         <h3
                           style={{
                             fontSize: 15,
@@ -642,7 +643,7 @@ export default function DashboardPage() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    {Icons.target(c.fgS)}
+                    <Brain size={20} color={c.fgS} />
                     <span
                       style={{
                         fontSize: 12,
@@ -853,7 +854,7 @@ export default function DashboardPage() {
                     gap: 24,
                   }}
                 >
-                  <div style={{ fontSize: 42, flexShrink: 0 }}>{modes[0].e}</div>
+                  <div style={{ flexShrink: 0 }}><BookOpen size={36} color={modes[0].accent} /></div>
                   <div style={{ flex: 1 }}>
                     <h3
                       style={{
@@ -986,7 +987,7 @@ export default function DashboardPage() {
                     <div
                       style={{ position: "relative", zIndex: 1, opacity: 0.45 }}
                     >
-                      <div style={{ fontSize: 26, marginBottom: 12 }}>{m.e}</div>
+                      <div style={{ marginBottom: 12 }}><m.Icon size={24} color={m.accent} /></div>
                       <h3
                         style={{
                           fontSize: 14,

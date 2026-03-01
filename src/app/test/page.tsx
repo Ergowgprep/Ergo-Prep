@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Card, Ctn, Mono, Hdr, ThemeToggle } from "@/components/ui";
+import { ClipboardCheck, AlertTriangle } from "lucide-react";
 
 export default function TestPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function TestPage() {
         left={
           <>
             <Btn v="ghost" sz="sm" onClick={() => router.push("/dashboard")}>← Back</Btn>
-            <span style={{ fontWeight: 600, fontSize: 14.5 }}>⏱️ Mock Test</span>
+            <span style={{ fontWeight: 600, fontSize: 14.5, display: "inline-flex", alignItems: "center", gap: 6 }}><ClipboardCheck size={18} color={c.ac} /> Mock Test</span>
           </>
         }
         right={<ThemeToggle />}
@@ -35,7 +36,7 @@ export default function TestPage() {
         <div style={{ maxWidth: 540, margin: "0 auto" }}>
           {/* Warning */}
           <Card className="s1" style={{ marginBottom: 18, background: theme === "dark" ? c.card : `${c.ac}06`, border: `1px solid ${c.ac}20` }}>
-            <h3 style={{ fontWeight: 700, marginBottom: 6, fontSize: 14.5 }}>⚠️ Real Exam Conditions</h3>
+            <h3 style={{ fontWeight: 700, marginBottom: 6, fontSize: 14.5, display: "flex", alignItems: "center", gap: 6 }}><AlertTriangle size={18} color={c.ac} /> Real Exam Conditions</h3>
             <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.8 }}>
               <strong>40 questions</strong> in <strong>40 minutes</strong>. Timer starts immediately. Auto-submits at expiry. No explanations until submission.
             </p>
