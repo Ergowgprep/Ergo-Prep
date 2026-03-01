@@ -24,12 +24,19 @@ export async function GET(req: NextRequest) {
     }
 
     const fields = req.nextUrl.searchParams.get("fields") || "section, correct";
+    const sessionId = req.nextUrl.searchParams.get("session_id");
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("attempts")
       .select(fields)
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
+
+    if (sessionId) {
+      query = query.eq("session_id", sessionId);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
