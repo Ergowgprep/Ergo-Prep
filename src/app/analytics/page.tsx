@@ -62,6 +62,26 @@ export default function AnalyticsPage() {
   const strongest = sectionAccuracies.length > 0 ? sectionAccuracies.reduce((a, b) => (a.pct >= b.pct ? a : b)) : null;
   const weakest = sectionAccuracies.length > 0 ? sectionAccuracies.reduce((a, b) => (a.pct <= b.pct ? a : b)) : null;
 
+  // Logic Profile
+  const TEST_WEIGHTS: Record<string, number> = {
+    Inference: 5, Deduction: 5, Assumptions: 12, Interpretation: 6, Arguments: 12,
+  };
+  const PROFILE_REQ = 20;
+  const profileUnlocked = SECTIONS.every((s) => sp[s].t >= PROFILE_REQ);
+  const profileRanked = profileUnlocked
+    ? SECTIONS.map((sec) => {
+        const p = sp[sec];
+        const accuracy = p.t > 0 ? p.c / p.t : 0;
+        const testWeight = TEST_WEIGHTS[sec] / 40;
+        return {
+          section: sec,
+          accuracy: Math.round(accuracy * 100),
+          testQuestions: TEST_WEIGHTS[sec],
+          priority: (1 - accuracy) * testWeight,
+        };
+      }).sort((a, b) => b.priority - a.priority)
+    : [];
+
   if (loading) {
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -87,7 +107,7 @@ export default function AnalyticsPage() {
             {[
               { id: "performance", l: "📊 Performance" },
               { id: "sections", l: "📐 Sections" },
-              { id: "tips", l: "💡 Tips" },
+              { id: "profile", l: "🧠 Logic Profile" },
             ].map((t) => (
               <div key={t.id} onClick={() => sTab(t.id)} style={{
                 flex: 1, textAlign: "center", padding: "9px 14px", borderRadius: 10, cursor: "pointer",
@@ -170,54 +190,83 @@ export default function AnalyticsPage() {
             </div>
           )}
 
-          {tab === "tips" && (
+          {tab === "profile" && (
             <div className="s1">
-              {tot < 5 ? (
-                <Card style={{ textAlign: "center", padding: 44 }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>🔒</div>
-                  <h3 style={{ fontWeight: 700, marginBottom: 5, fontSize: 15 }}>Calibrating</h3>
-                  <p style={{ color: c.mt, fontSize: 13.5, marginBottom: 14 }}>Answer 5+ questions to unlock personalised tips</p>
-                  <Btn onClick={() => router.push("/dashboard")}>Practice</Btn>
-                </Card>
+              {!profileUnlocked ? (
+                <>
+                  <Card style={{ textAlign: "center", padding: "28px 24px", marginBottom: 16 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: c.mt, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 8 }}>
+                      Logic Profile Locked
+                    </div>
+                    <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6, marginBottom: 0 }}>
+                      Complete 20 questions in each section to unlock your Logic Profile
+                    </p>
+                  </Card>
+                  {SECTIONS.map((sec) => {
+                    const done = Math.min(sp[sec].t, PROFILE_REQ);
+                    const pct = Math.round((done / PROFILE_REQ) * 100);
+                    return (
+                      <Card key={sec} hover style={{ marginBottom: 8 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+                          <span style={{ fontWeight: 600, fontSize: 13.5 }}>{sec}</span>
+                          <Mono style={{ fontSize: 12.5, color: done >= PROFILE_REQ ? c.gn : c.mt }}>{done}/{PROFILE_REQ} completed</Mono>
+                        </div>
+                        <PB value={pct} color={done >= PROFILE_REQ ? c.gn : c.ac} height={5} />
+                      </Card>
+                    );
+                  })}
+                </>
               ) : (
                 <>
-                  {SECTIONS.filter((s) => {
-                    const p = sp[s];
-                    return p.t > 0 && (p.c / p.t) < 0.75;
-                  }).length === 0 ? (
-                    <Card style={{ textAlign: "center", padding: 44 }}>
-                      <div style={{ fontSize: 36, marginBottom: 10 }}>🎯</div>
-                      <h3 style={{ fontWeight: 700, marginBottom: 5, fontSize: 15 }}>Looking sharp!</h3>
-                      <p style={{ color: c.mt, fontSize: 13.5, marginBottom: 14 }}>You&apos;re scoring above 75% in every section. Keep it up!</p>
-                      <Btn onClick={() => router.push("/practice")}>Keep Practising</Btn>
-                    </Card>
-                  ) : (
-                    SECTIONS.filter((s) => {
-                      const p = sp[s];
-                      return p.t > 0 && (p.c / p.t) < 0.75;
-                    }).map((sec) => {
-                      const p = sp[sec];
-                      const pct = Math.round((p.c / p.t) * 100);
-                      return (
-                        <Card key={sec} hover style={{ marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
-                              <span style={{ fontWeight: 700, fontSize: 13.5 }}>{sec}</span>
-                              <span style={{
-                                padding: "2px 7px", borderRadius: 6, fontSize: 10.5, fontWeight: 600,
-                                background: pct < 50 ? c.rdS : c.acS, color: pct < 50 ? c.rd : c.ac,
-                              }}>{pct < 50 ? "🔥 Priority" : "⚠️ Focus"}</span>
+                  <Card style={{ textAlign: "center", padding: "28px 24px", marginBottom: 16 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: c.gn, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 8 }}>
+                      Logic Profile Unlocked
+                    </div>
+                    <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6, marginBottom: 0 }}>
+                      Sections ranked by priority based on your accuracy and real test weighting
+                    </p>
+                  </Card>
+                  {profileRanked.map((item, i) => {
+                    const rank = i + 1;
+                    const col = rank <= 2 ? c.rd : rank === 3 ? c.ac : c.gn;
+                    const bg = rank <= 2 ? c.rdS : rank === 3 ? c.acS : c.gnS;
+                    const label = rank <= 2 ? "High Priority" : rank === 3 ? "Medium" : "Low Priority";
+                    const weightLabel = item.testQuestions >= 10 ? "heavily weighted" : item.testQuestions >= 6 ? "moderately weighted" : "lightly weighted";
+                    const accLabel = item.accuracy < 50 ? "Low" : item.accuracy < 75 ? "Moderate" : "High";
+                    const explanation = rank <= 2
+                      ? `${accLabel} accuracy on a ${weightLabel} section — focus here`
+                      : rank === 3
+                        ? `${accLabel} accuracy on a ${weightLabel} section — room to improve`
+                        : `${accLabel} accuracy on a ${weightLabel} section — looking solid`;
+                    return (
+                      <Card key={item.section} hover style={{ marginBottom: 8, padding: "18px 20px" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 14, flex: 1, minWidth: 0 }}>
+                            <Mono style={{ fontSize: 18, fontWeight: 700, color: col, width: 28, textAlign: "center", flexShrink: 0 }}>
+                              {rank}
+                            </Mono>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                                <span style={{ fontWeight: 700, fontSize: 14 }}>{item.section}</span>
+                                <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10.5, fontWeight: 600, background: bg, color: col }}>
+                                  {label}
+                                </span>
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                                <Mono style={{ fontSize: 12.5, color: c.fg }}>{item.accuracy}% accuracy</Mono>
+                                <span style={{ fontSize: 12, color: c.mt }}>{item.testQuestions}/40 questions on real test</span>
+                              </div>
+                              <p style={{ fontSize: 12, color: c.fgS, margin: 0 }}>{explanation}</p>
                             </div>
-                            <p style={{ fontSize: 12.5, color: c.fgS }}>{pct}% accuracy across {p.t} questions</p>
                           </div>
-                          <Btn v="outline" sz="sm" onClick={() => {
-                            const params = new URLSearchParams({ mode: "practice", sections: sec, limit: "10" });
+                          <Btn v="outline" sz="sm" style={{ marginLeft: 14, flexShrink: 0 }} onClick={() => {
+                            const params = new URLSearchParams({ mode: "practice", sections: item.section, limit: "10" });
                             router.push(`/quiz?${params.toString()}`);
                           }}>Practice</Btn>
-                        </Card>
-                      );
-                    })
-                  )}
+                        </div>
+                      </Card>
+                    );
+                  })}
                 </>
               )}
             </div>
