@@ -1251,8 +1251,10 @@ export default function LearnPage() {
           {!hasAcc && (
             <div style={{ marginTop: 16, padding: "14px 18px", background: theme === "dark" ? c.card : "#F59E0B08", border: "1px solid #F59E0B30", borderRadius: 12, textAlign: "center" }}>
               <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>
-                Learning Mode requires a society promo code or a paid plan.{" "}
-                <a href="/pricing" style={{ color: c.ac, fontWeight: 600, textDecoration: "underline" }}>View plans</a>
+                Enter your university society code on your{" "}
+                <a href="/profile" style={{ color: c.ac, fontWeight: 600, textDecoration: "underline" }}>profile page</a>
+                {" "}to unlock Learning Mode, or grab an{" "}
+                <a href="/pricing" style={{ color: c.ac, fontWeight: 600, textDecoration: "underline" }}>access pass</a>.
               </p>
             </div>
           )}
