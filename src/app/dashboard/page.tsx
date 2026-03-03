@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -24,7 +24,8 @@ export default function DashboardPage() {
   const c = getColors(theme === "dark");
   const d = theme === "dark";
 
-  const { profile, hasAccess: hasAcc } = useAuth();
+  const { profile, hasAccess: hasAcc, refreshProfile } = useAuth();
+  const hasPromo = !!profile?.promo_code;
   const name = profile?.name || "there";
   const exp = profile?.access_expires_at ? new Date(profile.access_expires_at) : null;
 
@@ -130,6 +131,11 @@ export default function DashboardPage() {
     : [];
 
   const [hovMode, setHM] = useState<number | null>(null);
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoMsg, setPromoMsg] = useState("");
+  const [promoErr, setPromoErr] = useState(false);
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const modes = [
     {
@@ -160,6 +166,44 @@ export default function DashboardPage() {
       pg: "/test",
     },
   ];
+
+  const handlePromoSubmit = useCallback(async () => {
+    const code = promoCode.trim().toUpperCase();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoMsg("");
+    try {
+      const vRes = await fetch(`/api/promo?code=${encodeURIComponent(code)}`);
+      const vData = await vRes.json();
+      if (!vData.valid) {
+        setPromoErr(true);
+        setPromoMsg(vData.reason || "Invalid code");
+        setPromoLoading(false);
+        return;
+      }
+      const rRes = await fetch("/api/promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const rData = await rRes.json();
+      if (!rRes.ok) {
+        setPromoErr(true);
+        setPromoMsg(rData.error || "Failed to redeem code");
+        setPromoLoading(false);
+        return;
+      }
+      setPromoErr(false);
+      setPromoMsg("Code redeemed! Redirecting...");
+      await refreshProfile();
+      router.push("/learn");
+    } catch {
+      setPromoErr(true);
+      setPromoMsg("Something went wrong. Please try again.");
+    } finally {
+      setPromoLoading(false);
+    }
+  }, [promoCode, refreshProfile, router]);
 
   return (
     <div
@@ -228,13 +272,13 @@ export default function DashboardPage() {
                 marginBottom: 6,
               }}
             >
-              {hasAcc ? "Welcome back, " + name : "Hey, " + name}
+              {hasAcc ? "Welcome back, " + name : "Hey, " + name + "!"}
             </h1>
-            <p style={{ color: c.fgS, fontSize: 15, lineHeight: 1.6 }}>
-              {hasAcc
-                ? "Pick up where you left off or start something new."
-                : "Start learning with a society code, or grab an access pass to unlock everything."}
-            </p>
+            {hasAcc && (
+              <p style={{ color: c.fgS, fontSize: 15, lineHeight: 1.6 }}>
+                Pick up where you left off or start something new.
+              </p>
+            )}
           </div>
 
           {hasAcc ? (
@@ -793,29 +837,16 @@ export default function DashboardPage() {
             <>
               {/* ===== NO ACCESS LAYOUT ===== */}
 
-              {/* Learning Mode - hero card (free) */}
-              <div style={{ marginBottom: 10 }}>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: c.mt,
-                    textTransform: "uppercase",
-                    letterSpacing: ".1em",
-                  }}
-                >
-                  (PSST..ASK YOUR UNIVERSITY LAW SOCIETY For free access codes to learning mode!)
-                </span>
-              </div>
+              {/* Learning Mode - hero card */}
               <div
                 onMouseEnter={() => setHM(0)}
                 onMouseLeave={() => setHM(null)}
-                onClick={() => router.push(modes[0].pg)}
+                onClick={() => hasPromo ? router.push("/learn") : setPromoOpen((v) => !v)}
                 style={{
                   padding: "32px 28px",
                   borderRadius: 20,
                   cursor: "pointer",
-                  marginBottom: 28,
+                  marginBottom: !hasPromo && promoOpen ? 0 : 28,
                   background: hovMode === 0 ? modes[0].bg : c.card,
                   border:
                     "1.5px solid " +
@@ -893,7 +924,126 @@ export default function DashboardPage() {
                     Start learning {Icons.arr}
                   </div>
                 </div>
+                {hasPromo && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 14,
+                      right: 14,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: c.gn,
+                      textTransform: "uppercase",
+                      letterSpacing: ".06em",
+                      padding: "3px 10px",
+                      borderRadius: 100,
+                      background: c.gnS,
+                      border: "1px solid " + c.gn + "30",
+                      zIndex: 2,
+                    }}
+                  >
+                    Unlocked
+                  </div>
+                )}
               </div>
+
+              {/* Promo code expand */}
+              {!hasPromo && (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: promoOpen ? 180 : 0,
+                    opacity: promoOpen ? 1 : 0,
+                    transition: promoOpen
+                      ? "max-height .35s cubic-bezier(.16,1,.3,1), opacity .2s ease .05s, margin .35s cubic-bezier(.16,1,.3,1)"
+                      : "max-height .25s cubic-bezier(.4,0,.2,1), opacity .15s ease, margin .25s cubic-bezier(.4,0,.2,1)",
+                    marginBottom: promoOpen ? 28 : 0,
+                  }}
+                >
+                  <div style={{ paddingTop: 14 }}>
+                    <div
+                      style={{
+                        padding: "20px 24px",
+                        borderRadius: 16,
+                        background: c.card,
+                        border: "1.5px solid " + c.bd,
+                      }}
+                    >
+                      <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
+                        <input
+                          type="text"
+                          placeholder="Enter society code"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            flex: 1,
+                            padding: "10px 14px",
+                            borderRadius: 10,
+                            border: "1.5px solid " + c.bd,
+                            background: c.bg,
+                            color: c.fg,
+                            fontSize: 14,
+                            fontFamily: fonts.b,
+                            outline: "none",
+                            letterSpacing: ".06em",
+                            transition: "border-color .2s",
+                          }}
+                          onFocus={(e) => { e.currentTarget.style.borderColor = modes[0].accent; }}
+                          onBlur={(e) => { e.currentTarget.style.borderColor = c.bd; }}
+                          onKeyDown={(e) => { if (e.key === "Enter") handlePromoSubmit(); }}
+                        />
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handlePromoSubmit(); }}
+                          disabled={promoLoading || !promoCode.trim()}
+                          style={{
+                            padding: "10px 20px",
+                            borderRadius: 10,
+                            border: "none",
+                            background: modes[0].accent,
+                            color: "#fff",
+                            fontSize: 13.5,
+                            fontWeight: 600,
+                            fontFamily: fonts.b,
+                            cursor: promoLoading || !promoCode.trim() ? "default" : "pointer",
+                            opacity: promoLoading || !promoCode.trim() ? 0.5 : 1,
+                            transition: "opacity .2s",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {promoLoading ? "Unlocking..." : "Unlock"}
+                        </button>
+                      </div>
+                      {promoMsg && (
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: promoErr ? c.rd : c.gn,
+                            marginBottom: 8,
+                          }}
+                        >
+                          {promoMsg}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 13, color: c.fgS }}>
+                        Don&apos;t have a code?{" "}
+                        <a
+                          href="/pricing"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            color: c.ac,
+                            fontWeight: 600,
+                            textDecoration: "none",
+                          }}
+                        >
+                          View plans &rarr;
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Unlock prompt */}
               <div
