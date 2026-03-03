@@ -13,6 +13,7 @@ type Profile = {
   year_of_study: string | null;
   access_expires_at: string | null;
   stripe_customer_id: string | null;
+  promo_code: string | null;
 };
 
 type AuthContextType = {

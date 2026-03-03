@@ -22,6 +22,10 @@ export default function OnboardingPage() {
   const [nameF, setNF] = useState(false);
   const [uniF, setUF] = useState(false);
   const [courseF, setCF] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoF, setPF] = useState(false);
+  const [promoError, setPromoError] = useState("");
+  const [promoSuccess, setPromoSuccess] = useState("");
 
   const canSubmit = name.trim() && uni.trim() && course.trim() && year;
 
@@ -42,6 +46,8 @@ export default function OnboardingPage() {
   const handleSubmit = async () => {
     if (!canSubmit || !user) return;
     setLoading(true);
+    setPromoError("");
+    setPromoSuccess("");
 
     try {
       const res = await fetch("/api/profile", {
@@ -64,6 +70,36 @@ export default function OnboardingPage() {
       console.error("Onboarding save error:", err);
       setLoading(false);
       return;
+    }
+
+    // Handle promo code if entered
+    const code = promoCode.trim();
+    if (code) {
+      try {
+        const validateRes = await fetch(`/api/promo?code=${encodeURIComponent(code)}`);
+        const validateData = await validateRes.json();
+
+        if (!validateData.valid) {
+          setPromoError(validateData.reason || "Invalid code");
+          // Still allow continuing — profile is already saved
+        } else {
+          const redeemRes = await fetch("/api/promo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code }),
+          });
+          const redeemData = await redeemRes.json();
+
+          if (redeemData.success) {
+            setPromoSuccess("Code applied! You'll get reduced pricing.");
+          } else {
+            setPromoError(redeemData.error || "Failed to redeem code");
+          }
+        }
+      } catch (err) {
+        console.error("Promo code error:", err);
+        setPromoError("Something went wrong validating the code");
+      }
     }
 
     await refreshProfile();
@@ -168,6 +204,30 @@ export default function OnboardingPage() {
                     );
                   })}
                 </div>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>
+                  Society Code <span style={{ fontWeight: 400 }}>(optional)</span>
+                </label>
+                <p style={{ fontSize: 12, color: c.fgS, marginBottom: 8, lineHeight: 1.5 }}>
+                  Got a code from your university society? Enter it here for reduced pricing.
+                </p>
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => { setPromoCode(e.target.value); setPromoError(""); setPromoSuccess(""); }}
+                  onFocus={() => setPF(true)}
+                  onBlur={() => setPF(false)}
+                  placeholder="e.g. WARWICK2026"
+                  style={inp(promoF)}
+                />
+                {promoError && (
+                  <p style={{ fontSize: 12.5, color: "#ef4444", marginTop: 6 }}>{promoError}</p>
+                )}
+                {promoSuccess && (
+                  <p style={{ fontSize: 12.5, color: "#22c55e", marginTop: 6 }}>{promoSuccess}</p>
+                )}
               </div>
 
               <Btn full sz="lg" disabled={!canSubmit || loading} onClick={handleSubmit} style={{ marginTop: 6 }}>
