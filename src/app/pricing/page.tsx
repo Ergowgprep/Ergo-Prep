@@ -11,8 +11,10 @@ export default function PricingPage() {
   const router = useRouter();
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
+
+  const hasPromo = !!profile?.promo_code;
 
   const feats = [
     "All 5 Watson-Glaser sections",
@@ -23,9 +25,9 @@ export default function PricingPage() {
   ];
 
   const tiers = [
-    { id: "6h", name: "6-Hour Pass", price: "£1.99", hours: 6, sub: "6 hours", pop: false },
-    { id: "24h", name: "24-Hour Pass", price: "£4.99", hours: 24, sub: "24 hours", pop: true },
-    { id: "1w", name: "1-Week Pass", price: "£9.99", hours: 168, sub: "7 days", pop: false },
+    { id: "6h",  name: "6-Hour Pass",  price: "£4.99",  promoPrice: "£1.99",  hours: 6,   sub: "6 hours",  pop: false },
+    { id: "12h", name: "12-Hour Pass", price: "£7.99",  promoPrice: "£4.99",  hours: 12,  sub: "12 hours", pop: true },
+    { id: "1w",  name: "1-Week Pass",  price: "£10.99", promoPrice: "£9.99",  hours: 168, sub: "7 days",   pop: false },
   ];
 
   const handleBuy = async (planId: string) => {
@@ -74,7 +76,11 @@ export default function PricingPage() {
         }}>
           <Lightbulb size={20} color={c.ac} />
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>
-            Every plan includes <strong style={{ color: c.fg }}>the exact same features</strong> — all 1,500+ questions, every mode, full analytics. The only difference is how long your access lasts.
+            Every plan includes <strong style={{ color: c.fg }}>the exact same features</strong> — all 1,500+ questions, every mode, full analytics.
+            {hasPromo
+              ? <> Your society discount is applied — prices start from <strong style={{ color: c.fg }}>just £1.99</strong>.</>
+              : <> The only difference is how long your access lasts.</>
+            }
           </p>
         </div>
 
@@ -89,11 +95,25 @@ export default function PricingPage() {
                   textTransform: "uppercase", letterSpacing: ".06em",
                 }}>Popular</div>
               )}
+              {hasPromo && (
+                <div style={{
+                  position: "absolute", top: t.pop ? 34 : 12, right: 12, padding: "3px 10px", borderRadius: 100,
+                  background: c.gnS, fontSize: 10, fontWeight: 700, color: c.gn,
+                  textTransform: "uppercase", letterSpacing: ".06em",
+                }}>Society Discount</div>
+              )}
               <div style={{ margin: "0 auto 14px" }}>
                 <IB bg={t.pop ? c.ac : c.acS} size={48}>{Icons.clock(t.pop ? c.acF : c.ac)}</IB>
               </div>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{t.name}</h3>
-              <Mono style={{ fontSize: 38, fontWeight: 700, display: "block", marginBottom: 4 }}>{t.price}</Mono>
+              {hasPromo ? (
+                <div style={{ marginBottom: 4 }}>
+                  <span style={{ fontSize: 16, color: c.mt, textDecoration: "line-through", marginRight: 8 }}>{t.price}</span>
+                  <Mono style={{ fontSize: 38, fontWeight: 700 }}>{t.promoPrice}</Mono>
+                </div>
+              ) : (
+                <Mono style={{ fontSize: 38, fontWeight: 700, display: "block", marginBottom: 4 }}>{t.price}</Mono>
+              )}
               <span style={{ fontSize: 13, color: c.mt, display: "block", marginBottom: 20 }}>{t.sub} of full access</span>
               <Btn
                 full
