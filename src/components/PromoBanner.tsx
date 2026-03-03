@@ -50,8 +50,7 @@ export default function PromoBanner() {
         onMouseEnter={(e) => { e.currentTarget.style.color = c.fg; }}
         onMouseLeave={(e) => { e.currentTarget.style.color = c.fgS; }}
       >
-        Part of a university law society? Create an account to enter your code for reduced pricing{" "}
-        <span style={{ color: c.ac, fontWeight: 600 }}>&rarr;</span>
+        Part of a university law society? Click here for reduced pricing!
       </a>
       <button
         onClick={dismiss}
