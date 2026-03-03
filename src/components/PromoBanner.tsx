@@ -2,14 +2,22 @@
 import { useAuth } from "@/lib/AuthContext";
 import { useTheme } from "@/lib/ThemeContext";
 import { getColors, fonts } from "@/lib/theme";
+import { usePathname } from "next/navigation";
 
 export default function PromoBanner() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const c = getColors(isDark);
+  const pathname = usePathname();
 
-  if (loading || user) return null;
+  const hiddenPages = ["/quiz", "/results", "/review"];
+
+  if (loading) return null;
+  if (hiddenPages.includes(pathname)) return null;
+  if (user && profile?.promo_code) return null;
+
+  const href = user ? "/profile" : "/login";
 
   return (
     <div
@@ -26,7 +34,7 @@ export default function PromoBanner() {
       }}
     >
       <a
-        href="/login"
+        href={href}
         style={{
           color: "#000",
           textDecoration: "none",
@@ -35,7 +43,7 @@ export default function PromoBanner() {
         onMouseEnter={(e) => { e.currentTarget.style.color = c.ac; }}
         onMouseLeave={(e) => { e.currentTarget.style.color = "#000"; }}
       >
-        Part of a university law society? Click here for reduced pricing!
+        Part of a university law society? Enter a code like WARWICK-LAW for reduced pricing!
       </a>
     </div>
   );
