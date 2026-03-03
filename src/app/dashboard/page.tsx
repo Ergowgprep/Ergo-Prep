@@ -25,6 +25,7 @@ export default function DashboardPage() {
   const d = theme === "dark";
 
   const { profile, hasAccess: hasAcc, refreshProfile } = useAuth();
+  const hasPromo = !!profile?.promo_code;
   const name = profile?.name || "there";
   const exp = profile?.access_expires_at ? new Date(profile.access_expires_at) : null;
 
@@ -840,12 +841,12 @@ export default function DashboardPage() {
               <div
                 onMouseEnter={() => setHM(0)}
                 onMouseLeave={() => setHM(null)}
-                onClick={() => setPromoOpen((v) => !v)}
+                onClick={() => hasPromo ? router.push("/learn") : setPromoOpen((v) => !v)}
                 style={{
                   padding: "32px 28px",
                   borderRadius: 20,
                   cursor: "pointer",
-                  marginBottom: promoOpen ? 0 : 28,
+                  marginBottom: !hasPromo && promoOpen ? 0 : 28,
                   background: hovMode === 0 ? modes[0].bg : c.card,
                   border:
                     "1.5px solid " +
@@ -923,103 +924,126 @@ export default function DashboardPage() {
                     Start learning {Icons.arr}
                   </div>
                 </div>
+                {hasPromo && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 14,
+                      right: 14,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: c.gn,
+                      textTransform: "uppercase",
+                      letterSpacing: ".06em",
+                      padding: "3px 10px",
+                      borderRadius: 100,
+                      background: c.gnS,
+                      border: "1px solid " + c.gn + "30",
+                      zIndex: 2,
+                    }}
+                  >
+                    Unlocked
+                  </div>
+                )}
               </div>
 
               {/* Promo code expand */}
-              <div
-                style={{
-                  overflow: "hidden",
-                  maxHeight: promoOpen ? 180 : 0,
-                  opacity: promoOpen ? 1 : 0,
-                  transition: promoOpen
-                    ? "max-height .35s cubic-bezier(.16,1,.3,1), opacity .2s ease .05s, margin .35s cubic-bezier(.16,1,.3,1)"
-                    : "max-height .25s cubic-bezier(.4,0,.2,1), opacity .15s ease, margin .25s cubic-bezier(.4,0,.2,1)",
-                  marginBottom: promoOpen ? 28 : 0,
-                }}
-              >
-                <div style={{ paddingTop: 14 }}>
-                  <div
-                    style={{
-                      padding: "20px 24px",
-                      borderRadius: 16,
-                      background: c.card,
-                      border: "1.5px solid " + c.bd,
-                    }}
-                  >
-                    <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
-                      <input
-                        type="text"
-                        placeholder="Enter society code"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          flex: 1,
-                          padding: "10px 14px",
-                          borderRadius: 10,
-                          border: "1.5px solid " + c.bd,
-                          background: c.bg,
-                          color: c.fg,
-                          fontSize: 14,
-                          fontFamily: fonts.b,
-                          outline: "none",
-                          letterSpacing: ".06em",
-                          transition: "border-color .2s",
-                        }}
-                        onFocus={(e) => { e.currentTarget.style.borderColor = modes[0].accent; }}
-                        onBlur={(e) => { e.currentTarget.style.borderColor = c.bd; }}
-                        onKeyDown={(e) => { if (e.key === "Enter") handlePromoSubmit(); }}
-                      />
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handlePromoSubmit(); }}
-                        disabled={promoLoading || !promoCode.trim()}
-                        style={{
-                          padding: "10px 20px",
-                          borderRadius: 10,
-                          border: "none",
-                          background: modes[0].accent,
-                          color: "#fff",
-                          fontSize: 13.5,
-                          fontWeight: 600,
-                          fontFamily: fonts.b,
-                          cursor: promoLoading || !promoCode.trim() ? "default" : "pointer",
-                          opacity: promoLoading || !promoCode.trim() ? 0.5 : 1,
-                          transition: "opacity .2s",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {promoLoading ? "Unlocking..." : "Unlock"}
-                      </button>
-                    </div>
-                    {promoMsg && (
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 600,
-                          color: promoErr ? c.rd : c.gn,
-                          marginBottom: 8,
-                        }}
-                      >
-                        {promoMsg}
+              {!hasPromo && (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: promoOpen ? 180 : 0,
+                    opacity: promoOpen ? 1 : 0,
+                    transition: promoOpen
+                      ? "max-height .35s cubic-bezier(.16,1,.3,1), opacity .2s ease .05s, margin .35s cubic-bezier(.16,1,.3,1)"
+                      : "max-height .25s cubic-bezier(.4,0,.2,1), opacity .15s ease, margin .25s cubic-bezier(.4,0,.2,1)",
+                    marginBottom: promoOpen ? 28 : 0,
+                  }}
+                >
+                  <div style={{ paddingTop: 14 }}>
+                    <div
+                      style={{
+                        padding: "20px 24px",
+                        borderRadius: 16,
+                        background: c.card,
+                        border: "1.5px solid " + c.bd,
+                      }}
+                    >
+                      <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
+                        <input
+                          type="text"
+                          placeholder="Enter society code"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            flex: 1,
+                            padding: "10px 14px",
+                            borderRadius: 10,
+                            border: "1.5px solid " + c.bd,
+                            background: c.bg,
+                            color: c.fg,
+                            fontSize: 14,
+                            fontFamily: fonts.b,
+                            outline: "none",
+                            letterSpacing: ".06em",
+                            transition: "border-color .2s",
+                          }}
+                          onFocus={(e) => { e.currentTarget.style.borderColor = modes[0].accent; }}
+                          onBlur={(e) => { e.currentTarget.style.borderColor = c.bd; }}
+                          onKeyDown={(e) => { if (e.key === "Enter") handlePromoSubmit(); }}
+                        />
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handlePromoSubmit(); }}
+                          disabled={promoLoading || !promoCode.trim()}
+                          style={{
+                            padding: "10px 20px",
+                            borderRadius: 10,
+                            border: "none",
+                            background: modes[0].accent,
+                            color: "#fff",
+                            fontSize: 13.5,
+                            fontWeight: 600,
+                            fontFamily: fonts.b,
+                            cursor: promoLoading || !promoCode.trim() ? "default" : "pointer",
+                            opacity: promoLoading || !promoCode.trim() ? 0.5 : 1,
+                            transition: "opacity .2s",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {promoLoading ? "Unlocking..." : "Unlock"}
+                        </button>
                       </div>
-                    )}
-                    <div style={{ fontSize: 13, color: c.fgS }}>
-                      Don&apos;t have a code?{" "}
-                      <a
-                        href="/pricing"
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          color: c.ac,
-                          fontWeight: 600,
-                          textDecoration: "none",
-                        }}
-                      >
-                        View plans &rarr;
-                      </a>
+                      {promoMsg && (
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: promoErr ? c.rd : c.gn,
+                            marginBottom: 8,
+                          }}
+                        >
+                          {promoMsg}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 13, color: c.fgS }}>
+                        Don&apos;t have a code?{" "}
+                        <a
+                          href="/pricing"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            color: c.ac,
+                            fontWeight: 600,
+                            textDecoration: "none",
+                          }}
+                        >
+                          View plans &rarr;
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Unlock prompt */}
               <div
