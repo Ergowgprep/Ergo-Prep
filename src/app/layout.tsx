@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
 import { AuthProvider } from "@/lib/AuthContext";
+import PromoBanner from "@/components/PromoBanner";
 
 export const metadata: Metadata = {
   title: "Ergo — Watson-Glaser Preparation",
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <AuthProvider>
+            <PromoBanner />
             <div className="grain">
               {children}
             </div>
