@@ -26,7 +26,7 @@ export default function PricingPage() {
 
   const tiers = [
     { id: "6h",  name: "6-Hour Pass",  price: "£4.99",  promoPrice: "£1.99",  hours: 6,   sub: "6 hours",  pop: false },
-    { id: "12h", name: "12-Hour Pass", price: "£7.99",  promoPrice: "£4.99",  hours: 12,  sub: "12 hours", pop: true },
+    { id: "24h", name: "24-Hour Pass", price: "£7.99",  promoPrice: "£4.99",  hours: 24,  sub: "24 hours", pop: true },
     { id: "1w",  name: "1-Week Pass",  price: "£10.99", promoPrice: "£9.99",  hours: 168, sub: "7 days",   pop: false },
   ];
 

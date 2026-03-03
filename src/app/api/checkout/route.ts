@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const PLANS: Record<string, { price: number; promoPrice: number; hours: number; name: string }> = {
   "6h":  { price: 499, promoPrice: 199, hours: 6,   name: "6-Hour Pass" },
-  "12h": { price: 799, promoPrice: 499, hours: 12,  name: "12-Hour Pass" },
+  "24h": { price: 799, promoPrice: 499, hours: 24,  name: "24-Hour Pass" },
   "1w":  { price: 1099, promoPrice: 999, hours: 168, name: "1-Week Pass" },
 };
 
