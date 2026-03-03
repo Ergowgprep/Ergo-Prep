@@ -233,7 +233,7 @@ export default function DashboardPage() {
             <p style={{ color: c.fgS, fontSize: 15, lineHeight: 1.6 }}>
               {hasAcc
                 ? "Pick up where you left off or start something new."
-                : "Start learning for free, or grab an access pass to unlock everything."}
+                : "Start learning with a society code, or grab an access pass to unlock everything."}
             </p>
           </div>
 
@@ -804,7 +804,7 @@ export default function DashboardPage() {
                     letterSpacing: ".1em",
                   }}
                 >
-                  Free access
+                  Learning Mode
                 </span>
               </div>
               <div
@@ -875,7 +875,7 @@ export default function DashboardPage() {
                       }}
                     >
                       Master all five Watson-Glaser sections with guided, interactive
-                      lessons. No access pass required.
+                      lessons. Free with a university society code.
                     </p>
                   </div>
                   <div
