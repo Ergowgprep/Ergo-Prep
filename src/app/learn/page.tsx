@@ -1197,7 +1197,7 @@ export default function LearnPage() {
         left={
           <>
             <Btn v="ghost" sz="sm" onClick={() => router.push("/dashboard")}>← Back</Btn>
-            <span style={{ fontWeight: 600, fontSize: 14.5, display: "inline-flex", alignItems: "center", gap: 6 }}><BookOpen size={18} color={c.ac} /> Learning Mode</span>
+            <span style={{ fontWeight: 600, fontSize: 14.5, display: "inline-flex", alignItems: "center", gap: 6 }}><BookOpen size={18} color={"#6366F1"} /> Learning Mode</span>
           </>
         }
         right={<ThemeToggle />}
