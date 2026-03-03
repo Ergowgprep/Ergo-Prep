@@ -881,34 +881,61 @@ export default function DashboardPage() {
                     position: "relative",
                     zIndex: 1,
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    gap: 24,
+                    textAlign: "center",
+                    gap: 16,
                   }}
                 >
                   <div style={{ flexShrink: 0 }}><BookOpen size={42} color="#6366F1" /></div>
-                  <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      justifyContent: "center",
+                    }}
+                  >
                     <h3
                       style={{
                         fontSize: 18,
                         fontWeight: 700,
-                        marginBottom: 4,
+                        margin: 0,
                         letterSpacing: "-.01em",
                       }}
                     >
                       {modes[0].t}
                     </h3>
-                    <p
-                      style={{
-                        fontSize: 14,
-                        color: c.fgS,
-                        lineHeight: 1.6,
-                        marginBottom: 0,
-                      }}
-                    >
-                      Master all five Watson-Glaser sections with guided, interactive
-                      lessons. Free with a university society code.
-                    </p>
+                    {hasPromo && (
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          color: c.gn,
+                          textTransform: "uppercase",
+                          letterSpacing: ".06em",
+                          padding: "3px 10px",
+                          borderRadius: 100,
+                          background: c.gnS,
+                          border: "1px solid " + c.gn + "30",
+                        }}
+                      >
+                        Unlocked
+                      </span>
+                    )}
                   </div>
+                  <p
+                    style={{
+                      fontSize: 14,
+                      color: c.fgS,
+                      lineHeight: 1.6,
+                      margin: 0,
+                      maxWidth: 420,
+                    }}
+                  >
+                    Master all five Watson-Glaser sections with guided, interactive
+                    lessons. Free with a university society code.
+                  </p>
                   <div
                     style={{
                       display: "flex",
@@ -917,34 +944,13 @@ export default function DashboardPage() {
                       fontSize: 14,
                       fontWeight: 600,
                       color: modes[0].accent,
-                      flexShrink: 0,
                       transition: "gap .2s",
+                      marginTop: 4,
                     }}
                   >
                     Start learning {Icons.arr}
                   </div>
                 </div>
-                {hasPromo && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 14,
-                      right: 14,
-                      fontSize: 10,
-                      fontWeight: 700,
-                      color: c.gn,
-                      textTransform: "uppercase",
-                      letterSpacing: ".06em",
-                      padding: "3px 10px",
-                      borderRadius: 100,
-                      background: c.gnS,
-                      border: "1px solid " + c.gn + "30",
-                      zIndex: 2,
-                    }}
-                  >
-                    Unlocked
-                  </div>
-                )}
               </div>
 
               {/* Promo code expand */}
