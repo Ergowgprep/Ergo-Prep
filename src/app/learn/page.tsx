@@ -47,7 +47,10 @@ export default function LearnPage() {
 
   // TODO: Replace with real state from Supabase
   const { profile } = useAuth();
-  const hasAcc = !!(profile?.access_expires_at && new Date(profile.access_expires_at) > new Date());
+  const hasAcc = !!(
+    profile?.promo_code ||
+    (profile?.access_expires_at && new Date(profile.access_expires_at) > new Date())
+  );
 
   const ac = secInfo.Arguments.color;
   const lc = secInfo["Logic Essentials"].color;
@@ -1242,9 +1245,17 @@ export default function LearnPage() {
               );
             })}
           </div>
-          <Btn full sz="lg" disabled={!sel} onClick={() => { setSlide(0); setSE(false); setAns({}); setStarted(true); }}>
+          <Btn full sz="lg" disabled={!sel || !hasAcc} onClick={() => { setSlide(0); setSE(false); setAns({}); setStarted(true); }}>
             {sel ? "Begin: " + sel : "Select a section to continue"}
           </Btn>
+          {!hasAcc && (
+            <div style={{ marginTop: 16, padding: "14px 18px", background: theme === "dark" ? c.card : "#F59E0B08", border: "1px solid #F59E0B30", borderRadius: 12, textAlign: "center" }}>
+              <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}>
+                Learning Mode requires a society promo code or a paid plan.{" "}
+                <a href="/pricing" style={{ color: c.ac, fontWeight: 600, textDecoration: "underline" }}>View plans</a>
+              </p>
+            </div>
+          )}
         </div>
       </Ctn>
     </div>
