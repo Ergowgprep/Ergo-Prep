@@ -84,6 +84,19 @@ export default function PricingPage() {
           </p>
         </div>
 
+        {/* Promo banner */}
+        {hasPromo && (
+          <div style={{
+            maxWidth: 800, margin: "0 auto 20px", padding: "10px 18px", borderRadius: 10,
+            background: c.gnS, border: `1px solid ${c.gn}25`,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          }}>
+            <span style={{ fontSize: 13.5, color: c.gn, fontWeight: 600 }}>
+              ✓ Society discount applied — your reduced prices are shown below
+            </span>
+          </div>
+        )}
+
         {/* Tier cards */}
         <div className="s3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, maxWidth: 800, margin: "0 auto 44px" }}>
           {tiers.map((t) => (
@@ -94,13 +107,6 @@ export default function PricingPage() {
                   background: c.ac, fontSize: 10, fontWeight: 700, color: c.acF,
                   textTransform: "uppercase", letterSpacing: ".06em",
                 }}>Popular</div>
-              )}
-              {hasPromo && (
-                <div style={{
-                  position: "absolute", top: t.pop ? 34 : 12, right: 12, padding: "3px 10px", borderRadius: 100,
-                  background: c.gnS, fontSize: 10, fontWeight: 700, color: c.gn,
-                  textTransform: "uppercase", letterSpacing: ".06em",
-                }}>Society Discount</div>
               )}
               <div style={{ margin: "0 auto 14px" }}>
                 <IB bg={t.pop ? c.ac : c.acS} size={48}>{Icons.clock(t.pop ? c.acF : c.ac)}</IB>
