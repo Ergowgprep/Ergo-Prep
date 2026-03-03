@@ -21,19 +21,19 @@ export default function PromoBanner() {
         justifyContent: "center",
         fontFamily: fonts.b,
         fontSize: 12.5,
-        color: c.fg,
+        color: "#000",
         flexShrink: 0,
       }}
     >
       <a
         href="/login"
         style={{
-          color: c.fg,
+          color: "#000",
           textDecoration: "none",
           transition: "color .2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.color = c.ac; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = c.fg; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = "#000"; }}
       >
         Part of a university law society? Click here for reduced pricing!
       </a>
