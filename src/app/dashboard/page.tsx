@@ -804,7 +804,7 @@ export default function DashboardPage() {
                     letterSpacing: ".1em",
                   }}
                 >
-                  Learning Mode
+                  (PSST..ASK YOUR UNIVERSITY LAW SOCIETY For free access codes to learning mode!)
                 </span>
               </div>
               <div
@@ -874,8 +874,8 @@ export default function DashboardPage() {
                         marginBottom: 0,
                       }}
                     >
-                      Master all five Watson-Glaser sections with guided, interactive
-                      lessons. Free with a university society code.
+                      Master all five Watson-Glaser sections with interactive lessons.
+                      Free with a university society code.
                     </p>
                   </div>
                   <div
