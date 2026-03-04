@@ -120,7 +120,12 @@ export default function PricingPage() {
               ) : (
                 <Mono style={{ fontSize: 38, fontWeight: 700, display: "block", marginBottom: 4 }}>{t.price}</Mono>
               )}
-              <span style={{ fontSize: 13, color: c.mt, display: "block", marginBottom: 20 }}>{t.sub} of full access</span>
+              <span style={{ fontSize: 13, color: c.mt, display: "block", marginBottom: hasPromo ? 20 : 4 }}>{t.sub} of full access</span>
+              {!hasPromo && (
+                <span style={{ fontSize: 12, color: c.ac, display: "block", marginBottom: 14 }}>
+                  {t.promoPrice} with a society code
+                </span>
+              )}
               <Btn
                 full
                 sz="md"
