@@ -93,10 +93,13 @@ export default function Home() {
               </span>
             </h1>
             <p style={{ fontSize: "clamp(16px,2.2vw,20px)", lineHeight: 1.7, color: c.fgS, maxWidth: 520, margin: "0 auto 44px", animation: "fu 1s ease both" }}>
-              1,500+ Watson-Glaser style questions. <span style={{ color: c.ac, fontWeight: 700 }}>£1.99</span>.*
+              1,500+ Watson-Glaser style questions. <span style={{ color: c.ac, fontWeight: 700 }}>£4.99</span>.*
+            </p>
+            <p style={{ fontSize: 12, color: c.ac, marginTop: -36, marginBottom: 36, animation: "fu 1s ease both" }}>
+              * £1.99 with a university society code
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", animation: "fu 1.2s ease both" }}>
-              <Btn sz="lg" onClick={() => router.push(isIn ? "/pricing" : "/login")} style={{ padding: "16px 32px", fontSize: 16 }}>Start from £1.99 {Icons.arr}</Btn>
+              <Btn sz="lg" onClick={() => router.push(isIn ? "/pricing" : "/login")} style={{ padding: "16px 32px", fontSize: 16 }}>Start from £4.99 {Icons.arr}</Btn>
               <Btn v="outline" sz="lg" onClick={() => router.push(isIn ? "/dashboard" : "/login")} style={{ padding: "16px 28px", fontSize: 16 }}>{isIn ? "Dashboard" : "Login"}</Btn>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 44, justifyContent: "center", animation: "fu 1.4s ease both" }}>
@@ -148,7 +151,7 @@ export default function Home() {
                   }}>{f.ic}</div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8, letterSpacing: "-.01em" }}>{f.t}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.7, color: c.fgS }}>
-                    {f.hl ? <>Unlock ~1,500 official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£1.99</span>. No subscriptions.</> : f.d}
+                    {f.hl ? <>Unlock ~1,500 official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£4.99</span>. <span style={{ fontSize: 12, color: c.ac }}>(from £1.99 with a society code)</span> No subscriptions.</> : f.d}
                   </p>
                 </div>
               );
@@ -333,9 +336,9 @@ export default function Home() {
             }} />
             <div style={{ position: "relative", zIndex: 2 }}>
               <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, letterSpacing: "-.025em", marginBottom: 14 }}>Ready to think sharper?</h2>
-              <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £1.99.</p>
+              <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £4.99.</p>
               <Btn sz="lg" onClick={() => router.push("/pricing")} style={{ fontSize: 17, padding: "16px 36px" }}>
-                Get Started — from £1.99 {Icons.arr}
+                Get Started — from £4.99 {Icons.arr}
               </Btn>
             </div>
           </div>
