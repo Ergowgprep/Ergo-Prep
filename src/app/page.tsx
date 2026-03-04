@@ -39,8 +39,11 @@ export default function Home() {
       const el = ctaRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
+      // scrollRange = extra height beyond viewport that drives 0→1
       const scrollRange = el.offsetHeight - window.innerHeight;
       if (scrollRange <= 0) { setCtaP(0); return; }
+      // When rect.top = 0, progress = 0 (section just hit top of viewport)
+      // When rect.top = -scrollRange, progress = 1 (scrolled through extra space)
       const raw = -rect.top / scrollRange;
       setCtaP(Math.min(1, Math.max(0, raw)));
     };
@@ -343,28 +346,34 @@ export default function Home() {
         <section
           ref={(el) => { refs.current.cta = el; ctaRef.current = el; }}
           data-s="cta"
-          style={{ height: "200vh", position: "relative" }}
+          style={{ height: "150vh", position: "relative" }}
         >
-          <div style={{ position: "sticky", top: 0, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: `${Math.round(28 * (1 - ctaP))}px` }}>
+          <div style={{
+            position: "sticky", top: 0, height: "100vh",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            pointerEvents: "none",
+          }}>
             <div style={{
               width: `calc(680px + ${Math.round(ctaP * 100)}vw - ${Math.round(ctaP * 680)}px)`,
-              maxWidth: "100vw",
+              height: `calc(220px + ${Math.round(ctaP * 100)}vh - ${Math.round(ctaP * 220)}px)`,
+              maxWidth: "100vw", maxHeight: "100vh",
+              display: "flex", alignItems: "center", justifyContent: "center",
               textAlign: "center",
-              padding: "64px 44px",
               borderRadius: Math.round(20 * (1 - ctaP)),
               background: `linear-gradient(135deg,${c.card} 0%,${c.acS} 100%)`,
               border: `1px solid ${c.ac}${ctaP > 0.9 ? "00" : "22"}`,
               opacity: isV("cta") ? 1 : 0,
               position: "relative", overflow: "hidden",
-              willChange: "transform, border-radius",
+              willChange: "transform, border-radius, width, height",
               transform: "translateZ(0)",
               transition: "opacity .8s cubic-bezier(.16,1,.3,1)",
+              pointerEvents: "auto",
             }}>
               <div style={{
                 position: "absolute", top: "-50%", left: "50%", transform: "translateX(-50%)", width: 380, height: 380,
                 background: `radial-gradient(circle,${c.ac}0A 0%,transparent 70%)`, borderRadius: "50%", pointerEvents: "none",
               }} />
-              <div style={{ position: "relative", zIndex: 2 }}>
+              <div style={{ position: "relative", zIndex: 2, padding: "64px 44px" }}>
                 <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, letterSpacing: "-.025em", marginBottom: 14 }}>Ready to think sharper?</h2>
                 <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £4.99.</p>
                 <Btn sz="lg" onClick={() => router.push("/pricing")} style={{ fontSize: 17, padding: "16px 36px" }}>
