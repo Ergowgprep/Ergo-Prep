@@ -7,6 +7,12 @@ export default function AuthCallback() {
   const router = useRouter();
 
   useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        router.push("/reset-password");
+      }
+    });
+
     const handleCallback = async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
@@ -35,6 +41,8 @@ export default function AuthCallback() {
       }
     };
     handleCallback();
+
+    return () => { subscription.unsubscribe(); };
   }, [router]);
 
   return (

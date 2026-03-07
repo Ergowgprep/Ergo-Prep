@@ -34,6 +34,9 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [emailF, setEF] = useState(false);
   const [pwF, setPF] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [resetMsg, setResetMsg] = useState("");
+  const [resetEmailF, setREF] = useState(false);
 
   const inp = (focused: boolean) => ({
     width: "100%",
@@ -57,6 +60,18 @@ export default function LoginPage() {
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) { setError(error.message); setLoading(false); }
+  };
+
+  const handleForgot = async () => {
+    setLoading(true);
+    setError("");
+    setResetMsg("");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/reset-password",
+    });
+    if (error) { setError(error.message); }
+    else { setResetMsg("Check your email for a reset link"); }
+    setLoading(false);
   };
 
   const onSubmit = async () => {
@@ -134,28 +149,58 @@ export default function LoginPage() {
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                 onFocus={() => setEF(true)} onBlur={() => setEF(false)} placeholder="you@example.com" style={inp(emailF)} />
             </div>
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
-                <label style={{ fontSize: 12.5, fontWeight: 600, color: c.mt }}>Password</label>
-                {!isSignUp && <button style={{ fontSize: 11.5, color: c.ac, fontWeight: 600, cursor: "pointer", border: "none", background: "none", fontFamily: fonts.b }}>Forgot password?</button>}
+            {/* Forgot password inline section */}
+            {!isSignUp && forgotMode ? (
+              <div style={{ overflow: "hidden", animation: "fu .3s ease both" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>Email for reset</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                    onFocus={() => setREF(true)} onBlur={() => setREF(false)} placeholder="you@example.com" style={inp(resetEmailF)} />
+                </div>
+                {resetMsg && (
+                  <div style={{ padding: "10px 14px", background: c.gnS, border: `1px solid ${c.gn}33`, borderRadius: 8, marginTop: 12, fontSize: 13, color: c.gn }}>
+                    {resetMsg}
+                  </div>
+                )}
+                <Btn full sz="lg" disabled={loading || !email} onClick={handleForgot} style={{ marginTop: 12 }}>
+                  {loading ? (
+                    <div style={{ width: 18, height: 18, border: `2px solid ${c.acF}44`, borderTopColor: c.acF, borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+                  ) : (
+                    <>Send Reset Link {Icons.arr}</>
+                  )}
+                </Btn>
+                <div style={{ textAlign: "center", marginTop: 12 }}>
+                  <button onClick={() => { setForgotMode(false); setError(""); setResetMsg(""); }} style={{
+                    fontSize: 12.5, color: c.ac, fontWeight: 600, cursor: "pointer", border: "none", background: "none", fontFamily: fonts.b,
+                  }}>Back to login</button>
+                </div>
               </div>
-              <div style={{ position: "relative" }}>
-                <input type={showPw ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)}
-                  onFocus={() => setPF(true)} onBlur={() => setPF(false)} placeholder="••••••••"
-                  style={{ ...inp(pwF), paddingRight: 46 }} />
-                <button onClick={() => setSPw(!showPw)} style={{
-                  position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-                  display: "flex", alignItems: "center", padding: 0, cursor: "pointer", border: "none", background: "none",
-                }}><EyeIcon open={showPw} /></button>
-              </div>
-            </div>
-            <Btn full sz="lg" disabled={loading || !email || !pw} onClick={onSubmit} style={{ marginTop: 4 }}>
-              {loading ? (
-                <div style={{ width: 18, height: 18, border: `2px solid ${c.acF}44`, borderTopColor: c.acF, borderRadius: "50%", animation: "spin .8s linear infinite" }} />
-              ) : (
-                <>{isSignUp ? "Create Account" : "Log In"} {Icons.arr}</>
-              )}
-            </Btn>
+            ) : (
+              <>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                    <label style={{ fontSize: 12.5, fontWeight: 600, color: c.mt }}>Password</label>
+                    {!isSignUp && <button onClick={() => { setForgotMode(true); setError(""); }} style={{ fontSize: 11.5, color: c.ac, fontWeight: 600, cursor: "pointer", border: "none", background: "none", fontFamily: fonts.b }}>Forgot password?</button>}
+                  </div>
+                  <div style={{ position: "relative" }}>
+                    <input type={showPw ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)}
+                      onFocus={() => setPF(true)} onBlur={() => setPF(false)} placeholder="••••••••"
+                      style={{ ...inp(pwF), paddingRight: 46 }} />
+                    <button onClick={() => setSPw(!showPw)} style={{
+                      position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                      display: "flex", alignItems: "center", padding: 0, cursor: "pointer", border: "none", background: "none",
+                    }}><EyeIcon open={showPw} /></button>
+                  </div>
+                </div>
+                <Btn full sz="lg" disabled={loading || !email || !pw} onClick={onSubmit} style={{ marginTop: 4 }}>
+                  {loading ? (
+                    <div style={{ width: 18, height: 18, border: `2px solid ${c.acF}44`, borderTopColor: c.acF, borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+                  ) : (
+                    <>{isSignUp ? "Create Account" : "Log In"} {Icons.arr}</>
+                  )}
+                </Btn>
+              </>
+            )}
           </div>
 
           {/* Toggle */}

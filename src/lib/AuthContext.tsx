@@ -36,7 +36,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const PUBLIC_PAGES = ["/", "/login", "/pricing", "/terms", "/privacy", "/about"];
+const PUBLIC_PAGES = ["/", "/login", "/pricing", "/terms", "/privacy", "/about", "/reset-password"];
 const PROFILE_CACHE_KEY = "ergo_profile";
 
 function getCachedProfile(): Profile | null {
