@@ -11,8 +11,11 @@ export default function PricingPage() {
   const router = useRouter();
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoMsg, setPromoMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
   const hasPromo = !!profile?.promo_code;
 
@@ -53,6 +56,38 @@ export default function PricingPage() {
     } catch (err) {
       console.error("Checkout error:", err);
       setLoading(null);
+    }
+  };
+
+  const handlePromo = async () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoMsg(null);
+    try {
+      const check = await fetch(`/api/promo?code=${encodeURIComponent(code)}`);
+      const checkData = await check.json();
+      if (!checkData.valid) {
+        setPromoMsg({ text: checkData.reason || "Invalid code", ok: false });
+        setPromoLoading(false);
+        return;
+      }
+      const redeem = await fetch("/api/promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const redeemData = await redeem.json();
+      if (redeemData.success) {
+        setPromoMsg({ text: `Society discount applied — ${redeemData.society_name}`, ok: true });
+        await refreshProfile();
+      } else {
+        setPromoMsg({ text: redeemData.error || "Could not apply code", ok: false });
+      }
+    } catch {
+      setPromoMsg({ text: "Something went wrong — try again", ok: false });
+    } finally {
+      setPromoLoading(false);
     }
   };
 
@@ -146,6 +181,41 @@ export default function PricingPage() {
             </Card>
           ))}
         </div>
+
+        {/* Promo code input — logged-in users without a code */}
+        {user && !hasPromo && (
+          <div style={{
+            maxWidth: 800, margin: "0 auto 36px", padding: "16px 22px", borderRadius: 12,
+            background: c.card, border: `1px solid ${c.bd}`,
+            display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12,
+          }}>
+            <span style={{ fontSize: 13.5, fontWeight: 600, color: c.fgS, whiteSpace: "nowrap" }}>Have a society code?</span>
+            <input
+              type="text"
+              placeholder="e.g. WARWICK-LAW"
+              value={promoInput}
+              onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoMsg(null); }}
+              onKeyDown={(e) => e.key === "Enter" && handlePromo()}
+              style={{
+                flex: "1 1 160px", minWidth: 0, padding: "8px 12px", borderRadius: 8,
+                border: `1px solid ${c.bd}`, background: c.bg, color: c.fg,
+                fontSize: 13.5, fontFamily: fonts.b, outline: "none",
+                textTransform: "uppercase", letterSpacing: ".04em",
+              }}
+            />
+            <Btn v="outline" sz="sm" disabled={promoLoading || !promoInput.trim()} onClick={handlePromo}>
+              {promoLoading ? "Applying…" : "Apply"}
+            </Btn>
+            {promoMsg && (
+              <span style={{
+                width: "100%", fontSize: 12.5, fontWeight: 600,
+                color: promoMsg.ok ? c.gn : c.rd,
+              }}>
+                {promoMsg.ok ? "✓" : "✗"} {promoMsg.text}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Feature list */}
         <div className="s4" style={{ maxWidth: 400, margin: "0 auto 44px" }}>
