@@ -44,23 +44,23 @@ a { color: inherit; text-decoration: none; }
 
 .grain {
   position: relative;
-  z-index: 1;
+  min-height: 100vh;
 }
 
+/* The High-Performance Static Texture */
 .grain::before {
   content: "";
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  position: fixed; /* Stays locked in place while user scrolls */
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; /* Lets clicks pass through to your buttons */
+  z-index: 9999; /* Sits over everything to give it that printed feel */
+  
+  /* 1. Fast PNG noise tile | 2. Vertical Grid | 3. Horizontal Grid */
+  background-image: 
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAABVVVWAgIDNzc3v7+////+wsLBmZma08A6fAAAAUUlEQVQ4y2NgQAX8DIxg0sPBAyT5GfgZGECSAoK/AUKKgoD8gIUF0PDBwQEkBRb+YGBgkP8PJDHICv7//8/AwCAl+B/IgLIAmRQS/B0uSQB/L0gM/N0oNwAAAABJRU5ErkJggg=='),
+    linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+    
+  background-size: 100px 100px, 32px 32px, 32px 32px;
   background-repeat: repeat;
-  background-size: 256px 256px;
-  animation: grain 8s steps(10) infinite;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
 }

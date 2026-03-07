@@ -75,9 +75,11 @@ export default function DashboardPage() {
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [hovSess, setHS] = useState<number | null>(null);
+
   useEffect(() => {
     if (!profile) return;
     let cancelled = false;
+
     const fetchSessions = async () => {
       try {
         const res = await fetch("/api/sessions");
@@ -89,6 +91,7 @@ export default function DashboardPage() {
         console.warn("Sessions fetch failed:", err);
       }
     };
+
     fetchSessions();
     return () => { cancelled = true; };
   }, [profile]);
@@ -102,6 +105,7 @@ export default function DashboardPage() {
   hist.forEach((a) => {
     if (sc[a.section] !== undefined) sc[a.section]++;
   });
+
   const REQ = 20;
   const totC = SECTIONS.reduce((s, k) => s + Math.min(sc[k], REQ), 0);
   const unlocked = SECTIONS.every((s) => sc[s] >= REQ);
@@ -118,11 +122,13 @@ export default function DashboardPage() {
   const TEST_WEIGHTS: Record<string, number> = {
     Inference: 5, Deduction: 5, Assumptions: 12, Interpretation: 6, Arguments: 12,
   };
+
   const secCorrect: Record<string, number> = {};
   SECTIONS.forEach((s) => (secCorrect[s] = 0));
   hist.forEach((a) => {
     if (a.correct && secCorrect[a.section] !== undefined) secCorrect[a.section]++;
   });
+
   const profileRanked = unlocked
     ? SECTIONS.map((sec) => {
         const accuracy = sc[sec] > 0 ? secCorrect[sec] / sc[sec] : 0;
@@ -172,6 +178,7 @@ export default function DashboardPage() {
     if (!code) return;
     setPromoLoading(true);
     setPromoMsg("");
+
     try {
       const vRes = await fetch(`/api/promo?code=${encodeURIComponent(code)}`);
       const vData = await vRes.json();
@@ -181,6 +188,7 @@ export default function DashboardPage() {
         setPromoLoading(false);
         return;
       }
+
       const rRes = await fetch("/api/promo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -193,6 +201,7 @@ export default function DashboardPage() {
         setPromoLoading(false);
         return;
       }
+
       setPromoErr(false);
       setPromoMsg("Code redeemed! Redirecting...");
       await refreshProfile();
@@ -234,6 +243,7 @@ export default function DashboardPage() {
 
       <Ctn style={{ padding: "48px 28px 100px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
+
           {/* Welcome */}
           <div style={{ marginBottom: hasAcc ? 40 : 32 }}>
             <div
@@ -831,7 +841,6 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-
             </>
           ) : (
             <>
@@ -906,19 +915,6 @@ export default function DashboardPage() {
                     >
                       {modes[0].t}
                     </h3>
-<<<<<<< HEAD
-                    <p
-                      style={{
-                        fontSize: 14,
-                        color: c.fgS,
-                        lineHeight: 1.6,
-                        marginBottom: 0,
-                      }}
-                    >
-                      Master all five Watson-Glaser sections with interactive lessons.
-                      Free with a university society code.
-                    </p>
-=======
                     {hasPromo && (
                       <span
                         style={{
@@ -936,7 +932,6 @@ export default function DashboardPage() {
                         Unlocked
                       </span>
                     )}
->>>>>>> origin/claude/fix-promo-banner-mRpJq
                   </div>
                   <p
                     style={{

@@ -31,26 +31,6 @@ export default function Home() {
   }, []);
   const isV = (s: string) => vis.has(s);
 
-  // CTA scroll-driven expand
-  const ctaRef = useRef<HTMLElement>(null);
-  const [ctaP, setCtaP] = useState(0);
-  useEffect(() => {
-    const onScroll = () => {
-      const el = ctaRef.current;
-      if (!el) return;
-      const vh = window.innerHeight;
-      const rect = el.getBoundingClientRect();
-      // progress 0 when section top = vh (just entering viewport)
-      // progress 1 when section top = 0 (section fills viewport)
-      const raw = 1 - rect.top / vh;
-      setCtaP(Math.min(1, Math.max(0, raw)));
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-
   // Feature hover
   const [hovFeat, setHF] = useState<number | null>(null);
 
@@ -176,8 +156,6 @@ export default function Home() {
             })}
           </div>
         </section>
-
-
 
         {/* DEMO */}
         <section ref={(el) => { refs.current.demo = el; }} data-s="demo" style={{ maxWidth: 1100, margin: "0 auto", padding: "50px 28px 50px" }}>
@@ -340,46 +318,51 @@ export default function Home() {
           </div>
         </section>
 
-        </div>
+      </div>
 
-      {/* CTA — scroll-driven expand (outside overflow:hidden for sticky to work) */}
+      {/* CTA — Static Card */}
       <section
-        ref={(el) => { refs.current.cta = el; ctaRef.current = el; }}
+        ref={(el) => { refs.current.cta = el; }}
         data-s="cta"
-        style={{ minHeight: "100vh", position: "relative" }}
+        style={{ maxWidth: 750, margin: "0 auto", padding: "50px 28px 100px" }}
       >
         <div style={{
-          position: "sticky", top: 0, height: "100vh",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          pointerEvents: "none",
+          opacity: isV("cta") ? 1 : 0,
+          transform: isV("cta") ? "translateY(0)" : "translateY(30px)",
+          transition: "all .8s cubic-bezier(.16,1,.3,1)",
+          padding: "64px 44px",
+          textAlign: "center",
+          borderRadius: 20,
+          background: `linear-gradient(135deg,${c.card} 0%,${c.acS} 100%)`,
+          border: `1px solid ${c.ac}22`,
+          position: "relative",
+          overflow: "hidden"
         }}>
+
+          {/* THE SHINE SWEEP EFFECT */}
           <div style={{
-            width: `calc(${Math.round(680 * (1 - ctaP))}px + ${Math.round(ctaP * 100)}vw)`,
-            height: `calc(${Math.round(220 * (1 - ctaP))}px + ${Math.round(ctaP * 100)}vh)`,
-            maxWidth: "100vw", maxHeight: "100vh",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            textAlign: "center",
-            borderRadius: Math.round(20 * (1 - ctaP)),
-            background: `linear-gradient(135deg,${c.card} 0%,${c.acS} 100%)`,
-            border: `1px solid ${c.ac}${ctaP > 0.9 ? "00" : "22"}`,
-            opacity: isV("cta") ? 1 : 0,
-            position: "relative", overflow: "hidden",
-            willChange: "width, height, border-radius",
-            transform: "translateZ(0)",
-            transition: "opacity .8s cubic-bezier(.16,1,.3,1)",
-            pointerEvents: "auto",
-          }}>
-            <div style={{
-              position: "absolute", top: "-50%", left: "50%", transform: "translateX(-50%)", width: 380, height: 380,
-              background: `radial-gradient(circle,${c.ac}0A 0%,transparent 70%)`, borderRadius: "50%", pointerEvents: "none",
-            }} />
-            <div style={{ position: "relative", zIndex: 2, padding: "64px 44px" }}>
-              <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, letterSpacing: "-.025em", marginBottom: 14 }}>Ready to think sharper?</h2>
-              <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £4.99.</p>
-              <Btn sz="lg" onClick={() => router.push("/pricing")} style={{ fontSize: 17, padding: "16px 36px" }}>
-                Get Started — from £4.99 {Icons.arr}
-              </Btn>
-            </div>
+            position: "absolute",
+            top: 0,
+            left: isV("cta") ? "200%" : "-150%",
+            width: "100%",
+            height: "100%",
+            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
+            transform: "skewX(-25deg)",
+            transition: isV("cta") ? "left 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s" : "none",
+            pointerEvents: "none",
+            zIndex: 1
+          }} />
+
+          <div style={{
+            position: "absolute", top: "-50%", left: "50%", transform: "translateX(-50%)", width: 380, height: 380,
+            background: `radial-gradient(circle,${c.ac}0A 0%,transparent 70%)`, borderRadius: "50%", pointerEvents: "none",
+          }} />
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, letterSpacing: "-.025em", marginBottom: 14 }}>Ready to think sharper?</h2>
+            <p style={{ color: c.fgS, fontSize: 15, marginBottom: 32, maxWidth: 420, margin: "0 auto 32px" }}>Start practising with 1,500+ Watson-Glaser style questions. Plans from just £4.99.</p>
+            <Btn sz="lg" onClick={() => router.push("/pricing")} style={{ fontSize: 17, padding: "16px 36px" }}>
+              Get Started — from £4.99 {Icons.arr}
+            </Btn>
           </div>
         </div>
       </section>
