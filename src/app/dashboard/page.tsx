@@ -933,18 +933,29 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </div>
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: c.fgS,
-                      lineHeight: 1.6,
-                      margin: 0,
-                      maxWidth: 420,
-                    }}
-                  >
-                    Master all five Watson-Glaser sections with guided, interactive
-                    lessons. Free with a university society code.
-                  </p>
+                  <div style={{ margin: 0, maxWidth: 420 }}>
+                    <p
+                      style={{
+                        fontSize: 14,
+                        color: c.fgS,
+                        lineHeight: 1.6,
+                        margin: 0,
+                      }}
+                    >
+                      Master all five Watson-Glaser sections with interactive lessons.
+                    </p>
+                    <p
+                      style={{
+                        fontSize: 14,
+                        color: c.ac,
+                        fontWeight: 600,
+                        lineHeight: 1.6,
+                        margin: "4px 0 0",
+                      }}
+                    >
+                      Free with a university society code.
+                    </p>
+                  </div>
                   <div
                     style={{
                       display: "flex",
