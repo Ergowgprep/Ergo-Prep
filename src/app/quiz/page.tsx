@@ -329,7 +329,7 @@ function QuizContent() {
       <Ctn style={{ padding: isMobile ? "12px" : "28px" }}>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 14 : 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
           <div style={isMobile ? undefined : { position: "sticky", top: 75, alignSelf: "start" }}>
-            <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}`, padding: isMobile ? "12px 14px" : undefined }}>
+            <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}`, ...(isMobile ? { padding: "12px 14px" } : {}) }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: passageCollapsed ? 0 : 12 }}>
                 <div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5, color: c.ac }}>{q.section}</div>
                 {isMobile && <button onClick={() => setPassageCollapsed((v) => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: c.ac, fontSize: 12, fontWeight: 600, padding: "2px 6px", borderRadius: 6, lineHeight: 1 }}>{passageCollapsed ? "Show passage" : "Hide passage"}</button>}
