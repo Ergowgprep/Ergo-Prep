@@ -30,6 +30,12 @@ export default function ResultsPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const block = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key === "c") e.preventDefault(); };
+    document.addEventListener("keydown", block);
+    return () => document.removeEventListener("keydown", block);
+  }, []);
+
   if (!qr) {
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b }}>
@@ -49,7 +55,7 @@ export default function ResultsPage() {
   // Review view
   if (rv) {
     return (
-      <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b }}>
+      <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
         <Ctn style={{ padding: "44px 28px" }}>
           <div style={{ maxWidth: 740, margin: "0 auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 26 }}>
@@ -93,7 +99,7 @@ export default function ResultsPage() {
 
   // Summary view
   return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
       <Ctn style={{ padding: "44px 28px" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <div className="s1" style={{ textAlign: "center", marginBottom: 24 }}>
