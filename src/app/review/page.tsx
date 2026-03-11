@@ -70,6 +70,12 @@ function ReviewContent() {
     return () => { cancelled = true; };
   }, [sessionId]);
 
+  useEffect(() => {
+    const block = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key === "c") e.preventDefault(); };
+    document.addEventListener("keydown", block);
+    return () => document.removeEventListener("keydown", block);
+  }, []);
+
   if (loading) {
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -93,7 +99,7 @@ function ReviewContent() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, transition: "background .4s, color .4s" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, transition: "background .4s, color .4s", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
       <Hdr
         left={
           <>
