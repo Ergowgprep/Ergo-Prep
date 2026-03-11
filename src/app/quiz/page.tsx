@@ -162,6 +162,16 @@ function QuizContent() {
     return () => clearInterval(iv);
   }, [profile?.access_expires_at, mode]);
 
+  const [isMobile, setIsMobile] = useState(false);
+  const [passageCollapsed, setPassageCollapsed] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const [gi, sGI] = useState(0);
   const [qi, sQI] = useState(0);
   const [sel, sSel] = useState<string | null>(null);
@@ -305,21 +315,27 @@ function QuizContent() {
   return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.fg, fontFamily: fonts.b, transition: "background .4s, color .4s" }}>
       <div style={{ borderBottom: `1px solid ${c.bd}`, background: c.gl, backdropFilter: "blur(16px)", position: "sticky", top: 0, zIndex: 50 }}>
-        <Ctn style={{ padding: "12px 28px" }}>
+        <Ctn style={{ padding: isMobile ? "8px 12px" : "12px 28px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Btn v="outline" sz="sm" onClick={() => { if (mode === "test" && !sub) sED(true); else if (mode === "practice") setExC(true); else router.push("/dashboard"); }}>Exit</Btn><span style={{ padding: "4px 11px", borderRadius: 8, background: c.acS, fontSize: 12.5, fontWeight: 600, border: `1px solid ${c.ac}12` }}>{mode === "practice" ? <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Target size={14} color={c.ac} /> Practice</span> : <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><ClipboardCheck size={14} color={c.ac} /> Mock Test</span>}</span></div>
-            <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-              {mode === "test" ? <Mono style={{ fontSize: 13.5, fontWeight: 700, color: tl < 300000 ? c.rd : c.fg, display: "inline-flex", alignItems: "center", gap: 4 }}><ClockIcon size={16} /> {`${Math.floor(tl / 60000)}:${String(Math.floor((tl % 60000) / 1000)).padStart(2, "0")}`}</Mono> : <span style={{ fontSize: 12.5, color: c.mt }}>{Math.floor((Date.now() - st) / 60000)} min</span>}
-              <Mono style={{ fontSize: 12.5, color: c.fgS }}>{cur}/{totQ}</Mono>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 6 : 10 }}><Btn v="outline" sz="sm" onClick={() => { if (mode === "test" && !sub) sED(true); else if (mode === "practice") setExC(true); else router.push("/dashboard"); }}>Exit</Btn><span style={{ padding: isMobile ? "3px 7px" : "4px 11px", borderRadius: 8, background: c.acS, fontSize: isMobile ? 11 : 12.5, fontWeight: 600, border: `1px solid ${c.ac}12` }}>{mode === "practice" ? <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Target size={isMobile ? 12 : 14} color={c.ac} /> Practice</span> : <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><ClipboardCheck size={isMobile ? 12 : 14} color={c.ac} /> Mock Test</span>}</span></div>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 18 }}>
+              {mode === "test" ? <Mono style={{ fontSize: isMobile ? 12 : 13.5, fontWeight: 700, color: tl < 300000 ? c.rd : c.fg, display: "inline-flex", alignItems: "center", gap: 4 }}><ClockIcon size={isMobile ? 13 : 16} /> {`${Math.floor(tl / 60000)}:${String(Math.floor((tl % 60000) / 1000)).padStart(2, "0")}`}</Mono> : <span style={{ fontSize: isMobile ? 11 : 12.5, color: c.mt }}>{Math.floor((Date.now() - st) / 60000)} min</span>}
+              <Mono style={{ fontSize: isMobile ? 11 : 12.5, color: c.fgS }}>{cur}/{totQ}</Mono>
             </div>
           </div>
           <PB value={(cur / totQ) * 100} height={3} />
         </Ctn>
       </div>
-      <Ctn style={{ padding: "28px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
-          <div style={{ position: "sticky", top: 75, alignSelf: "start" }}>
-            <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}` }}><div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5, color: c.ac, marginBottom: 12 }}>{q.section}</div><p style={{ fontSize: 14.5, lineHeight: 1.85, whiteSpace: "pre-wrap", color: c.fgS }}>{g.pt}</p></Card>
+      <Ctn style={{ padding: isMobile ? "12px" : "28px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 14 : 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
+          <div style={isMobile ? undefined : { position: "sticky", top: 75, alignSelf: "start" }}>
+            <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}`, padding: isMobile ? "12px 14px" : undefined }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: passageCollapsed ? 0 : 12 }}>
+                <div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5, color: c.ac }}>{q.section}</div>
+                {isMobile && <button onClick={() => setPassageCollapsed((v) => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: c.ac, fontSize: 12, fontWeight: 600, padding: "2px 6px", borderRadius: 6, lineHeight: 1 }}>{passageCollapsed ? "Show passage" : "Hide passage"}</button>}
+              </div>
+              {!passageCollapsed && <p style={{ fontSize: 14.5, lineHeight: 1.85, whiteSpace: "pre-wrap", color: c.fgS }}>{g.pt}</p>}
+            </Card>
           </div>
           <div>
             <Card className="s1" style={{ marginBottom: 14 }}>
@@ -329,20 +345,20 @@ function QuizContent() {
                   const iS = sel === o; const iC = o === q.correct_answer; const sR = mode !== "test" ? ans : sub;
                   let bd = c.bd, bg = "transparent"; if (iS && !sR) { bd = c.ac; bg = c.acS; } if (sR && iC) { bd = c.gn; bg = c.gnS; } if (sR && iS && !iC) { bd = c.rd; bg = c.rdS; }
                   return (
-                    <div key={i} onClick={() => selOpt(o)} style={{ padding: "12px 15px", borderRadius: 10, border: `2px solid ${bd}`, background: bg, cursor: "pointer", display: "flex", alignItems: "center", gap: 11, transition: "all .2s", transform: iS && !sR ? "scale(1.01)" : "scale(1)" }}>
+                    <div key={i} onClick={() => selOpt(o)} style={{ padding: "12px 15px", borderRadius: 10, border: `2px solid ${bd}`, background: bg, cursor: "pointer", display: "flex", alignItems: "center", gap: 11, transition: "all .2s", transform: iS && !sR ? "scale(1.01)" : "scale(1)", width: isMobile ? "100%" : undefined, boxSizing: "border-box" }}>
                       <div style={{ width: 18, height: 18, borderRadius: 9, border: `2px solid ${iS ? c.ac : c.bd}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{iS && <div style={{ width: 8, height: 8, borderRadius: 4, background: c.ac }} />}</div>
                       <span style={{ fontSize: 13.5, flex: 1, lineHeight: 1.5 }}>{o}</span>{sR && iC && Icons.check(c.gn)}{sR && iS && !iC && Icons.x(c.rd)}
                     </div>
                   );
                 })}
               </div>
-              {mode !== "test" && !ans && <Btn full sz="lg" disabled={!sel} onClick={subm} style={{ marginTop: 18 }}>Submit Answer</Btn>}
-              {mode === "test" && !sub && sel && <Btn full sz="lg" onClick={subm} style={{ marginTop: 18 }}>{cur === totQ ? "Submit Test" : "Next Question"}</Btn>}
+              {mode !== "test" && !ans && <Btn full sz="lg" disabled={!sel} onClick={subm} style={{ marginTop: 18, width: isMobile ? "100%" : undefined }}>Submit Answer</Btn>}
+              {mode === "test" && !sub && sel && <Btn full sz="lg" onClick={subm} style={{ marginTop: 18, width: isMobile ? "100%" : undefined }}>{cur === totQ ? "Submit Test" : "Next Question"}</Btn>}
             </Card>
             {showE && <Card style={{ background: c.blS, border: `1px solid ${c.bl}18`, marginBottom: 14 }}><div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}><div style={{ width: 7, height: 7, borderRadius: 4, background: c.bl }} /><span style={{ fontWeight: 700, fontSize: 12.5 }}>Explanation</span></div><p style={{ fontSize: 13.5, lineHeight: 1.75, color: c.fgS }}>{q.explanation}</p></Card>}
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Btn v="outline" onClick={prv} disabled={gi === 0 && qi === 0}>Previous</Btn>
-              {mode === "test" ? <Btn onClick={() => { if (cur === totQ) setSubC(true); else nxt(); }} disabled={!sel && cur === totQ}>{cur === totQ ? "Submit Test" : "Next"}</Btn> : <Btn onClick={tryNxt} disabled={mode !== "test" && !ans && !sel}>{cur === totQ ? "Finish" : "Next"}</Btn>}
+            <div style={{ display: "flex", justifyContent: "space-between", gap: isMobile ? 10 : undefined, flexDirection: isMobile ? "column" : undefined }}>
+              <Btn v="outline" onClick={prv} disabled={gi === 0 && qi === 0} style={{ width: isMobile ? "100%" : undefined }}>Previous</Btn>
+              {mode === "test" ? <Btn onClick={() => { if (cur === totQ) setSubC(true); else nxt(); }} disabled={!sel && cur === totQ} style={{ width: isMobile ? "100%" : undefined }}>{cur === totQ ? "Submit Test" : "Next"}</Btn> : <Btn onClick={tryNxt} disabled={mode !== "test" && !ans && !sel} style={{ width: isMobile ? "100%" : undefined }}>{cur === totQ ? "Finish" : "Next"}</Btn>}
             </div>
           </div>
         </div>
