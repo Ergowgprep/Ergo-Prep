@@ -327,7 +327,7 @@ function QuizContent() {
         </Ctn>
       </div>
       <Ctn style={{ padding: isMobile ? "12px" : "28px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 14 : 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "2fr 3fr", gap: isMobile ? 14 : 28, maxWidth: 1040, margin: "0 auto", userSelect: "none", WebkitUserSelect: "none" }} onContextMenu={(e) => e.preventDefault()}>
           <div style={isMobile ? undefined : { position: "sticky", top: 75, alignSelf: "start" }}>
             <Card style={{ background: c.mtBg, border: `1px solid ${c.bd}`, padding: isMobile ? "12px 14px" : undefined }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: passageCollapsed ? 0 : 12 }}>
