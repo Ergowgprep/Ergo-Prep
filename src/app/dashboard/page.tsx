@@ -136,6 +136,14 @@ export default function DashboardPage() {
       }).sort((a, b) => b.priority - a.priority)
     : [];
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const [hovMode, setHM] = useState<number | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
@@ -227,21 +235,21 @@ export default function DashboardPage() {
       <Hdr
         left={<Logo onClick={() => router.push("/")} />}
         right={
-          <>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 4 : 8 }}>
             <Btn v="ghost" sz="sm" onClick={() => router.push("/profile")}>
               {Icons.user(c.mt)}
             </Btn>
             {hasAcc && (
-              <Btn v="outline" sz="sm" onClick={() => router.push("/analytics")}>
+              <Btn v="outline" sz="sm" onClick={() => router.push("/analytics")} style={isMobile ? { fontSize: 12, padding: "4px 10px" } : undefined}>
                 Analytics
               </Btn>
             )}
             <ThemeToggle />
-          </>
+          </div>
         }
       />
 
-      <Ctn style={{ padding: "48px 28px 100px" }}>
+      <Ctn style={{ padding: isMobile ? "24px 14px 60px" : "48px 28px 100px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
 
           {/* Welcome */}
@@ -299,7 +307,7 @@ export default function DashboardPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                   gap: 16,
                   marginBottom: 24,
                 }}
@@ -307,7 +315,7 @@ export default function DashboardPage() {
                 {/* Timer card */}
                 <div
                   style={{
-                    padding: "32px 28px",
+                    padding: isMobile ? "24px 18px" : "32px 28px",
                     borderRadius: 20,
                     background: d
                       ? `linear-gradient(145deg,${c.card} 0%,${c.ac}06 100%)`
@@ -353,7 +361,7 @@ export default function DashboardPage() {
                     </div>
                     <Mono
                       style={{
-                        fontSize: "clamp(36px,7vw,52px)",
+                        fontSize: isMobile ? "clamp(28px,6vw,36px)" : "clamp(36px,7vw,52px)",
                         fontWeight: 700,
                         display: "block",
                         letterSpacing: ".04em",
@@ -372,7 +380,7 @@ export default function DashboardPage() {
                 {/* Stats card */}
                 <div
                   style={{
-                    padding: "32px 28px",
+                    padding: isMobile ? "24px 18px" : "32px 28px",
                     borderRadius: 20,
                     background: c.card,
                     border: "1px solid " + c.bd,
@@ -526,7 +534,7 @@ export default function DashboardPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3,1fr)",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)",
                   gap: 14,
                   marginBottom: 28,
                 }}
@@ -666,7 +674,7 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                            <Mono style={{ fontSize: 16, fontWeight: 700 }}>
+                            <Mono style={{ fontSize: 16, fontWeight: 700, whiteSpace: "nowrap" }}>
                               {s.score} / {s.total_questions}
                             </Mono>
                             <span style={{ color: c.mt, display: "flex" }}>{Icons.arr}</span>
@@ -681,7 +689,7 @@ export default function DashboardPage() {
               {/* Logic Profile */}
               <div
                 style={{
-                  padding: 28,
+                  padding: isMobile ? "20px 14px" : 28,
                   borderRadius: 20,
                   background: c.card,
                   border: "1px solid " + c.bd,
@@ -770,9 +778,10 @@ export default function DashboardPage() {
                 ) : (
                   <div
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(5,1fr)",
+                      display: isMobile ? "flex" : "grid",
+                      gridTemplateColumns: isMobile ? undefined : "repeat(5,1fr)",
                       gap: 10,
+                      ...(isMobile ? { overflowX: "auto", flexWrap: "wrap", justifyContent: "center" } : {}),
                     }}
                   >
                     {profileRanked.map((item, i) => {
@@ -1074,7 +1083,7 @@ export default function DashboardPage() {
               {/* Unlock prompt */}
               <div
                 style={{
-                  padding: "36px 32px",
+                  padding: isMobile ? "28px 16px" : "36px 32px",
                   borderRadius: 20,
                   marginBottom: 28,
                   textAlign: "center",
@@ -1144,7 +1153,7 @@ export default function DashboardPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                   gap: 14,
                 }}
               >
