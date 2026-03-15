@@ -632,7 +632,7 @@ export default function DashboardPage() {
                     Recent Tests
                   </span>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {sessions.map((s, i) => {
+                    {sessions.slice(0, 3).map((s, i) => {
                       const dt = new Date(s.created_at);
                       const fmt = dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
                       const isH = hovSess === i;

@@ -27,7 +27,8 @@ export async function GET() {
       .from("test_sessions")
       .select("id, mode, sections, total_questions, score, created_at")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(5);
 
     if (error) throw error;
 
