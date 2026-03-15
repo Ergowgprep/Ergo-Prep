@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 import { Btn, Ctn, Mono, Hdr, Logo, Ftr, ThemeToggle, Icons } from "@/components/ui";
+import DotGrid from "@/components/DotGrid";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function Home() {
@@ -73,6 +74,7 @@ export default function Home() {
 
         {/* HERO */}
         <section style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 28px 50px", position: "relative" }}>
+          <DotGrid baseColor={d ? "#7A7368" : "#9C968E"} accentColor={c.ac} />
           <div style={{ position: "absolute", top: -40, right: -40, width: 480, height: 480, opacity: 0.035, backgroundImage: `linear-gradient(${c.ac} 1px,transparent 1px),linear-gradient(90deg,${c.ac} 1px,transparent 1px)`, backgroundSize: "48px 48px", transform: "rotate(12deg)" }} />
           <div style={{ position: "absolute", top: 60, right: "12%", width: 260, height: 260, background: `radial-gradient(circle,${c.ac}11 0%,transparent 70%)`, borderRadius: "50%", filter: "blur(40px)", animation: "float 6s ease-in-out infinite", pointerEvents: "none" }} />
           <div style={{ maxWidth: 700, position: "relative", zIndex: 2, margin: "0 auto", textAlign: "center" }}>
