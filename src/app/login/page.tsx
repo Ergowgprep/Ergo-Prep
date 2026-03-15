@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -12,6 +12,13 @@ const GoogleIcon = () => (
 
 const LinkedInIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+);
+
+const MailIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
 );
 
 const EyeIcon = ({ open }: { open: boolean }) => (
@@ -37,6 +44,36 @@ export default function LoginPage() {
   const [forgotMode, setForgotMode] = useState(false);
   const [resetMsg, setResetMsg] = useState("");
   const [resetEmailF, setREF] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendMsg, setResendMsg] = useState("");
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+      return;
+    }
+    cooldownRef.current = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          if (cooldownRef.current) clearInterval(cooldownRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => { if (cooldownRef.current) clearInterval(cooldownRef.current); };
+  }, [resendCooldown > 0]);
+
+  const handleResend = useCallback(async () => {
+    if (resendCooldown > 0) return;
+    const { error } = await supabase.auth.resend({ type: "signup", email: verifyEmail });
+    if (error) { setResendMsg(error.message); }
+    else { setResendMsg("Email sent!"); }
+    setResendCooldown(60);
+    setTimeout(() => setResendMsg(""), 3000);
+  }, [verifyEmail, resendCooldown]);
 
   const inp = (focused: boolean) => ({
     width: "100%",
@@ -84,7 +121,7 @@ export default function LoginPage() {
         options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
       });
       if (error) { setError(error.message); setLoading(false); }
-      else { setError(""); setLoading(false); alert("Check your email for a confirmation link!"); }
+      else { setVerifyEmail(email); setLoading(false); }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
       if (error) { setError(error.message); setLoading(false); }
@@ -110,6 +147,28 @@ export default function LoginPage() {
         </div>
 
         <Card style={{ padding: 28 }}>
+          {verifyEmail ? (
+            <div style={{ textAlign: "center", animation: "fu .3s ease both" }}>
+              <div style={{ color: c.ac, marginBottom: 16, display: "flex", justifyContent: "center" }}>
+                <MailIcon />
+              </div>
+              <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Check your email</h2>
+              <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.6, marginBottom: 20 }}>
+                We&apos;ve sent a verification link to <strong style={{ color: c.fg }}>{verifyEmail}</strong>. Click it to activate your account.
+              </p>
+              {resendMsg && (
+                <div style={{ padding: "10px 14px", background: c.gnS, border: `1px solid ${c.gn}33`, borderRadius: 8, marginBottom: 12, fontSize: 13, color: c.gn }}>
+                  {resendMsg}
+                </div>
+              )}
+              <Btn full sz="lg" disabled={resendCooldown > 0} onClick={handleResend} style={{ marginBottom: 12 }}>
+                {resendCooldown > 0 ? `Resend email (${resendCooldown}s)` : "Resend email"}
+              </Btn>
+              <button onClick={() => { setVerifyEmail(""); setError(""); setResendMsg(""); setResendCooldown(0); }} style={{
+                fontSize: 13, color: c.ac, fontWeight: 600, cursor: "pointer", border: "none", background: "none", fontFamily: fonts.b,
+              }}>Back to login</button>
+            </div>
+          ) : (<>
           {/* Error */}
           {error && (
             <div style={{ padding: "10px 14px", background: c.rdS, border: `1px solid ${c.rd}33`, borderRadius: 8, marginBottom: 16, fontSize: 13, color: c.rd }}>
@@ -212,6 +271,7 @@ export default function LoginPage() {
               }}>{isSignUp ? "Log in" : "Sign up"}</button>
             </span>
           </div>
+          </>)}
         </Card>
 
         <p style={{ textAlign: "center", fontSize: 11.5, color: c.mt, marginTop: 18, lineHeight: 1.6 }}>

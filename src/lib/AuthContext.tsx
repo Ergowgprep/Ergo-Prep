@@ -36,7 +36,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const PUBLIC_PAGES = ["/", "/login", "/pricing", "/terms", "/privacy", "/about", "/reset-password"];
+const PUBLIC_PAGES = ["/", "/login", "/pricing", "/terms", "/privacy", "/about", "/reset-password", "/auth/callback"];
 const PROFILE_CACHE_KEY = "ergo_profile";
 
 function getCachedProfile(): Profile | null {
@@ -120,12 +120,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
 
         if (session?.user) {
-          setUser(session.user);
+          // Treat unverified email users as not logged in
+          if (!session.user.email_confirmed_at) {
+            setUser(null);
+            updateProfile(null);
+          } else {
+            setUser(session.user);
 
-          // Fetch fresh profile
-          const fresh = await fetchProfile(session.user.id);
-          if (mounted && fresh) {
-            updateProfile(fresh);
+            // Fetch fresh profile
+            const fresh = await fetchProfile(session.user.id);
+            if (mounted && fresh) {
+              updateProfile(fresh);
+            }
           }
         } else {
           // No session — clear everything
@@ -145,10 +151,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
 
         if (event === "SIGNED_IN" && session?.user) {
-          setUser(session.user);
-          const p = await fetchProfile(session.user.id);
-          if (mounted && p) updateProfile(p);
-          if (mounted) setLoading(false);
+          if (!session.user.email_confirmed_at) {
+            // Unverified user — don't treat as logged in
+            setUser(null);
+            updateProfile(null);
+            if (mounted) setLoading(false);
+          } else {
+            setUser(session.user);
+            const p = await fetchProfile(session.user.id);
+            if (mounted && p) updateProfile(p);
+            if (mounted) setLoading(false);
+          }
         } else if (event === "SIGNED_OUT") {
           setUser(null);
           updateProfile(null);
