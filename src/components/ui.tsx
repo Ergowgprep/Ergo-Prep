@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode, CSSProperties } from "react";
+import { useState, useRef, useEffect, ReactNode, CSSProperties } from "react";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
 
@@ -543,6 +543,113 @@ export function Ftr() {
           </div>
         </div>
       </Ctn>
+    </div>
+  );
+}
+
+// ============================================================================
+// SEARCHABLE DROPDOWN
+// ============================================================================
+export function SearchableDropdown({
+  value,
+  onChange,
+  options,
+  placeholder,
+  inputStyle,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  options: string[];
+  placeholder?: string;
+  inputStyle: (focused: boolean) => CSSProperties;
+}) {
+  const { theme } = useTheme();
+  const c = getColors(theme === "dark");
+  const [query, setQuery] = useState(value);
+  const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Sync external value changes (e.g. profile load)
+  useEffect(() => { setQuery(value); }, [value]);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const filtered = options.filter((o) =>
+    o.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const select = (val: string) => {
+    setQuery(val);
+    onChange(val);
+    setOpen(false);
+  };
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <input
+        type="text"
+        value={query}
+        placeholder={placeholder}
+        style={inputStyle(focused)}
+        onFocus={() => { setFocused(true); setOpen(true); }}
+        onBlur={() => setFocused(false)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          onChange(e.target.value);
+          setOpen(true);
+        }}
+      />
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            right: 0,
+            maxHeight: 220,
+            overflowY: "auto",
+            background: c.card,
+            border: `1px solid ${c.bd}`,
+            borderRadius: 10,
+            boxShadow: c.shM,
+            zIndex: 100,
+          }}
+        >
+          {filtered.length === 0 ? (
+            <div style={{ padding: "12px 16px", fontSize: 13.5, color: c.mt, fontFamily: fonts.b }}>
+              No results
+            </div>
+          ) : (
+            filtered.slice(0, 50).map((item) => (
+              <div
+                key={item}
+                onMouseDown={() => select(item)}
+                style={{
+                  padding: "10px 16px",
+                  fontSize: 14,
+                  fontFamily: fonts.b,
+                  color: item === value ? c.ac : c.fg,
+                  fontWeight: item === value ? 600 : 400,
+                  cursor: "pointer",
+                  transition: "background .15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = c.mtBg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+              >
+                {item}
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
