@@ -32,45 +32,48 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
     const my = mouse.current.y;
     const gap = 40;
     const baseR = 1.5;
-    const radius = 100;
+    const radius = 190;
+    const radiusSq = radius * radius;
     const [br, bg, bb] = parseHex(baseColor);
     const [ar, ag, ab] = parseHex(accentColor);
+    const baseFill = `rgba(${br},${bg},${bb},0.15)`;
 
     ctx.clearRect(0, 0, w, h);
 
-    // Only draw dots near the mouse to save work when mouse is far offscreen
-    const drawAll = mx > -1000 && my > -1000;
-    const nearR = radius + gap; // margin around mouse for active dots
+    const active = mx > -1000 && my > -1000;
+    // Bounding box for quick column/row skip (circular check inside)
+    const nearR = radius + gap;
 
     for (let x = gap; x < w; x += gap) {
-      // Skip entire columns far from the mouse
-      if (drawAll && (x < mx - nearR || x > mx + nearR)) {
-        // Draw base dot (no interaction)
-        for (let y = gap; y < h; y += gap) {
-          ctx.beginPath();
-          ctx.arc(x, y, baseR, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${br},${bg},${bb},0.15)`;
-          ctx.fill();
-        }
-        continue;
-      }
+      const colFar = active && (x < mx - nearR || x > mx + nearR);
 
       for (let y = gap; y < h; y += gap) {
-        if (drawAll && (y < my - nearR || y > my + nearR)) {
+        // Quick bounding-box reject, then true circular distance
+        if (colFar || (active && (y < my - nearR || y > my + nearR))) {
           ctx.beginPath();
           ctx.arc(x, y, baseR, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${br},${bg},${bb},0.15)`;
+          ctx.fillStyle = baseFill;
           ctx.fill();
           continue;
         }
 
         const dx = x - mx;
         const dy = y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const t = Math.max(0, 1 - dist / radius);
+        const distSq = dx * dx + dy * dy;
 
-        const opacity = 0.15 + t * 0.45;
-        const scale = 1 + t * 2;
+        if (!active || distSq > radiusSq) {
+          ctx.beginPath();
+          ctx.arc(x, y, baseR, 0, Math.PI * 2);
+          ctx.fillStyle = baseFill;
+          ctx.fill();
+          continue;
+        }
+
+        const dist = Math.sqrt(distSq);
+        const t = 1 - dist / radius; // 0..1, smooth falloff
+
+        const opacity = 0.15 + t * 0.7;
+        const scale = 1 + t * 5;
         const r = Math.round(br + (ar - br) * t);
         const g = Math.round(bg + (ag - bg) * t);
         const b = Math.round(bb + (ab - bb) * t);
