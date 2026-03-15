@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
-import { Btn, Card, Ctn, Hdr, ThemeToggle, Icons } from "@/components/ui";
+import { Btn, Card, Ctn, Hdr, ThemeToggle, Icons, SearchableDropdown } from "@/components/ui";
 import { useAuth } from "@/lib/AuthContext";
+import { UK_UNIVERSITIES } from "@/lib/universities";
 
 const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "Postgraduate", "Graduate / Alumni"];
 
@@ -22,7 +23,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [nameF, setNF] = useState(false);
-  const [uniF, setUF] = useState(false);
+
   const [courseF, setCF] = useState(false);
 
   const [promoInput, setPromoInput] = useState("");
@@ -159,14 +160,12 @@ export default function ProfilePage() {
 
               <div>
                 <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: c.mt, marginBottom: 5 }}>University</label>
-                <input
-                  type="text"
+                <SearchableDropdown
                   value={uni}
-                  onChange={(e) => setUni(e.target.value)}
-                  onFocus={() => setUF(true)}
-                  onBlur={() => setUF(false)}
+                  onChange={setUni}
+                  options={UK_UNIVERSITIES}
                   placeholder="e.g. University of Warwick"
-                  style={inp(uniF)}
+                  inputStyle={inp}
                 />
               </div>
 
