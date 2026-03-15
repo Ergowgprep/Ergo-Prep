@@ -2,9 +2,7 @@
 import { useRef, useEffect, useCallback } from "react";
 
 interface Props {
-  /** muted dot color, e.g. "#7A7368" */
   baseColor: string;
-  /** accent color for hover glow, e.g. "#EFD000" */
   accentColor: string;
 }
 
@@ -32,7 +30,7 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
     const h = c.height;
     const mx = mouse.current.x;
     const my = mouse.current.y;
-    const gap = 35;
+    const gap = 40;
     const baseR = 1.5;
     const radius = 100;
     const [br, bg, bb] = parseHex(baseColor);
@@ -40,12 +38,36 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
 
     ctx.clearRect(0, 0, w, h);
 
+    // Only draw dots near the mouse to save work when mouse is far offscreen
+    const drawAll = mx > -1000 && my > -1000;
+    const nearR = radius + gap; // margin around mouse for active dots
+
     for (let x = gap; x < w; x += gap) {
+      // Skip entire columns far from the mouse
+      if (drawAll && (x < mx - nearR || x > mx + nearR)) {
+        // Draw base dot (no interaction)
+        for (let y = gap; y < h; y += gap) {
+          ctx.beginPath();
+          ctx.arc(x, y, baseR, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${br},${bg},${bb},0.15)`;
+          ctx.fill();
+        }
+        continue;
+      }
+
       for (let y = gap; y < h; y += gap) {
+        if (drawAll && (y < my - nearR || y > my + nearR)) {
+          ctx.beginPath();
+          ctx.arc(x, y, baseR, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${br},${bg},${bb},0.15)`;
+          ctx.fill();
+          continue;
+        }
+
         const dx = x - mx;
         const dy = y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const t = Math.max(0, 1 - dist / radius); // 1 at cursor, 0 at edge
+        const t = Math.max(0, 1 - dist / radius);
 
         const opacity = 0.15 + t * 0.45;
         const scale = 1 + t * 2;
@@ -68,14 +90,12 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
     if (!c) return;
 
     const resize = () => {
-      const rect = c.parentElement!.getBoundingClientRect();
-      c.width = rect.width;
-      c.height = rect.height;
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
     };
 
     const onMove = (e: MouseEvent) => {
-      const rect = c.getBoundingClientRect();
-      mouse.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      mouse.current = { x: e.clientX, y: e.clientY };
     };
 
     const onLeave = () => {
@@ -84,14 +104,14 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
 
     resize();
     window.addEventListener("resize", resize);
-    c.addEventListener("mousemove", onMove);
-    c.addEventListener("mouseleave", onLeave);
+    window.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseleave", onLeave);
     raf.current = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener("resize", resize);
-      c.removeEventListener("mousemove", onMove);
-      c.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
       cancelAnimationFrame(raf.current);
     };
   }, [draw]);
@@ -100,12 +120,13 @@ export default function DotGrid({ baseColor, accentColor }: Props) {
     <canvas
       ref={cvs}
       style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: 1,
-        pointerEvents: "auto",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 0,
+        pointerEvents: "none",
       }}
     />
   );
