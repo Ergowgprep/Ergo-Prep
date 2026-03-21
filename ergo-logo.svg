@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40">
+  <!-- Rounded accent square -->
+  <rect x="5" y="5" width="30" height="30" rx="7" ry="7" fill="#C9A200"/>
+  <!-- Therefore symbol ∴ -->
+  <text x="20" y="25" text-anchor="middle" font-family="'JetBrains Mono','Fira Code',monospace" font-weight="700" font-size="15" fill="#15130F">∴</text>
+  <!-- Ergo text -->
+  <text x="44" y="27" font-family="'Outfit','Helvetica Neue',sans-serif" font-weight="700" font-size="19" letter-spacing="-0.02em" fill="#1A1A1A">Ergo</text>
+</svg>
