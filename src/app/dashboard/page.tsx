@@ -73,6 +73,14 @@ export default function DashboardPage() {
     return () => { cancelled = true; };
   }, [profile]);
 
+  const [globalAcc, setGlobalAcc] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d) setGlobalAcc(d.accuracy); })
+      .catch(() => {});
+  }, []);
+
   const [sessions, setSessions] = useState<Session[]>([]);
   const [hovSess, setHS] = useState<number | null>(null);
 
@@ -439,6 +447,11 @@ export default function DashboardPage() {
                         >
                           Accuracy
                         </span>
+                        {globalAcc !== null && (
+                          <span style={{ fontSize: 11, color: c.mt, display: "block", marginTop: 2 }}>
+                            Global avg: {globalAcc}%
+                          </span>
+                        )}
                       </div>
                       <div>
                         <Mono

@@ -18,6 +18,14 @@ export default function AnalyticsPage() {
   const [tab, sTab] = useState(searchParams.get("tab") === "profile" ? "profile" : "performance");
   const [hist, setHist] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
+  const [globalAcc, setGlobalAcc] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d) setGlobalAcc(d.accuracy); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const fetchAttempts = async () => {
@@ -132,6 +140,9 @@ export default function AnalyticsPage() {
                   <Card key={i} hover style={{ textAlign: "center" }}>
                     <Mono style={{ fontSize: 30, fontWeight: 700, color: s.cl, display: "block", marginBottom: 3 }}>{s.v}</Mono>
                     <span style={{ fontSize: 12, color: c.mt }}>{s.l}</span>
+                    {s.l === "Accuracy" && globalAcc !== null && (
+                      <span style={{ fontSize: 11, color: c.mt, display: "block", marginTop: 4 }}>Global avg: {globalAcc}%</span>
+                    )}
                   </Card>
                 ))}
               </div>
