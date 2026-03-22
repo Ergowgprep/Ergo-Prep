@@ -1,6 +1,5 @@
 "use client";
-export const dynamic = "force-dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getColors, fonts, SECTIONS } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -10,7 +9,7 @@ import { BarChart3, Brain, TrendingUp } from "lucide-react";
 
 type Attempt = { section: string; correct: boolean; created_at: string; mode: string };
 
-export default function AnalyticsPage() {
+function AnalyticsContent() {
   const router = useRouter();
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
@@ -291,5 +290,13 @@ export default function AnalyticsPage() {
         </div>
       </Ctn>
     </div>
+  );
+}
+
+export default function AnalyticsPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: 100, textAlign: "center" }}>Loading...</div>}>
+      <AnalyticsContent />
+    </Suspense>
   );
 }
