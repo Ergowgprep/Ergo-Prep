@@ -17,13 +17,13 @@ interface Dot {
 
 const GAP = 21;
 const DOT_RADIUS = 0.65;
-const BASE_OPACITY = 0.13;
+const BASE_OPACITY = 0.55;
 const RANDOM_OFFSET = 4; // ±4px
 const CURSOR_RADIUS = 165;
 const MAX_DISPLACEMENT = 18;
 const DAMPING = 0.85;
 const SPRING = 0.05;
-const REPULSION_STRENGTH = 800;
+const REPULSION_STRENGTH = 1200;
 
 function parseHex(hex: string) {
   const h = hex.replace("#", "");

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getColors, fonts } from "@/lib/theme";
 import { useTheme } from "@/lib/ThemeContext";
@@ -16,6 +16,14 @@ export default function PricingPage() {
   const [promoInput, setPromoInput] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoMsg, setPromoMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const hasPromo = !!profile?.promo_code;
 
@@ -97,7 +105,7 @@ export default function PricingPage() {
         left={<Btn v="ghost" sz="sm" onClick={() => router.push("/")}>← Back</Btn>}
         right={<ThemeToggle />}
       />
-      <Ctn style={{ padding: "80px 28px" }}>
+      <Ctn style={{ padding: isMobile ? "40px 16px" : "80px 28px" }}>
         {/* Heading */}
         <div className="s1" style={{ textAlign: "center", marginBottom: 44 }}>
           <h1 style={{ fontSize: 30, fontWeight: 700, letterSpacing: "-.02em", marginBottom: 10 }}>Simple pricing</h1>
@@ -107,7 +115,7 @@ export default function PricingPage() {
         {/* Banner */}
         <div className="s2" style={{
           maxWidth: 700, margin: "0 auto 36px", padding: "16px 22px", borderRadius: 12,
-          background: c.acS, border: `1px solid ${c.ac}25`, display: "flex", alignItems: "center", gap: 12,
+          background: c.acS, border: `1px solid ${c.ac}25`, display: "flex", flexDirection: isMobile ? "column" : "row", textAlign: isMobile ? "center" : "left", alignItems: "center", gap: 12,
         }}>
           <Lightbulb size={20} color={c.ac} />
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>
@@ -133,7 +141,7 @@ export default function PricingPage() {
         )}
 
         {/* Tier cards */}
-        <div className="s3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, maxWidth: 800, margin: "0 auto 44px" }}>
+        <div className="s3" style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 16, maxWidth: 800, margin: "0 auto 44px" }}>
           {tiers.map((t) => (
             <Card key={t.id} accent={t.pop} hover style={{ padding: 28, textAlign: "center", position: "relative", overflow: "hidden" }}>
               {t.pop && (
@@ -238,7 +246,7 @@ export default function PricingPage() {
 
         {/* Affordability section */}
         <div className="s5" style={{
-          maxWidth: 560, margin: "0 auto", textAlign: "center", padding: "32px 28px",
+          maxWidth: 560, margin: "0 auto", textAlign: "center", padding: isMobile ? "24px 16px" : "32px 28px",
           borderRadius: 14, background: c.card, border: `1px solid ${c.bd}`,
         }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>I cannot afford this</h3>
