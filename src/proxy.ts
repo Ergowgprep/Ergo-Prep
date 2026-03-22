@@ -2,6 +2,31 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function proxy(request: NextRequest) {
+  // HTTP Basic Auth for staging (skip if STAGING_PASSWORD is not set)
+  const stagingPassword = process.env.STAGING_PASSWORD;
+  if (stagingPassword && request.nextUrl.pathname !== "/api/webhook") {
+    const authHeader = request.headers.get("authorization");
+    let authorized = false;
+
+    if (authHeader) {
+      const [scheme, encoded] = authHeader.split(" ");
+      if (scheme === "Basic" && encoded) {
+        const decoded = atob(encoded);
+        const [username, password] = decoded.split(":");
+        if (username === "ergo" && password === stagingPassword) {
+          authorized = true;
+        }
+      }
+    }
+
+    if (!authorized) {
+      return new NextResponse("Authentication required", {
+        status: 401,
+        headers: { "WWW-Authenticate": 'Basic realm="Staging"' },
+      });
+    }
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
