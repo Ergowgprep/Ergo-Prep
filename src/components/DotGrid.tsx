@@ -17,7 +17,7 @@ interface Dot {
 
 const GAP = 21;
 const DOT_RADIUS = 0.65;
-const BASE_OPACITY = 0.55;
+const BASE_OPACITY = 0.85;
 const RANDOM_OFFSET = 4; // ±4px
 const CURSOR_RADIUS = 165;
 const MAX_DISPLACEMENT = 18;
