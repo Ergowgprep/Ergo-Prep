@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
 import { AuthProvider } from "@/lib/AuthContext";
 import PromoBanner from "@/components/PromoBanner";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Ergo — Watson-Glaser Preparation",
@@ -23,6 +24,7 @@ export default function RootLayout({
             <div className="grain">
               {children}
             </div>
+          <Analytics />
           </AuthProvider>
         </ThemeProvider>
       </body>
