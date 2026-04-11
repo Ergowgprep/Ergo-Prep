@@ -121,7 +121,7 @@ export default function PricingPage() {
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.6 }}>
             Every plan includes <strong style={{ color: c.fg }}>the exact same features</strong> — all 1,500+ questions, every mode, full analytics.
             {hasPromo
-              ? <> Your society discount is applied — prices start from <strong style={{ color: c.fg }}>just £1.99</strong>.</>
+              ? <> Your society discount is applied — prices start from <strong style={{ color: c.fg }}>just £4.99</strong>.</>
               : <> The only difference is how long your access lasts.</>
             }
           </p>
