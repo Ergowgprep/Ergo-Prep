@@ -376,7 +376,7 @@ export default function LearnPage() {
     { render: () => <div>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The &ldquo;Most&rdquo; Middle Ground</h2>
       <div style={{ padding: 16, background: lc + "0A", borderRadius: 12, border: "1px solid " + lc + "20", marginBottom: 18 }}>
-        <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>&ldquo;Most&rdquo; is stronger than &ldquo;Some&rdquo; but weaker than &ldquo;All.&rdquo; It strictly means <strong style={{ color: c.fg }}>more than 50%</strong> of the group.</p>
+        <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>&ldquo;Most&rdquo; is stronger than &ldquo;Some&rdquo; but (usually) weaker than &ldquo;All.&rdquo; It strictly means <strong style={{ color: c.fg }}>more than 50%</strong> of the group.</p>
       </div>
       <MCQ qKey="le4" question='If "Most lawyers work late", which conclusion must be true?' opts={["All lawyers work late", "At least 51% of lawyers work late", "Some lawyers do not work late"]} correctArr={[1]} expText='"Most" guarantees a majority: more than half. It does NOT guarantee that all do, and strictly "Most" can include "All", so you cannot be certain some do NOT.' />
     </div> },
