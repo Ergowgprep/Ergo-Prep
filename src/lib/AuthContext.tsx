@@ -204,7 +204,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Logged in + completed onboarding + on login or onboarding page
     if (user && profile?.university && (pathname === "/login" || pathname === "/onboarding")) {
       redirecting.current = true;
-      router.push("/dashboard");
+      const pendingRedirect = sessionStorage.getItem("pendingRedirect");
+      router.push(pendingRedirect || "/dashboard");
       setTimeout(() => { redirecting.current = false; }, 1500);
       return;
     }
