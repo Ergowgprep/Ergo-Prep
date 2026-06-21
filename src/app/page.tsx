@@ -111,9 +111,7 @@ export default function Home() {
                 ))}
               </div>
               <div>
-                <span style={{ fontSize: 12.5, color: c.mt }}>Trusted by </span>
-                <Mono style={{ fontSize: 12.5, color: c.ac, fontWeight: 700 }}>xxxx</Mono>
-                <span style={{ fontSize: 12.5, color: c.mt }}> candidates across the UK</span>
+                <span style={{ fontSize: 12.5, color: c.mt }}>Trusted by candidates across the UK and globally</span>
               </div>
             </div>
           </div>
@@ -127,7 +125,7 @@ export default function Home() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
             {[
-              { ic: Icons.book(c.ac), t: "Three Modes", d: "Learning Mode for instant feedback. Practice Mode for the night before the test. Test Mode to prove that you got this." },
+              { ic: Icons.book(c.ac), t: "Three Modes", d: "Learning; Practice; Test.\nPretty self-explanatory really..." },
               { ic: Icons.zap(c.ac), t: "Best Value", d: null, hl: true },
               { ic: Icons.bar(c.ac), t: "Performance Tracking", d: "Compare your results against global averages and track your improvement over time." },
             ].map((f, i) => {
@@ -150,8 +148,8 @@ export default function Home() {
                     marginBottom: 18, transition: "all .35s",
                   }}>{f.ic}</div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8, letterSpacing: "-.01em" }}>{f.t}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.7, color: c.fgS }}>
-                    {f.hl ? <>Unlock ~1,500 official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£4.99</span>. <span style={{ fontSize: 12, color: c.ac }}>(from £1.99 with a society code)</span> No subscriptions.</> : f.d}
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: c.fgS, whiteSpace: "pre-line" }}>
+                    {f.hl ? <>Unlock ~1,500 official-style questions for just <span style={{ color: c.ac, fontWeight: 700 }}>£4.99</span> <span style={{ fontSize: 12, color: c.ac }}>(from £1.99 with a society code).</span> No subscriptions.</> : f.d}
                   </p>
                 </div>
               );
@@ -281,44 +279,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* TESTIMONIALS */}
-        <section ref={(el) => { refs.current.tests = el; }} data-s="tests" style={{ maxWidth: 1100, margin: "0 auto", padding: "50px 28px 50px" }}>
-          <div style={{ opacity: isV("tests") ? 1 : 0, transform: isV("tests") ? "translateY(0)" : "translateY(30px)", transition: "all .7s cubic-bezier(.16,1,.3,1)" }}>
-            <h2 style={{ textAlign: "center", fontSize: "clamp(24px,3.5vw,32px)", fontWeight: 700, letterSpacing: "-.02em", marginBottom: 10 }}>What candidates say</h2>
-            <p style={{ textAlign: "center", color: c.mt, fontSize: 15, marginBottom: 44 }}>Join thousands who improved their Watson-Glaser scores.</p>
-            <div style={{ maxWidth: 580, margin: "0 auto", position: "relative", minHeight: 190 }}>
-              {tests.map((t, i) => (
-                <div key={i} style={{
-                  position: i === actTest ? "relative" : "absolute", top: 0, left: 0, right: 0,
-                  opacity: i === actTest ? 1 : 0, transform: i === actTest ? "translateY(0) scale(1)" : "translateY(10px) scale(.98)",
-                  transition: "all .5s cubic-bezier(.16,1,.3,1)", pointerEvents: i === actTest ? "auto" : "none",
-                  background: c.card, borderRadius: 16, border: `1px solid ${c.bd}`, padding: 30,
-                }}>
-                  <div style={{ fontSize: 44, lineHeight: 1, color: c.ac, opacity: 0.3, marginBottom: 6, fontFamily: "Georgia,serif" }}>&ldquo;</div>
-                  <p style={{ fontSize: 15, lineHeight: 1.75, marginBottom: 18 }}>{t.tx}</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-                    <div style={{
-                      width: 34, height: 34, borderRadius: "50%", background: `linear-gradient(135deg,${c.ac}44,${c.ac}22)`,
-                      display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: c.ac,
-                    }}>{t.nm[0]}</div>
-                    <div>
-                      <div style={{ fontSize: 13.5, fontWeight: 700 }}>{t.nm}</div>
-                      <div style={{ fontSize: 12, color: c.mt }}>{t.rl}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 22 }}>
-                {tests.map((_, i) => (
-                  <button key={i} onClick={() => setAT(i)} style={{
-                    width: i === actTest ? 24 : 8, height: 8, borderRadius: 4,
-                    background: i === actTest ? c.ac : c.bd, transition: "all .3s", border: "none", cursor: "pointer",
-                  }} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
       </div>
 
