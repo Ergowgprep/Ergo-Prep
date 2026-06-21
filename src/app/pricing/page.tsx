@@ -27,6 +27,42 @@ export default function PricingPage() {
 
   const hasPromo = !!profile?.promo_code;
 
+  useEffect(() => {
+    if (!user || hasPromo) return;
+    const pending = sessionStorage.getItem("pendingPromo");
+    if (!pending) return;
+    sessionStorage.removeItem("pendingPromo");
+    sessionStorage.removeItem("pendingRedirect");
+    setPromoInput(pending);
+    // auto-apply after state settles
+    const apply = async () => {
+      setPromoLoading(true);
+      setPromoMsg(null);
+      try {
+        const check = await fetch(`/api/promo?code=${encodeURIComponent(pending)}`);
+        const checkData = await check.json();
+        if (!checkData.valid) { setPromoMsg({ text: checkData.reason || "Invalid code", ok: false }); return; }
+        const redeem = await fetch("/api/promo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: pending }),
+        });
+        const redeemData = await redeem.json();
+        if (redeemData.success) {
+          setPromoMsg({ text: `Society discount applied — ${redeemData.society_name}`, ok: true });
+          await refreshProfile();
+        } else {
+          setPromoMsg({ text: redeemData.error || "Could not apply code", ok: false });
+        }
+      } catch {
+        setPromoMsg({ text: "Something went wrong — try again", ok: false });
+      } finally {
+        setPromoLoading(false);
+      }
+    };
+    apply();
+  }, [user, hasPromo]);
+
   const feats = [
     "All 5 Watson-Glaser sections",
     "Learning, Practice & Mock modes",
@@ -78,6 +114,12 @@ export default function PricingPage() {
       if (!checkData.valid) {
         setPromoMsg({ text: checkData.reason || "Invalid code", ok: false });
         setPromoLoading(false);
+        return;
+      }
+      if (!user) {
+        sessionStorage.setItem("pendingPromo", code);
+        sessionStorage.setItem("pendingRedirect", "/pricing");
+        router.push("/login");
         return;
       }
       const redeem = await fetch("/api/promo", {
@@ -190,8 +232,8 @@ export default function PricingPage() {
           ))}
         </div>
 
-        {/* Promo code input — logged-in users without a code */}
-        {user && !hasPromo && (
+        {/* Promo code input — shown to all users without an applied code */}
+        {!hasPromo && (
           <div style={{
             maxWidth: 800, margin: "0 auto 36px", padding: "16px 22px", borderRadius: 12,
             background: c.card, border: `1px solid ${c.bd}`,
