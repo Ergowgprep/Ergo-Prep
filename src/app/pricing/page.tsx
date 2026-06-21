@@ -25,6 +25,8 @@ export default function PricingPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const hasPromo = !!profile?.promo_code;
+
   useEffect(() => {
     if (!user || hasPromo) return;
     const pending = sessionStorage.getItem("pendingPromo");
@@ -60,8 +62,6 @@ export default function PricingPage() {
     };
     apply();
   }, [user, hasPromo]);
-
-  const hasPromo = !!profile?.promo_code;
 
   const feats = [
     "All 5 Watson-Glaser sections",
