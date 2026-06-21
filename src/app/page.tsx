@@ -125,7 +125,7 @@ export default function Home() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
             {[
-              { ic: Icons.book(c.ac), t: "Three Modes", d: "Learning Mode\nPractice Mode\nTest Mode\nPretty self-explanatory really." },
+              { ic: Icons.book(c.ac), t: "Three Modes", d: "Learning; Practice; Test.\nPretty self-explanatory really..." },
               { ic: Icons.zap(c.ac), t: "Best Value", d: null, hl: true },
               { ic: Icons.bar(c.ac), t: "Performance Tracking", d: "Compare your results against global averages and track your improvement over time." },
             ].map((f, i) => {
