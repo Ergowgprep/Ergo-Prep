@@ -32,13 +32,12 @@ export default function PricingPage() {
     "Learning, Practice & Mock modes",
     "Detailed explanations for every question",
     "Performance tracking vs. global averages",
-    "Smart ranking adapts to your level",
   ];
 
   const tiers = [
     { id: "6h",  name: "6-Hour Pass",  price: "£4.99",  promoPrice: "£1.99",  hours: 6,   sub: "6 hours",  pop: false },
     { id: "24h", name: "24-Hour Pass", price: "£7.99",  promoPrice: "£4.99",  hours: 24,  sub: "24 hours", pop: true },
-    { id: "1w",  name: "1-Week Pass",  price: "£10.99", promoPrice: "£9.99",  hours: 168, sub: "7 days",   pop: false },
+    { id: "1w",  name: "1-Week Pass",  price: "£12.99", promoPrice: "£9.99",  hours: 168, sub: "7 days",   pop: false },
   ];
 
   const handleBuy = async (planId: string) => {
@@ -251,9 +250,8 @@ export default function PricingPage() {
         }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>I cannot afford this</h3>
           <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.75, marginBottom: 20 }}>
-            Ergo&apos;s mission is to level the playing field. If you cannot afford our product, we can provide a pass for free — just reach out with some details.
+            Ergo&apos;s mission is to level the playing field. If you cannot afford our product, we can provide a pass for free — just reach out @ <a href="mailto:ergoprepuk@gmail.com" style={{ color: c.ac }}>ergoprepuk@gmail.com</a> with some details.
           </p>
-          <Btn v="outline" onClick={() => window.open("mailto:hello@ergoprep.co.uk", "_blank")}>Contact us</Btn>
         </div>
       </Ctn>
     </div>
