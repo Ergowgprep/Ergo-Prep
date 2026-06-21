@@ -14,25 +14,30 @@ const PLANS: Record<string, { price: number; promoPrice: number; hours: number; 
 
 export async function POST(req: NextRequest) {
   try {
-    const { planId, userId } = await req.json();
+    const { planId } = await req.json();
     const plan = PLANS[planId];
 
     if (!plan) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    // Check if user has a promo code for discounted pricing
-    let hasPromo = false;
-    if (userId) {
-      const supabase = await createSupabaseServer();
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("promo_code")
-        .eq("id", userId)
-        .single();
-
-      hasPromo = !!profile?.promo_code;
+    // Derive the user from the authenticated session — never trust a
+    // client-supplied user id for pricing or checkout metadata.
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const userId = user.id;
+
+    // Check if user has a promo code for discounted pricing
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("promo_code")
+      .eq("id", userId)
+      .single();
+
+    const hasPromo = !!profile?.promo_code;
 
     const unitAmount = hasPromo ? plan.promoPrice : plan.price;
 
