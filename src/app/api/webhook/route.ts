@@ -35,6 +35,36 @@ export async function POST(req: NextRequest) {
     const userId = session.metadata?.userId;
     const hours = parseInt(session.metadata?.hours || "6");
 
+    // Idempotency guard against Stripe webhook retries.
+    // Stripe may deliver the same checkout.session.completed event more than
+    // once; without this check each delivery would stack additional access
+    // hours onto the user's profile. We key on the Stripe *session* id (not the
+    // event id) so that retries of the same purchase are deduplicated.
+    //
+    // Run this migration manually in Supabase before deploying:
+    //
+    //   create table if not exists processed_events (
+    //     session_id text primary key,
+    //     processed_at timestamptz not null default now()
+    //   );
+    //
+    // The `session_id` primary key gives us the uniqueness constraint that
+    // makes duplicate inserts fail, which we rely on below.
+    if (session.id) {
+      const { data: existing } = await supabase
+        .from("processed_events")
+        .select("session_id")
+        .eq("session_id", session.id)
+        .maybeSingle();
+
+      if (existing) {
+        // Already granted access for this session; acknowledge the retry
+        // without granting again.
+        console.log(`Duplicate webhook ignored for session ${session.id}`);
+        return NextResponse.json({ received: true, duplicate: true });
+      }
+    }
+
     if (userId) {
       // Get current profile to check existing access
       const { data: profile } = await supabase
@@ -64,6 +94,19 @@ export async function POST(req: NextRequest) {
       }
 
       console.log(`Access granted: user ${userId}, ${hours}h, expires ${expiresAt}`);
+
+      // Mark this session as processed so future retries are deduplicated.
+      // A unique-violation here means a concurrent delivery already recorded it,
+      // which is fine — the access grant above is the only thing we guard.
+      if (session.id) {
+        const { error: recordError } = await supabase
+          .from("processed_events")
+          .insert({ session_id: session.id });
+
+        if (recordError) {
+          console.error("Error recording processed event:", recordError.message);
+        }
+      }
     }
   }
 
