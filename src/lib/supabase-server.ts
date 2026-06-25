@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 export async function createSupabaseServer() {
@@ -21,6 +22,22 @@ export async function createSupabaseServer() {
             // Middleware handles token refresh, so this is safe to ignore.
           }
         },
+      },
+    }
+  );
+}
+
+// Service role client that bypasses RLS. Use only for trusted server-side
+// writes to sensitive columns (e.g. access_expires_at, promo_code,
+// stripe_customer_id, times_used). Never expose this to the browser.
+export function createSupabaseServiceRole() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     }
   );
