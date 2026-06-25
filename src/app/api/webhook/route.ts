@@ -30,6 +30,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
+  // --- NEW: IDEMPOTENCY CHECK ---
+  // Try to insert the incoming Stripe event ID into a dedicated tracking table.
+  // If we've already processed this event, Postgres will throw a unique constraint error (23505).
+  const { error: logError } = await supabase
+    .from("stripe_processed_events")
+    .insert({ event_id: event.id });
+
+  if (logError) {
+    if (logError.code === "23505") {
+      console.log(`Duplicate event ignored: ${event.id}`);
+      // Return 200 OK so Stripe knows we received it and stops retrying
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+    // For any other DB error, return 500 so Stripe retries later
+    console.error("Failed to log webhook event ID:", logError);
+    return NextResponse.json({ error: "Event logging failed" }, { status: 500 });
+  }
+  // ------------------------------
+
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session.metadata?.userId;
@@ -60,6 +79,11 @@ export async function POST(req: NextRequest) {
 
       if (error) {
         console.error("Error updating profile after payment:", error);
+        
+        // CRITICAL CRASH RECOVERY:
+        // Delete the event log entry so Stripe can retry safely when your DB recovers
+        await supabase.from("stripe_processed_events").delete().eq("event_id", event.id);
+        
         return NextResponse.json({ error: "Database update failed" }, { status: 500 });
       }
 
