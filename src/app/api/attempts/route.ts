@@ -9,20 +9,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("access_expires_at")
-      .eq("id", user.id)
-      .single();
-
-    const hasAccess =
-      profile?.access_expires_at &&
-      new Date(profile.access_expires_at) > new Date();
-
-    if (!hasAccess) {
-      return NextResponse.json({ error: "Access expired" }, { status: 403 });
-    }
-
     const fields = req.nextUrl.searchParams.get("fields") || "section, correct";
     const sessionId = req.nextUrl.searchParams.get("session_id");
 
