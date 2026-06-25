@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabase-server";
+import { createSupabaseServer, createSupabaseServiceRole } from "@/lib/supabase-server";
 
 export async function GET(req: NextRequest) {
   try {
@@ -90,8 +90,12 @@ export async function POST(req: NextRequest) {
 
     if (insertError) throw insertError;
 
+    // Sensitive writes to promo_codes.times_used and profiles.promo_code must
+    // bypass RLS, so use a service role client for these updates only.
+    const supabaseAdmin = createSupabaseServiceRole();
+
     // 2. Increment times_used on the promo code
-    const { error: updateCodeError } = await supabase
+    const { error: updateCodeError } = await supabaseAdmin
       .from("promo_codes")
       .update({ times_used: promo.times_used + 1 })
       .eq("code", code);
@@ -99,7 +103,7 @@ export async function POST(req: NextRequest) {
     if (updateCodeError) throw updateCodeError;
 
     // 3. Update the user's profile with the promo code
-    const { error: updateProfileError } = await supabase
+    const { error: updateProfileError } = await supabaseAdmin
       .from("profiles")
       .update({ promo_code: code })
       .eq("id", user.id);
