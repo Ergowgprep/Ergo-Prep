@@ -57,7 +57,6 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: "payment",
-      allow_promotion_codes: true,
       success_url: `${req.nextUrl.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.nextUrl.origin}/pricing`,
       metadata: {
