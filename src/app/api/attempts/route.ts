@@ -9,7 +9,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const fields = req.nextUrl.searchParams.get("fields") || "section, correct";
+    const ALLOWED_FIELDS = new Set([
+      "id", "question_id", "section", "selected_answer", "correct", "mode",
+      "session_id", "created_at",
+    ]);
+    const requested = req.nextUrl.searchParams.get("fields");
+    const fields = requested
+      ? requested.split(",").map((f) => f.trim()).filter((f) => ALLOWED_FIELDS.has(f)).join(", ")
+      : "section, correct";
+
+    if (!fields) {
+      return NextResponse.json({ error: "No valid fields requested" }, { status: 400 });
+    }
+
     const sessionId = req.nextUrl.searchParams.get("session_id");
 
     let query = supabase

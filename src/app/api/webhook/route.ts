@@ -30,22 +30,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  // --- NEW: IDEMPOTENCY CHECK ---
-  // Try to insert the incoming Stripe event ID into a dedicated tracking table.
-  // If we've already processed this event, Postgres will throw a unique constraint error (23505).
+  // --- IDEMPOTENCY CHECK ---
+  // Insert the event ID. On conflict, allow retry only if the previous
+  // attempt was marked as "failed"; otherwise treat as a duplicate.
   const { error: logError } = await supabase
     .from("stripe_processed_events")
-    .insert({ event_id: event.id });
+    .insert({ event_id: event.id, status: "processing" });
 
   if (logError) {
     if (logError.code === "23505") {
-      console.log(`Duplicate event ignored: ${event.id}`);
-      // Return 200 OK so Stripe knows we received it and stops retrying
-      return NextResponse.json({ received: true, duplicate: true });
+      // Row exists — check if it previously failed and needs retry
+      const { data: existing } = await supabase
+        .from("stripe_processed_events")
+        .select("status")
+        .eq("event_id", event.id)
+        .single();
+
+      if (existing?.status === "failed") {
+        await supabase
+          .from("stripe_processed_events")
+          .update({ status: "processing" })
+          .eq("event_id", event.id);
+      } else {
+        console.log(`Duplicate event ignored: ${event.id}`);
+        return NextResponse.json({ received: true, duplicate: true });
+      }
+    } else {
+      console.error("Failed to log webhook event ID:", logError);
+      return NextResponse.json({ error: "Event logging failed" }, { status: 500 });
     }
-    // For any other DB error, return 500 so Stripe retries later
-    console.error("Failed to log webhook event ID:", logError);
-    return NextResponse.json({ error: "Event logging failed" }, { status: 500 });
   }
   // ------------------------------
 
@@ -79,17 +92,25 @@ export async function POST(req: NextRequest) {
 
       if (error) {
         console.error("Error updating profile after payment:", error);
-        
-        // CRITICAL CRASH RECOVERY:
-        // Delete the event log entry so Stripe can retry safely when your DB recovers
-        await supabase.from("stripe_processed_events").delete().eq("event_id", event.id);
-        
+
+        // Mark the event as failed so it can be retried. A status column
+        // avoids deleting the row (which opens a race window for duplicates).
+        await supabase
+          .from("stripe_processed_events")
+          .update({ status: "failed" })
+          .eq("event_id", event.id);
+
         return NextResponse.json({ error: "Database update failed" }, { status: 500 });
       }
 
       console.log(`Access granted: user ${userId}, ${hours}h, expires ${expiresAt}`);
     }
   }
+
+  await supabase
+    .from("stripe_processed_events")
+    .update({ status: "completed" })
+    .eq("event_id", event.id);
 
   return NextResponse.json({ received: true });
 }

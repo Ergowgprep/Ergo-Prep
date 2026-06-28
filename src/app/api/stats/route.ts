@@ -4,13 +4,18 @@ import { createSupabaseServer } from "@/lib/supabase-server";
 export async function GET() {
   try {
     const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const [{ count: total, error: e1 }, { count: correct, error: e2 }] =
       await Promise.all([
-        supabase.from("attempts").select("*", { count: "exact", head: true }),
+        supabase.from("attempts").select("*", { count: "exact", head: true }).eq("user_id", user.id),
         supabase
           .from("attempts")
           .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id)
           .eq("correct", true),
       ]);
 
