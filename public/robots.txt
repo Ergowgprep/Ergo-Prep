@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /quiz
+Disallow: /practice
+Disallow: /test
+Disallow: /analytics
+Disallow: /profile
+Disallow: /onboarding
+Disallow: /results
+Disallow: /review
+Disallow: /payment
+Disallow: /api/
+Sitemap: https://ergoprep.co.uk/sitemap.xml
