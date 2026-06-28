@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabase-server";
+import { createSupabaseServer, createSupabaseServiceRole } from "@/lib/supabase-server";
 
 export async function GET() {
   try {
@@ -14,6 +14,26 @@ export async function GET() {
       .select("*")
       .eq("id", user.id)
       .single();
+
+    if (data) {
+      return NextResponse.json({ profile: data });
+    }
+
+    if (error && error.code === "PGRST116") {
+      const serviceRole = createSupabaseServiceRole();
+      const { data: created, error: insertError } = await serviceRole
+        .from("profiles")
+        .upsert({
+          id: user.id,
+          email: user.email,
+          name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+        })
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+      return NextResponse.json({ profile: created });
+    }
 
     if (error) throw error;
 

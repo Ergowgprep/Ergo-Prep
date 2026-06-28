@@ -12,17 +12,30 @@ function SuccessContent() {
   const router = useRouter();
   const { theme } = useTheme();
   const c = getColors(theme === "dark");
-  const { refreshProfile } = useAuth();
+  const { refreshProfile, hasAccess } = useAuth();
   const searchParams = useSearchParams();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Refresh profile to pick up new access_expires_at
-    const init = async () => {
-      await refreshProfile();
-      setLoaded(true);
+    let cancelled = false;
+    const poll = async () => {
+      for (let i = 0; i < 10; i++) {
+        await refreshProfile();
+        if (cancelled) return;
+        const res = await fetch("/api/profile");
+        if (res.ok) {
+          const { profile } = await res.json();
+          if (profile?.access_expires_at) {
+            await refreshProfile();
+            break;
+          }
+        }
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+      if (!cancelled) setLoaded(true);
     };
-    init();
+    poll();
+    return () => { cancelled = true; };
   }, [refreshProfile]);
 
   return (
