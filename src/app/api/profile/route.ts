@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabase-server";
+import { createSupabaseServer, createSupabaseServiceRole } from "@/lib/supabase-server";
 
 export async function GET() {
   try {
@@ -9,15 +9,29 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", user.id)
+      .maybeSingle();
+
+    if (data) {
+      return NextResponse.json({ profile: data });
+    }
+
+    const serviceRole = createSupabaseServiceRole();
+    const { data: created, error: insertError } = await serviceRole
+      .from("profiles")
+      .upsert({
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+      })
+      .select()
       .single();
 
-    if (error) throw error;
-
-    return NextResponse.json({ profile: data });
+    if (insertError) throw insertError;
+    return NextResponse.json({ profile: created });
   } catch (err) {
     console.error("Profile GET error:", err);
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
