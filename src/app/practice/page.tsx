@@ -90,6 +90,13 @@ export default function PracticePage() {
               <span style={{ fontSize: 11, color: c.mt }}>5</span>
               <span style={{ fontSize: 11, color: c.mt }}>50</span>
             </div>
+            {sel.length > 0 && (
+              <p style={{ fontSize: 12, color: c.mt, marginTop: 10 }}>
+                {sel.length === 1
+                  ? `${cnt} questions from ${sel[0]}`
+                  : `${cnt % sel.length === 0 ? "" : "~"}${Math.round(cnt / sel.length)} questions per section`}
+              </p>
+            )}
           </Card>
 
           {/* New questions only */}
