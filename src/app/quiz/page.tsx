@@ -19,6 +19,15 @@ type Question = {
 
 type PassageGroup = { pt: string; qs: Question[] };
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function QuizContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -94,7 +103,7 @@ function QuizContent() {
           return;
         }
 
-        const shuffledData = allData.sort(() => Math.random() - 0.5);
+        const shuffledData = shuffle(allData);
         const byPassage = new Map<string, Question[]>();
         shuffledData.forEach((q) => {
           const k = q.passage_text || "General"; 
@@ -107,11 +116,11 @@ function QuizContent() {
         secs.forEach((sec) => {
           const need = quotas[sec] || 0;
           const secPassages = [...byPassage.entries()].filter(([, pqs]) => pqs.some((q) => q.section === sec));
-          const shuffled = secPassages.sort(() => Math.random() - 0.5);
+          const shuffled = shuffle(secPassages);
           let count = 0;
           for (const [, pqs] of shuffled) {
             if (count >= need) break;
-            const secQs = pqs.filter((q) => q.section === sec && !usedIds.has(q.id)).sort(() => Math.random() - 0.5);
+            const secQs = shuffle(pqs.filter((q) => q.section === sec && !usedIds.has(q.id)));
             const take = secQs.slice(0, Math.min(maxPerPassage, need - count));
             take.forEach((q) => usedIds.add(q.id));
             result.push(...take);
@@ -125,7 +134,7 @@ function QuizContent() {
           if (!grouped.has(k)) grouped.set(k, []);
           grouped.get(k)!.push(q);
         });
-        const finalQs = [...grouped.values()].sort(() => Math.random() - 0.5).flat();
+        const finalQs = shuffle([...grouped.values()]).flat();
         const finalGrp = Array.from(grouped.entries()).map(([p, q]) => ({ pt: p, qs: q }));
 
         setQs(finalQs);
