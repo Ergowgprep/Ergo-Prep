@@ -666,9 +666,9 @@ export default function LearnPage() {
   // ============================================================================
   const asc = secInfo.Assumptions.color;
   const assumptionSlides = [
-    // Slide 1/11 — Welcome to Assumptions (Informative)
+    // Slide 1/12 — Welcome to Assumptions (Informative)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 11</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 12</span>
       <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Assumptions</h2>
       <div style={{ display: "grid", gap: 14 }}>
         <div style={{ padding: 16, background: asc + "0A", borderRadius: 12, border: "1px solid " + asc + "20" }}>
@@ -681,69 +681,92 @@ export default function LearnPage() {
         </div>
       </div>
       <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
-        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> If the author&apos;s argument falls apart without this statement, it is a necessary assumption. If the argument survives without it, it is not.</p>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Think of an assumption as a foundation stone. If you pull it out, the entire argument collapses. If the argument still stands without it, it was never part of the foundation.</p>
       </div>
     </div> },
 
-    // Slide 2/11 — The Logic Bridge (Interactive)
+    // Slide 2/12 — The Foundation (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Logic Bridge</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Foundation</h2>
+      <div style={{ padding: 14, background: asc + "0A", borderRadius: 10, border: "1px solid " + asc + "20", marginBottom: 14 }}>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Concept:</strong> An assumption is a necessary foundation stone. If you take it away, the passage cannot stand &mdash; the argument crumbles. If the argument survives without it, that stone was never part of the foundation.</p>
+      </div>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> I am going to the beach today, so I will get a sunburn.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> It is sunny today.</p>
       </div>
-      <MCQ qKey="as1" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"Every argument has a gap: Premise (Fact) → [GAP] → Conclusion. The assumption is the bridge that spans it. If it were raining or midnight, the jump from \"beach\" to \"sunburn\" wouldn't make sense. The author must assume the sun is out.\n\n💡 Pro Tip: Look for the \"leap\" in logic. Whatever connects the start to the finish is the assumption."} />
+      <MCQ qKey="as1" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"Remove this foundation stone: imagine it is NOT sunny today. Now the author's leap from \"beach\" to \"sunburn\" makes no sense — the argument collapses. The sun being out is a necessary foundation that the entire passage rests upon.\n\n💡 Pro Tip: Ask yourself: \"Can this passage exist without this statement being true?\" If the answer is no, it is a foundation stone — Assumption Made."} />
     </div> },
 
-    // Slide 3/11 — The Negative Test (Interactive)
+    // Slide 3/12 — Step 1: The Reframing Test (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Negative Test</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 12 — technique</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Step 1: The Reframing Test</h2>
+      <div style={{ padding: 14, background: asc + "0A", borderRadius: 10, border: "1px solid " + asc + "20", marginBottom: 14 }}>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Technique:</strong> Take the proposed assumption and slot it into the passage as if the author had written it. Does it read naturally? Does it fill a gap the argument needs? If it fits seamlessly, the author was probably relying on it. If it sounds random or irrelevant, it&apos;s not an assumption.</p>
+      </div>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> I am travelling to Paris tomorrow, so I will visit the Eiffel Tower.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 10 }}><strong style={{ color: c.fg }}>Test Assumption A:</strong> &ldquo;The Eiffel Tower is located in Paris.&rdquo;</p>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7, fontStyle: "italic", marginTop: 4, padding: "8px 12px", background: c.gn + "0C", borderRadius: 8, border: "1px solid " + c.gn + "20" }}>&rarr; Reframed: &ldquo;I am travelling to Paris tomorrow. <strong style={{ color: c.gn }}>The Eiffel Tower is located in Paris.</strong> So I will visit the Eiffel Tower.&rdquo; &mdash; Fits perfectly. The passage needs this to make sense.</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 10 }}><strong style={{ color: c.fg }}>Test Assumption B:</strong> &ldquo;Paris is the capital of France.&rdquo;</p>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7, fontStyle: "italic", marginTop: 4, padding: "8px 12px", background: c.rd + "0C", borderRadius: 8, border: "1px solid " + c.rd + "20" }}>&rarr; Reframed: &ldquo;I am travelling to Paris tomorrow. <strong style={{ color: c.rd }}>Paris is the capital of France.</strong> So I will visit the Eiffel Tower.&rdquo; &mdash; True fact, but random. It adds nothing to the argument&apos;s logic.</p>
+      </div>
+      <MCQ qKey="as_rf" question="Which statement is the author actually assuming?" opts={["The Eiffel Tower is located in Paris", "Paris is the capital of France"]} correctArr={[0]} expText={"The Reframing Test is your quick first filter. Assumption A slots in and connects the dots — the author needs the tower to be in Paris for the visit to make sense. Assumption B is true but irrelevant — whether Paris is a capital has nothing to do with visiting the Eiffel Tower.\n\n💡 Pro Tip: Use the Reframing Test as Step 1 (quick intuition check), then confirm with Step 2: the Negation Test (rigorous logic check)."} />
+    </div> },
+
+    // Slide 4/12 — Step 2: The Negation Test (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 12 — technique</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Step 2: The Negation Test</h2>
+      <div style={{ padding: 14, background: asc + "0A", borderRadius: 10, border: "1px solid " + asc + "20", marginBottom: 14 }}>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Technique:</strong> Take the proposed assumption and make it false (negate it). If the argument collapses, the assumption is a necessary foundation stone &mdash; Assumption Made. If the argument still works, it was never part of the foundation &mdash; Assumption Not Made.</p>
+      </div>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> We need to hire more sales staff to increase revenue.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> New staff can find customers.</p>
       </div>
-      <MCQ qKey="as2" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"The fastest way to check an assumption is to invert it (make it false). Let's invert this: \"New staff CANNOT find customers.\" Does the author's plan to increase revenue still work? No, it collapses completely. Assumption Made."} />
+      <MCQ qKey="as2" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"Negate the assumption: \"New staff CANNOT find customers.\" Does the author's plan to increase revenue still work? No — if new hires can't find customers, hiring them is pointless. The argument collapses. Assumption Made.\n\n💡 Pro Tip: The two-step method — (1) Reframe it into the passage, (2) Negate it — gives you both a quick gut check and rigorous confirmation."} />
     </div> },
 
-    // Slide 4/11 — Necessary vs. Helpful: The "Must" Trap (Interactive)
+    // Slide 5/12 — The Necessity Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Necessary vs. Helpful: The &ldquo;Must&rdquo; Trap</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Necessity Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Our sales are down. We must launch a TV ad campaign to save the company.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> TV ads are the cheapest marketing option.</p>
       </div>
-      <MCQ qKey="as3" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"An assumption isn't just a fact that supports the argument — it is a load-bearing pillar the argument must have. TV ads might be incredibly expensive, but the author assumes they are the only thing powerful enough to save the company.\n\n💡 Pro Tip: Spot the difference between a helpful bonus and a strict requirement. The author assumes the ads will work, not that they are cheap."} />
+      <MCQ qKey="as3" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"An assumption isn't just a fact that supports the argument — it is a load-bearing foundation stone the argument must have. TV ads might be incredibly expensive, but the author assumes they are the only thing powerful enough to save the company.\n\n💡 Pro Tip: Spot the difference between a helpful bonus and a strict requirement. The author assumes the ads will work, not that they are cheap."} />
     </div> },
 
-    // Slide 5/11 — Sufficient vs. Necessary (Interactive)
+    // Slide 6/12 — The Guarantee Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Sufficient vs. Necessary</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Guarantee Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> To get into Harvard, you need high grades.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> If you have high grades, you will definitely get into Harvard.</p>
       </div>
-      <MCQ qKey="as4" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"An assumption must be necessary (a required prerequisite). It doesn't have to be sufficient (enough on its own to guarantee the outcome). High grades are necessary, but the author doesn't assume they are enough to guarantee entry — they might also require extracurriculars.\n\n💡 Pro Tip: Do not confuse a requirement with a guarantee!"} />
+      <MCQ qKey="as4" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"An assumption must be necessary (a required prerequisite). It doesn't have to be sufficient (enough on its own to guarantee the outcome). High grades are necessary, but the author doesn't assume they are enough to guarantee entry — they might also require extracurriculars.\n\n💡 Pro Tip: Do not confuse a requirement with a guarantee! A necessary condition is not a sufficient one."} />
     </div> },
 
-    // Slide 6/11 — Hidden Preferences (Interactive)
+    // Slide 7/12 — The Preference Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Hidden Preferences</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Preference Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> To increase our profit margins, we must switch to cheaper, lower-quality materials.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Increasing profit margins is more important than maintaining high product quality.</p>
       </div>
-      <MCQ qKey="as5" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"When an author proposes a plan to achieve a specific result, they automatically assume that the result is actually desired. They are making a hidden value judgment. If quality were the higher priority, the argument would fall apart. Assumption Made."} />
+      <MCQ qKey="as5" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"When an author proposes a plan to achieve a specific result, they automatically assume that the result is actually desired. They are making a hidden value judgment. If quality were the higher priority, the argument would fall apart. Assumption Made.\n\n💡 Pro Tip: If a passage sacrifices X to achieve Y, the author assumes Y is more important than X."} />
     </div> },
 
-    // Slide 7/11 — The "Superlative" Trap (Interactive)
+    // Slide 8/12 — The Superlative Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The &ldquo;Superlative&rdquo; Trap</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Superlative Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Product X is better than Product Y because it is cheaper.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Price is the only factor that matters to consumers.</p>
@@ -751,10 +774,10 @@ export default function LearnPage() {
       <MCQ qKey="as6" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"Watch out for extreme words: All, None, Always, Never, Best, Worst, Only. Authors rarely assume extremes unless they explicitly state them. The author assumes price is a factor — or the deciding factor here — but they don't assume quality or durability don't matter at all.\n\n💡 Pro Tip: The word \"only\" is usually a trap. Be highly sceptical of absolute statements."} />
     </div> },
 
-    // Slide 8/11 — Prescriptive vs. Descriptive (Interactive)
+    // Slide 9/12 — The Prediction Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Prescriptive vs. Descriptive</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 9 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Prediction Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> The CEO presided over a massive financial loss, so she should resign immediately.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> The CEO will resign.</p>
@@ -762,21 +785,21 @@ export default function LearnPage() {
       <MCQ qKey="as7" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"Don't confuse an opinion about what ought to happen (\"should\") with a prediction of what will happen (\"will\"). The argument is a moral/strategic opinion about what is right, not a crystal-ball prediction of the future.\n\n💡 Pro Tip: Match the tone of the passage. An assumption about a recommendation is very different from an assumption about a future fact."} />
     </div> },
 
-    // Slide 9/11 — Judge the Logic, Not the World (Interactive)
+    // Slide 10/12 — The Relevance Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 9 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Stick to the Prompt</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 10 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Relevance Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> I am travelling to Paris tomorrow, so I will visit the Eiffel Tower.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Paris is the capital of France.</p>
       </div>
-      <MCQ qKey="as8" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"Yes, this is a true fact in the real world. But does the author's plan rely on Paris being the capital? No. They just rely on the Eiffel Tower being located there.\n\n💡 Pro Tip: You are analysing the internal logic of the text block, not your own general knowledge. Leave your real-world facts behind!"} />
+      <MCQ qKey="as8" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[1]} expText={"Yes, this is a true fact in the real world. But does the author's plan rely on Paris being the capital? No. They just rely on the Eiffel Tower being located there. Being a capital city is irrelevant to visiting a specific landmark.\n\n💡 Pro Tip: Use the Reframing Test — slot it in and ask: does this connect the dots? \"I'm going to Paris. Paris is the capital. So I'll visit the Eiffel Tower.\" The middle sentence adds nothing. It's a true but irrelevant distraction."} />
     </div> },
 
-    // Slide 10/11 — Causation vs. Correlation (Interactive)
+    // Slide 11/12 — The Causation Trap (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 10 of 11 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Causation vs. Correlation</h2>
+      <span style={{ fontSize: 11, fontWeight: 700, color: asc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: asc + "15", display: "inline-block", marginBottom: 16 }}>slide 11 of 12 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Causation Trap</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> Studies show that populations who consume high amounts of olive oil have lower rates of heart disease. Therefore, adding olive oil to one&apos;s diet is the most effective way to prevent a heart attack.</p>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Olive oil consumption is the direct cause of the lower heart disease rates.</p>
@@ -784,20 +807,21 @@ export default function LearnPage() {
       <MCQ qKey="as9" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"The author observes two things happening together (a correlation between eating olive oil and having a healthy heart) and concludes that one caused the other. By claiming olive oil prevents heart attacks, the author must implicitly rule out all other possible causes — such as these populations exercising more, eating less sugar, or having better genetics.\n\n💡 Pro Tip: Whenever an argument observes a trend and prescribes a solution (\"X and Y happen together, so do X to get Y\"), look for the assumption that ignores hidden variables. The author must assume X is the true cause!"} />
     </div> },
 
-    // Slide 11/11 — Cheat Sheet
+    // Slide 12/12 — Cheat Sheet
     { render: () => <div>
       <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Assumptions Cheat Sheet</h2>
       <div style={{ display: "grid", gap: 8 }}>
         {[
-          { rule: "The Logic Bridge", tip: "Find the gap between premise and conclusion. The assumption fills it." },
-          { rule: "The Negative Test", tip: "Invert the assumption. If the argument collapses → Assumption Made." },
-          { rule: "Necessary ≠ Helpful", tip: "It must be a load-bearing pillar, not just a supportive bonus." },
-          { rule: "Sufficient ≠ Necessary", tip: "A requirement is not a guarantee. Don't confuse the two." },
-          { rule: "Hidden Preferences", tip: "If a plan pursues Goal X, the author assumes Goal X is worth pursuing." },
-          { rule: "Beware \"Only\"", tip: "Extreme words are traps. Authors rarely assume absolutes." },
-          { rule: "Should ≠ Will", tip: "A recommendation is not a prediction. Match the tone of the passage." },
-          { rule: "Logic, Not the World", tip: "Judge the argument's internal logic, not real-world general knowledge." },
-          { rule: "Correlation ≠ Causation", tip: "If the author prescribes a solution from a trend, they assume direct causation." },
+          { rule: "The Foundation", tip: "An assumption is a foundation stone. Remove it and the argument collapses." },
+          { rule: "Step 1: Reframing", tip: "Slot the assumption into the passage. Does it connect the dots naturally?" },
+          { rule: "Step 2: Negation", tip: "Negate the assumption. If the argument collapses → Assumption Made." },
+          { rule: "The Necessity Trap", tip: "It must be a load-bearing pillar, not just a supportive bonus." },
+          { rule: "The Guarantee Trap", tip: "A requirement is not a guarantee. Necessary ≠ sufficient." },
+          { rule: "The Preference Trap", tip: "If a plan sacrifices X for Y, the author assumes Y matters more than X." },
+          { rule: "The Superlative Trap", tip: "Extreme words (only, always, never) are traps. Authors rarely assume absolutes." },
+          { rule: "The Prediction Trap", tip: "\"Should\" is not \"will.\" A recommendation is not a prediction." },
+          { rule: "The Relevance Trap", tip: "A true fact is not an assumption unless the argument depends on it." },
+          { rule: "The Causation Trap", tip: "If the author prescribes a solution from a trend, they assume direct causation." },
         ].map((r, i) => (
           <div key={i} style={{ display: "grid", gridTemplateColumns: "155px 1fr", padding: "11px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, alignItems: "start", gap: 16 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: asc, fontFamily: fonts.m }}>{r.rule}</span>
