@@ -42,7 +42,7 @@ export default function LearnPage() {
   const [slide, setSlide] = useState(0);
   const [ans, setAns] = useState<Record<string, any>>({});
   const [showExp, setSE] = useState(false);
-  const [showInfo, setSI] = useState(false);
+  const [, setSI] = useState(false);
   const [exitConfirm, setEC] = useState(false);
 
   // TODO: Replace with real state from Supabase
@@ -338,12 +338,13 @@ export default function LearnPage() {
   // FALLACIES DATA
   // ============================================================================
   const fallacies = [
-    { prompt: "Should the legal voting age be lowered to 16?", arg: "Yes; because the youth are our future and we must always invest in our future.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 0, name: "Slogan", exp: "It uses a catchy, inspirational phrase (\"the youth are our future\") to avoid discussing the actual logic of political maturity or civic responsibility." },
-    { prompt: "Is it a good idea for students to take a gap year before starting university?", arg: "Yes; many top universities admit loads of applicants who have taken gap years.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 4, name: "Correlation not Causation", exp: "Just because top students happen to take gap years does not mean the gap year caused their success. A third factor (like motivation or resources) likely causes both." },
-    { prompt: "Should high schools allow students to use their phones during lunch breaks?", arg: "No; because if we allow them to use phones at lunch, they will soon demand to use them in class, eventually leading to a total collapse of discipline and the end of formal education.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 1, name: "Slippery Slope", exp: "It takes a small step (phones at lunch) and predicts an extreme, unproven disaster (the end of education). Without a logical link proving this chain is inevitable, it is just fear-mongering." },
-    { prompt: "Should companies mandate a four-day work week to increase productivity?", arg: "Yes; because my cousin's design firm switched to four days and their profits doubled in just six months.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 5, name: "Anecdote", exp: "A sample size of one is not a basis for national policy. What works for a specific design firm may not work for a hospital, a factory, or a law firm." },
-    { prompt: "Should all professional plumbers be required to hold a national certification?", arg: "Yes; because it is essential that the industry can ensure all its workers have the proper certification.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 2, name: "Circular Argument", exp: "The argument says we need certification because we need people to be certified. It provides no external reason, such as safety standards or technical skill." },
-    { prompt: "Should the government increase taxes on luxury sports cars?", arg: "No; because it is simply mean-spirited to target people just because they have worked hard enough to afford a nice vehicle.", opts: ["Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 3, name: "Appeal", exp: "Words like \"mean-spirited\" appeal to emotion rather than objective impact. A strong argument would focus on economic factors, not the feelings of the car owners." },
+    { prompt: "Should universities require students to attend all lectures?", arg: "Yes; university tuition fees have increased significantly over the past decade, placing a heavy financial burden on students and their families.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 0, name: "Red Herring", exp: "The argument shifts from whether mandatory attendance improves learning to the unrelated topic of tuition costs. The cost of tuition has nothing to do with whether attending lectures is beneficial.\n\n💡 Pro Tip: A red herring sounds convincing because the fact itself may be true — but it answers a different question than the one being asked." },
+    { prompt: "Should the legal voting age be lowered to 16?", arg: "Yes; because the youth are our future and we must always invest in our future.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 1, name: "Slogan", exp: "It uses a catchy, inspirational phrase (\"the youth are our future\") to avoid discussing the actual logic of political maturity or civic responsibility.\n\n💡 Pro Tip: If you could print the argument on a motivational poster, it is probably a slogan, not a reasoned argument." },
+    { prompt: "Is it a good idea for students to take a gap year before starting university?", arg: "Yes; many top universities admit loads of applicants who have taken gap years.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 5, name: "Correlation not Causation", exp: "Just because top students happen to take gap years does not mean the gap year caused their success. A third factor (like motivation or resources) likely causes both.\n\n💡 Pro Tip: Ask \"Could there be a hidden third factor?\" If yes, the argument is confusing correlation with causation." },
+    { prompt: "Should high schools allow students to use their phones during lunch breaks?", arg: "No; because if we allow them to use phones at lunch, they will soon demand to use them in class, eventually leading to a total collapse of discipline and the end of formal education.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 2, name: "Slippery Slope", exp: "It takes a small step (phones at lunch) and predicts an extreme, unproven disaster (the end of education). Without a logical link proving this chain is inevitable, it is just fear-mongering.\n\n💡 Pro Tip: Look for a chain of \"this will lead to...\" without evidence connecting each step." },
+    { prompt: "Should companies mandate a four-day work week to increase productivity?", arg: "Yes; because my cousin's design firm switched to four days and their profits doubled in just six months.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 6, name: "Anecdote", exp: "A sample size of one is not a basis for national policy. What works for a specific design firm may not work for a hospital, a factory, or a law firm.\n\n💡 Pro Tip: Personal stories are emotionally compelling but statistically meaningless. One example proves nothing about a general rule." },
+    { prompt: "Should all professional plumbers be required to hold a national certification?", arg: "Yes; because it is essential that the industry can ensure all its workers have the proper certification.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 3, name: "Circular Argument", exp: "The argument says we need certification because we need people to be certified. It provides no external reason, such as safety standards or technical skill.\n\n💡 Pro Tip: If the conclusion just restates the premise in different words, the argument is circular. It goes nowhere." },
+    { prompt: "Should the government increase taxes on luxury sports cars?", arg: "No; because it is simply mean-spirited to target people just because they have worked hard enough to afford a nice vehicle.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 4, name: "Appeal", exp: "Words like \"mean-spirited\" appeal to emotion rather than objective impact. A strong argument would focus on economic factors, not the feelings of the car owners.\n\n💡 Pro Tip: If the argument makes you feel something instead of think something, it is likely an appeal to emotion." },
   ];
 
   // ============================================================================
@@ -440,59 +441,57 @@ export default function LearnPage() {
   ];
 
   const argSlides = [
+    // Slide 1/12 — Welcome to Arguments (Informative)
     { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 12</span>
       <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Arguments</h2>
-      <p style={{ fontSize: 15, lineHeight: 1.85, color: c.fgS }}>In this module, you will learn how to evaluate whether an argument is <strong style={{ color: c.fg }}>strong</strong> or <strong style={{ color: c.fg }}>weak</strong>.</p>
-      <p style={{ fontSize: 15, lineHeight: 1.85, color: c.fgS, marginTop: 14 }}>A strong argument must satisfy <strong style={{ color: c.fg }}>two conditions</strong>. By the end, you will spot common traps like red herrings, logical fallacies, and emotional appeals.</p>
+      <div style={{ display: "grid", gap: 14 }}>
+        <div style={{ padding: 16, background: ac + "0A", borderRadius: 12, border: "1px solid " + ac + "20" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: ac, marginBottom: 6 }}>The Goal</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>In this section, you are given a question and a proposed argument. You must decide if the argument is <strong style={{ color: c.fg }}>strong</strong> or <strong style={{ color: c.fg }}>weak</strong>. A strong argument must satisfy two conditions.</p>
+        </div>
+        <div style={{ padding: 16, background: ac + "0A", borderRadius: 12, border: "1px solid " + ac + "20" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: ac, marginBottom: 6 }}>The Two Pillars</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}><strong style={{ color: c.fg }}>Relevance:</strong> Does it answer the entire prompt, or just the general topic? <strong style={{ color: c.fg }}>Significance:</strong> Is the outcome important or worthwhile? There is a big difference between saving lives and saving 50 pence.</p>
+        </div>
+      </div>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Most weak arguments fail on relevance, not significance. They sound convincing because they discuss the right topic — but they answer a slightly different question than the one being asked.</p>
+      </div>
     </div> },
-    { render: () => <MCQ qKey="s1" multi question="What makes an Argument Strong?" subtitle="Think about what separates a convincing argument from a weak one." opts={["Relevance", "Length", "Significance", "Complexity"]} correctArr={[0, 2]} expText="The correct answers are Relevance and Significance. An argument must directly address the prompt (relevant) and carry real weight (significant)." /> },
+
+    // Slide 2/12 — The Two Pillars (Interactive)
     { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 12 — challenge</span>
+      <MCQ qKey="s1" multi question="What makes an Argument Strong?" subtitle="Think about what separates a convincing argument from a weak one." opts={["Relevance", "Length", "Significance", "Complexity"]} correctArr={[0, 2]} expText={"The correct answers are Relevance and Significance. An argument must directly address the prompt (relevant) and carry real weight (significant). Length and complexity are irrelevant — a short, simple argument can be strong, and a long, complex one can be weak."} />
+    </div> },
+
+    // Slide 3/12 — The Two Pillars Explained (Informative)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 12</span>
       <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>The Two Pillars</h2>
       <div style={{ display: "grid", gap: 14 }}>
         <div style={{ padding: 20, background: ac + "0A", borderRadius: 12, border: "1px solid " + ac + "20" }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: ac }}>Relevance</h3>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Does it answer the <strong style={{ color: c.fg }}>entire prompt</strong>, or just the general topic?</p>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Does it answer the <strong style={{ color: c.fg }}>entire prompt</strong>, or just the general topic? An argument about &ldquo;schools&rdquo; is not automatically relevant to a question about &ldquo;should maths be compulsory.&rdquo;</p>
         </div>
         <div style={{ padding: 20, background: ac + "0A", borderRadius: 12, border: "1px solid " + ac + "20" }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: ac }}>Significance</h3>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Is the outcome <strong style={{ color: c.fg }}>important or worthwhile</strong>? There is a big difference between saving lives and saving 50 pence.</p>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Is the outcome <strong style={{ color: c.fg }}>important or worthwhile</strong>? There is a big difference between saving lives and saving 50 pence. A relevant argument with a trivial outcome is still weak.</p>
         </div>
       </div>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Apply a two-step check: (1) Does this answer the exact question? (2) Does the outcome actually matter? Both must be yes for a strong argument.</p>
+      </div>
     </div> },
-    { render: () => {
-      const rhOpts = [
-        "Yes; it allows patients to quickly identify medical professionals in emergencies.",
-        "Yes; medical professionals work very hard and deserve high-quality clothing.",
-        "No; medical professionals undergo years of rigorous and expensive training, and it is a sign of disrespect to strip them of their professional autonomy by dictating what they must do.",
-        "No; clinical studies indicate that traditional hospital uniforms, particularly neckties and long-sleeved coats, can act as vectors for cross-infection, increasing the spread of bacteria.",
-      ];
-      return (
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15" }}>exercise</span>
-            <button onClick={() => setSI(!showInfo)} style={{ fontSize: 11.5, fontWeight: 600, color: ac, cursor: "pointer", border: "1px solid " + ac + "40", background: "transparent", borderRadius: 100, padding: "3px 12px", fontFamily: fonts.b }}>
-              {showInfo ? "Hide" : "What is a"} Red Herring?
-            </button>
-          </div>
-          {showInfo && (
-            <div style={{ padding: 14, background: c.acS, borderRadius: 10, marginBottom: 16, animation: "fu .2s ease", border: "1px solid " + c.ac + "20" }}>
-              <p style={{ fontSize: 13, lineHeight: 1.7, color: c.fgS }}>The term <strong style={{ color: c.fg }}>Red Herring</strong> stems from a story about using strong-smelling smoked fish to distract hounds during a fox hunt. In arguments, a red herring diverts attention away from the actual question.</p>
-            </div>
-          )}
-          <MCQ qKey="s3" multi question="Spot the Red Herring" subtitle="Should hospital staff be required to wear uniforms? Select all red herring arguments." opts={rhOpts} correctArr={[1, 2]} expText="B shifts to deserving clothing (not relevant). C shifts to professional autonomy (not addressing whether uniforms serve a functional purpose). A and D are directly relevant." />
-          {!showExp && (
-            <div style={{ marginTop: 14, padding: 12, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
-              <p style={{ fontSize: 12.5, color: c.mt, lineHeight: 1.6 }}><strong style={{ color: c.fg }}>Hint:</strong> Check if the point actually supports the original claim, note sudden topic shifts, and look for &ldquo;whataboutism.&rdquo;</p>
-            </div>
-          )}
-        </div>
-      );
-    } },
+
+    // Slide 4/12 — Spot the Fallacy (Informative)
     { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 12</span>
       <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 14 }}>Spot the Fallacy</h2>
-      <p style={{ fontSize: 15, lineHeight: 1.85, color: c.fgS, marginBottom: 18 }}>A <strong style={{ color: c.fg }}>fallacy</strong> is a flaw in reasoning that makes an argument weak. Over the next six slides, identify which type each argument contains.</p>
+      <p style={{ fontSize: 14, lineHeight: 1.7, color: c.fgS, marginBottom: 18 }}>A <strong style={{ color: c.fg }}>fallacy</strong> is a flaw in reasoning that makes an argument weak. Over the next seven slides, identify which type each argument contains.</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        {[["Slogan", "A catchy phrase disguised as reasoning"], ["Slippery Slope", "Predicting extreme consequences without proof"], ["Circular Argument", "The conclusion just restates the premise"], ["Appeal", "Using emotion instead of evidence"], ["Correlation not Causation", "Two things happen together, so one must cause the other"], ["Anecdote", "One personal story treated as universal proof"]].map((f, i) => (
+        {[["Red Herring", "Diverts attention to an unrelated point"], ["Slogan", "A catchy phrase disguised as reasoning"], ["Slippery Slope", "Predicting extreme consequences without proof"], ["Circular Argument", "The conclusion just restates the premise"], ["Appeal", "Using emotion instead of evidence"], ["Correlation not Causation", "Two things happen together, so one must cause the other"], ["Anecdote", "One personal story treated as universal proof"]].map((f, i) => (
           <div key={i} style={{ padding: 12, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
             <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 3 }}>{f[0]}</div>
             <div style={{ fontSize: 12, color: c.mt, lineHeight: 1.5 }}>{f[1]}</div>
@@ -500,10 +499,12 @@ export default function LearnPage() {
         ))}
       </div>
     </div> },
+
+    // Slides 5-11 — Seven Fallacy Challenges
     ...fallacies.map((f, fi) => ({
       render: () => (
         <div>
-          <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 14 }}>fallacy {fi + 1} of 6</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: ac, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: ac + "15", display: "inline-block", marginBottom: 14 }}>slide {fi + 5} of 12 — challenge</span>
           <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{f.prompt}</h2>
           <div style={{ padding: 16, background: c.mtBg, borderRadius: 12, border: "1px solid " + c.bd, marginBottom: 16 }}>
             <p style={{ fontSize: 14, lineHeight: 1.7, fontStyle: "italic", color: c.fgS }}>&ldquo;{f.arg}&rdquo;</p>
@@ -512,6 +513,29 @@ export default function LearnPage() {
         </div>
       ),
     })),
+
+    // Slide 12/12 — Cheat Sheet
+    { render: () => <div>
+      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Arguments Cheat Sheet</h2>
+      <div style={{ display: "grid", gap: 8 }}>
+        {[
+          { rule: "Relevance", tip: "Does it answer the exact question being asked, not just the general topic?" },
+          { rule: "Significance", tip: "Is the outcome important? A trivial benefit makes a weak argument." },
+          { rule: "Red Herring", tip: "Shifts to an unrelated point. True but answers a different question." },
+          { rule: "Slogan", tip: "A catchy phrase that sounds inspiring but provides no actual reasoning." },
+          { rule: "Slippery Slope", tip: "Predicts an extreme chain reaction with no evidence linking the steps." },
+          { rule: "Circular Argument", tip: "The conclusion just restates the premise in different words." },
+          { rule: "Appeal to Emotion", tip: "Makes you feel something instead of think something. Not evidence." },
+          { rule: "Correlation ≠ Causation", tip: "Two things happening together does not prove one caused the other." },
+          { rule: "Anecdote", tip: "One personal story proves nothing about a general rule or policy." },
+        ].map((r, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "155px 1fr", padding: "11px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, alignItems: "start", gap: 16 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: ac, fontFamily: fonts.m }}>{r.rule}</span>
+            <span style={{ fontSize: 12.5, color: c.fgS, lineHeight: 1.55 }}>{r.tip}</span>
+          </div>
+        ))}
+      </div>
+    </div> },
   ];
 
   // ============================================================================
