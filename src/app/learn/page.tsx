@@ -8,13 +8,14 @@ import { useTheme } from "@/lib/ThemeContext";
 import {
   Btn, Card, Ctn, Mono, Hdr, PB, ThemeToggle, Icons, ConfirmModal,
 } from "@/components/ui";
-import { BookOpen, Brain, Search, GitBranch, Puzzle, Scale, MessageCircle } from "lucide-react";
+import { BookOpen, Brain, Search, GitBranch, Puzzle, Scale, MessageCircle, Blocks } from "lucide-react";
 
-type SecKey = "Logic Essentials" | "Inference" | "Assumptions" | "Deduction" | "Interpretation" | "Arguments";
+type SecKey = "Ergo Fundamentals" | "Logic Essentials" | "Inference" | "Assumptions" | "Deduction" | "Interpretation" | "Arguments";
 
-const LEARN_SECTIONS: SecKey[] = ["Logic Essentials", ...SECTIONS] as SecKey[];
+const LEARN_SECTIONS: SecKey[] = ["Ergo Fundamentals", "Logic Essentials", ...SECTIONS] as SecKey[];
 
 const secIcons: Record<SecKey, JSX.Element> = {
+  "Ergo Fundamentals": <Blocks size={22} />,
   "Logic Essentials": <Brain size={22} />,
   Inference: <Search size={22} />,
   Assumptions: <Puzzle size={22} />,
@@ -24,6 +25,7 @@ const secIcons: Record<SecKey, JSX.Element> = {
 };
 
 const secInfo: Record<SecKey, { icon: JSX.Element; color: string; desc: string; ready: boolean }> = {
+  "Ergo Fundamentals": { icon: secIcons["Ergo Fundamentals"], color: "#F97316", desc: "Understand the three building blocks — Premises, Assumptions, and Conclusions — that every Watson-Glaser question is built from before tackling the five sections.", ready: true },
   "Logic Essentials": { icon: secIcons["Logic Essentials"], color: "#0EA5E9", desc: "The rigid rules of quantifiers and connectors. The foundational 'math of words' required for Deduction and Interpretation.", ready: true },
   Inference: { icon: secIcons.Inference, color: "#6366F1", desc: "Evaluate whether evidence supports, contradicts, or is insufficient for a given conclusion.", ready: true },
   Assumptions: { icon: secIcons.Assumptions, color: "#EC4899", desc: "Identify hidden assumptions that must be true for an argument to hold.", ready: true },
@@ -54,6 +56,7 @@ export default function LearnPage() {
 
   const ac = secInfo.Arguments.color;
   const lc = secInfo["Logic Essentials"].color;
+  const fc = secInfo["Ergo Fundamentals"].color;
 
   // ============================================================================
   // INTERACTIVE COMPONENTS
@@ -82,7 +85,7 @@ export default function LearnPage() {
       ? (pickedArr.length === correctArr.length && correctArr.every((i) => pickedArr.includes(i)))
       : (ans[qKey] === correctArr[0]);
     const hasAnswer = multi ? pickedArr.length > 0 : (ans[qKey] != null && ans[qKey] >= 0);
-    const acColor = sel === "Logic Essentials" ? lc : ac;
+    const acColor = sel === "Logic Essentials" ? lc : sel === "Ergo Fundamentals" ? fc : ac;
 
     return (
       <div>
@@ -345,6 +348,191 @@ export default function LearnPage() {
     { prompt: "Should companies mandate a four-day work week to increase productivity?", arg: "Yes; because my cousin's design firm switched to four days and their profits doubled in just six months.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 6, name: "Anecdote", exp: "A sample size of one is not a basis for national policy. What works for a specific design firm may not work for a hospital, a factory, or a law firm.\n\n💡 Pro Tip: Personal stories are emotionally compelling but statistically meaningless. One example proves nothing about a general rule." },
     { prompt: "Should all professional plumbers be required to hold a national certification?", arg: "Yes; because it is essential that the industry can ensure all its workers have the proper certification.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 3, name: "Circular Argument", exp: "The argument says we need certification because we need people to be certified. It provides no external reason, such as safety standards or technical skill.\n\n💡 Pro Tip: If the conclusion just restates the premise in different words, the argument is circular. It goes nowhere." },
     { prompt: "Should the government increase taxes on luxury sports cars?", arg: "No; because it is simply mean-spirited to target people just because they have worked hard enough to afford a nice vehicle.", opts: ["Red Herring", "Slogan", "Slippery Slope", "Circular Argument", "Appeal", "Correlation not Causation", "Anecdote"], correct: 4, name: "Appeal", exp: "Words like \"mean-spirited\" appeal to emotion rather than objective impact. A strong argument would focus on economic factors, not the feelings of the car owners.\n\n💡 Pro Tip: If the argument makes you feel something instead of think something, it is likely an appeal to emotion." },
+  ];
+
+  // ============================================================================
+  // ERGO FUNDAMENTALS SLIDES
+  // ============================================================================
+  const fundamentalsSlides = [
+    // Slide 1/10 — Welcome (Informative)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 9</span>
+      <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Ergo Fundamentals</h2>
+      <div style={{ display: "grid", gap: 14 }}>
+        <div style={{ padding: 16, background: fc + "0A", borderRadius: 12, border: "1px solid " + fc + "20" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: fc, marginBottom: 6 }}>The Goal</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Before you learn the five Watson-Glaser sections, you need to understand the machine they all run on. Every question in the test is built from the same three components: <strong style={{ color: c.fg }}>Premises</strong>, <strong style={{ color: c.fg }}>Assumptions</strong>, and <strong style={{ color: c.fg }}>Conclusions</strong>.</p>
+        </div>
+        <div style={{ padding: 16, background: fc + "0A", borderRadius: 12, border: "1px solid " + fc + "20" }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: fc, marginBottom: 6 }}>Why This Matters</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Think of this section as the instruction manual. The five test sections are just <strong style={{ color: c.fg }}>five different ways of stress-testing the same machine</strong>.</p>
+        </div>
+      </div>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Students who understand the underlying framework score higher because they know <em>what</em> they&apos;re being tested on — not just <em>how</em> to answer.</p>
+      </div>
+    </div> },
+
+    // Slide 2/10 — The Three Building Blocks (Informative + Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 9</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Three Building Blocks</h2>
+      <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Every argument you will encounter in the Watson-Glaser test — no matter which section — is built from the same three components. If you can spot each one, you already know what the question is really asking.</p>
+      <div style={{ padding: 12, background: fc + "0A", borderRadius: 10, border: "1px solid " + fc + "20", marginBottom: 14, textAlign: "center" }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: c.fg }}>Premises + Assumptions → Conclusion</p>
+      </div>
+      <div style={{ display: "grid", gap: 10, marginBottom: 18 }}>
+        <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <h3 style={{ fontSize: 13, fontWeight: 700, color: "#10B981", marginBottom: 4 }}>Premise</h3>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}>A stated fact or piece of evidence the author gives you. It&apos;s written in the passage — you can point to it.</p>
+        </div>
+        <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <h3 style={{ fontSize: 13, fontWeight: 700, color: "#EC4899", marginBottom: 4 }}>Assumption</h3>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}>An unstated belief the author takes for granted. It&apos;s the hidden glue between what they say and what they conclude. You can&apos;t point to it — it lives in the gap.</p>
+        </div>
+        <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <h3 style={{ fontSize: 13, fontWeight: 700, color: "#F59E0B", marginBottom: 4 }}>Conclusion</h3>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}>The endpoint the author arrives at. It&apos;s what they want you to accept based on their premises and assumptions.</p>
+        </div>
+      </div>
+      <p style={{ fontSize: 14, fontWeight: 600, color: c.fg, marginBottom: 10 }}>Now let&apos;s see it in a real argument:</p>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;It has rained heavily all week. The river runs through a valley with no drainage system. Therefore, the valley will flood.&rdquo;</p>
+      </div>
+      <MCQ qKey="ef1" question="Which of these is the ASSUMPTION in this argument?" opts={["It has rained heavily all week", "Heavy rain with no drainage causes flooding", "The valley will flood"]} correctArr={[1]} expText={"The first statement is a Premise — it's a stated fact you can point to. The third is the Conclusion — it's what the author wants you to accept. The second is the Assumption — it's nowhere in the passage. The author jumps from \"rain + no drainage\" to \"flooding\" without explaining why that connection exists.\n\n💡 Pro Tip: Every Watson-Glaser question is testing whether you can see these invisible jumps."} />
+    </div> },
+
+    // Slide 3/10 — Try It Again (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 9 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Try It Again</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;The restaurant has received five consecutive hygiene violations. The council should shut it down immediately.&rdquo;</p>
+      </div>
+      <MCQ qKey="ef2" question="Which of these is the PREMISE (stated fact)?" opts={["The restaurant has received five consecutive hygiene violations", "Repeated hygiene violations make a restaurant unsafe to eat at", "The council should shut it down immediately"]} correctArr={[0]} expText={"The first statement is the Premise — it's a fact stated in the passage. The second is the Assumption — the author takes for granted that violations mean the restaurant is unsafe (maybe they were minor paperwork issues). The third is the Conclusion — the action the author wants.\n\n💡 Pro Tip: The assumption here is debatable — and that's exactly why the Watson-Glaser tests it. The author assumes you'll agree that violations mean danger."} />
+    </div> },
+
+    // Slide 4/10 — The Machine (Informative)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 9</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>The Machine</h2>
+      <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
+        <div style={{ padding: 16, background: "#10B981" + "0A", borderRadius: 12, border: "1px solid #10B981" + "20", textAlign: "center" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#10B981" }}>PREMISES</p>
+          <p style={{ fontSize: 12, color: c.fgS }}>what you&apos;re told</p>
+        </div>
+        <div style={{ textAlign: "center", fontSize: 18, color: c.mt }}>+</div>
+        <div style={{ padding: 16, background: "#EC4899" + "0A", borderRadius: 12, border: "1px solid #EC4899" + "20", textAlign: "center" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#EC4899" }}>ASSUMPTIONS</p>
+          <p style={{ fontSize: 12, color: c.fgS }}>what&apos;s hidden</p>
+        </div>
+        <div style={{ textAlign: "center", fontSize: 18, color: c.mt }}>↓</div>
+        <div style={{ padding: 16, background: "#F59E0B" + "0A", borderRadius: 12, border: "1px solid #F59E0B" + "20", textAlign: "center" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#F59E0B" }}>CONCLUSION</p>
+          <p style={{ fontSize: 12, color: c.fgS }}>what&apos;s claimed</p>
+        </div>
+      </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        <div style={{ padding: 12, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}><strong style={{ color: c.fg }}>If the premises are weak</strong> → the conclusion is unreliable</p>
+        </div>
+        <div style={{ padding: 12, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}><strong style={{ color: c.fg }}>If the assumption is wrong</strong> → the conclusion collapses</p>
+        </div>
+        <div style={{ padding: 12, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd }}>
+          <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.6 }}><strong style={{ color: c.fg }}>If the conclusion goes beyond what the premises + assumptions support</strong> → it doesn&apos;t follow</p>
+        </div>
+      </div>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> The Watson-Glaser test is just five different ways of poking this machine to see if it breaks.</p>
+      </div>
+    </div> },
+
+    // Slide 5/10 — The Five Lenses (Informative)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 9</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>The Five Lenses</h2>
+      <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Each Watson-Glaser section tests a <strong style={{ color: c.fg }}>different part</strong> of the same machine:</p>
+      <div style={{ display: "grid", gap: 8 }}>
+        {[
+          { sec: "Assumptions", col: "#EC4899", tests: "The hidden glue", q: "Is the author relying on this unstated belief?" },
+          { sec: "Arguments", col: "#3B82F6", tests: "The premises", q: "Is this premise relevant and significant enough to matter?" },
+          { sec: "Deduction", col: "#F59E0B", tests: "The conclusion (strict)", q: "Does this follow with 100% certainty?" },
+          { sec: "Interpretation", col: "#10B981", tests: "The conclusion (reasonable)", q: "Does this follow beyond reasonable doubt?" },
+          { sec: "Inference", col: "#6366F1", tests: "The conclusion (spectrum)", q: "How confident should you be in this conclusion?" },
+        ].map((r, i) => (
+          <div key={i} style={{ padding: "10px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, display: "grid", gridTemplateColumns: "110px 1fr", gap: 10, alignItems: "start" }}>
+            <div>
+              <span style={{ fontSize: 12, fontWeight: 700, color: r.col, fontFamily: fonts.m }}>{r.sec}</span>
+              <p style={{ fontSize: 11, color: c.mt, marginTop: 2 }}>{r.tests}</p>
+            </div>
+            <p style={{ fontSize: 12.5, color: c.fgS, lineHeight: 1.5, fontStyle: "italic" }}>&ldquo;{r.q}&rdquo;</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Three of the five sections (Deduction, Interpretation, Inference) all test conclusions — just at different thresholds of certainty. Knowing which threshold applies is half the battle.</p>
+      </div>
+    </div> },
+
+    // Slide 6/10 — The Conclusion Spectrum (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 9 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Conclusion Spectrum</h2>
+      <div style={{ padding: 14, background: fc + "0A", borderRadius: 10, border: "1px solid " + fc + "20", marginBottom: 14 }}>
+        <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Concept:</strong> Three sections test conclusions, but with different standards of proof. Let&apos;s calibrate your judgment.</p>
+      </div>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;In the UK, driving under the influence of alcohol is a criminal offence. Last Saturday night, police officers set up a breathalyser checkpoint on the M1 motorway.&rdquo;</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Conclusion:</strong> The checkpoint was set up to catch drink-drivers.</p>
+      </div>
+      <MCQ qKey="ef3" question="How would each section judge this conclusion?" opts={["Deduction: Follows / Interpretation: Follows / Inference: True", "Deduction: Does Not Follow / Interpretation: Follows / Inference: Probably True", "Deduction: Follows / Interpretation: Does Not Follow / Inference: Insufficient Data", "Deduction: Does Not Follow / Interpretation: Does Not Follow / Inference: Probably False"]} correctArr={[1]} expText={"Deduction demands 100% certainty — the passage never explicitly states why the checkpoint was set up. It could have been for licence checks or a stolen vehicle search, so \"Does Not Follow.\" Interpretation asks \"beyond reasonable doubt\" — a breathalyser checkpoint on a Saturday night? A reasonable person would accept this is about drink-driving, so \"Follows.\" Inference allows nuance — it's highly likely given the context, but the passage doesn't explicitly state the purpose, so \"Probably True.\"\n\n💡 Pro Tip: Same passage, same conclusion, three different answers. The section you're in changes the rules. Always check which threshold applies before answering."} />
+    </div> },
+
+    // Slide 7/10 — Arguments: Testing the Premises (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 9 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Arguments: Testing the Premises</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Question:</strong> Should schools ban mobile phones during lessons?</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Argument:</strong> &ldquo;Yes; because students who use phones in class tend to get lower grades than those who don&apos;t.&rdquo;</p>
+      </div>
+      <MCQ qKey="ef4" question="Is this a strong or weak argument?" opts={["Strong Argument", "Weak Argument"]} correctArr={[0]} expText={"Apply the two pillars. Relevance: Does it address the exact question about banning phones in lessons? Yes. Significance: Does the outcome matter? Lower grades are a significant consequence. Both pillars hold — Strong Argument.\n\n💡 Pro Tip: In the Arguments section, you're not testing whether the conclusion follows. You're testing whether the premise is worth considering at all. It's a different skill entirely."} />
+    </div> },
+
+    // Slide 8/10 — Assumptions: Testing the Hidden Glue (Interactive)
+    { render: () => <div>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 9 — challenge</span>
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Assumptions: Testing the Hidden Glue</h2>
+      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;We should move our team meetings to Monday mornings to improve productivity for the rest of the week.&rdquo;</p>
+        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7, marginTop: 6 }}><strong style={{ color: c.fg }}>Proposed Assumption:</strong> Team meetings have a positive effect on weekly productivity.</p>
+      </div>
+      <MCQ qKey="ef5" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"The author leaps from \"move meetings to Monday\" to \"improve productivity.\" This only works if meetings actually help productivity. Negate it: \"Meetings have NO effect on productivity.\" The argument collapses — why move them if they don't help?\n\n💡 Pro Tip: In the Assumptions section, you're hunting for the invisible foundation stone. The passage gives you the premises and conclusion — your job is to find what's hiding in between."} />
+    </div> },
+
+    // Slide 9/9 — Cheat Sheet
+    { render: () => <div>
+      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Ergo Fundamentals Cheat Sheet</h2>
+      <div style={{ display: "grid", gap: 8 }}>
+        {[
+          { rule: "The Formula", tip: "Premises + Assumptions → Conclusion" },
+          { rule: "Premises", tip: "Stated facts. You can point to them in the text." },
+          { rule: "Assumptions", tip: "Unstated beliefs. They live in the gap between premise and conclusion." },
+          { rule: "Conclusions", tip: "The endpoint. What the author wants you to accept." },
+          { rule: "Assumptions Section", tip: "\"Is the author relying on this hidden belief?\"" },
+          { rule: "Arguments Section", tip: "\"Is this premise relevant and significant?\"" },
+          { rule: "Deduction", tip: "\"Does this follow with 100% certainty?\" (Strict)" },
+          { rule: "Interpretation", tip: "\"Does this follow beyond reasonable doubt?\" (Soft)" },
+          { rule: "Inference", tip: "\"How confident should I be?\" (Spectrum)" },
+        ].map((r, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "155px 1fr", padding: "11px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, alignItems: "start", gap: 16 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: fc, fontFamily: fonts.m }}>{r.rule}</span>
+            <span style={{ fontSize: 12.5, color: c.fgS, lineHeight: 1.55 }}>{r.tip}</span>
+          </div>
+        ))}
+      </div>
+    </div> },
   ];
 
   // ============================================================================
@@ -1177,6 +1365,7 @@ export default function LearnPage() {
   // LESSON VIEW
   // ============================================================================
   const slideMap: Record<string, { render: () => JSX.Element }[]> = {
+    "Ergo Fundamentals": fundamentalsSlides,
     "Logic Essentials": logicSlides,
     "Inference": inferenceSlides,
     "Assumptions": assumptionSlides,
