@@ -356,7 +356,7 @@ export default function LearnPage() {
   const fundamentalsSlides = [
     // Slide 1/10 — Welcome (Informative)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 10</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 1 of 9</span>
       <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>Welcome to Ergo Fundamentals</h2>
       <div style={{ display: "grid", gap: 14 }}>
         <div style={{ padding: 16, background: fc + "0A", borderRadius: 12, border: "1px solid " + fc + "20" }}>
@@ -375,7 +375,7 @@ export default function LearnPage() {
 
     // Slide 2/10 — The Three Building Blocks (Informative + Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 10</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 9</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Three Building Blocks</h2>
       <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Every argument you will encounter in the Watson-Glaser test — no matter which section — is built from the same three components. If you can spot each one, you already know what the question is really asking.</p>
       <div style={{ padding: 12, background: fc + "0A", borderRadius: 10, border: "1px solid " + fc + "20", marginBottom: 14, textAlign: "center" }}>
@@ -404,7 +404,7 @@ export default function LearnPage() {
 
     // Slide 3/10 — Try It Again (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 10 — challenge</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 3 of 9 — challenge</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Try It Again</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;The restaurant has received five consecutive hygiene violations. The council should shut it down immediately.&rdquo;</p>
@@ -414,7 +414,7 @@ export default function LearnPage() {
 
     // Slide 4/10 — The Machine (Informative)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 10</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 4 of 9</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>The Machine</h2>
       <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
         <div style={{ padding: 16, background: "#10B981" + "0A", borderRadius: 12, border: "1px solid #10B981" + "20", textAlign: "center" }}>
@@ -450,7 +450,7 @@ export default function LearnPage() {
 
     // Slide 5/10 — The Five Lenses (Informative)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 10</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 5 of 9</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>The Five Lenses</h2>
       <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Each Watson-Glaser section tests a <strong style={{ color: c.fg }}>different part</strong> of the same machine:</p>
       <div style={{ display: "grid", gap: 8 }}>
@@ -477,7 +477,7 @@ export default function LearnPage() {
 
     // Slide 6/10 — The Conclusion Spectrum (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 10 — challenge</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 6 of 9 — challenge</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Conclusion Spectrum</h2>
       <div style={{ padding: 14, background: fc + "0A", borderRadius: 10, border: "1px solid " + fc + "20", marginBottom: 14 }}>
         <p style={{ fontSize: 13, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>The Concept:</strong> Three sections test conclusions, but with different standards of proof. Let&apos;s calibrate your judgment.</p>
@@ -491,7 +491,7 @@ export default function LearnPage() {
 
     // Slide 7/10 — Arguments: Testing the Premises (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 10 — challenge</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 7 of 9 — challenge</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Arguments: Testing the Premises</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Question:</strong> Should schools ban mobile phones during lessons?</p>
@@ -502,7 +502,7 @@ export default function LearnPage() {
 
     // Slide 8/10 — Assumptions: Testing the Hidden Glue (Interactive)
     { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 10 — challenge</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 8 of 9 — challenge</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Assumptions: Testing the Hidden Glue</h2>
       <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
         <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;We should move our team meetings to Monday mornings to improve productivity for the rest of the week.&rdquo;</p>
@@ -511,17 +511,7 @@ export default function LearnPage() {
       <MCQ qKey="ef5" question="Is this an assumption made by the author?" opts={["Assumption Made", "Assumption Not Made"]} correctArr={[0]} expText={"The author leaps from \"move meetings to Monday\" to \"improve productivity.\" This only works if meetings actually help productivity. Negate it: \"Meetings have NO effect on productivity.\" The argument collapses — why move them if they don't help?\n\n💡 Pro Tip: In the Assumptions section, you're hunting for the invisible foundation stone. The passage gives you the premises and conclusion — your job is to find what's hiding in between."} />
     </div> },
 
-    // Slide 9/10 — Putting It All Together (Interactive)
-    { render: () => <div>
-      <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 9 of 10 — challenge</span>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>Putting It All Together</h2>
-      <div style={{ padding: 14, background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, marginBottom: 14 }}>
-        <p style={{ fontSize: 13.5, color: c.fgS, lineHeight: 1.7 }}><strong style={{ color: c.fg }}>Passage:</strong> &ldquo;Research shows that employees who take regular breaks are 20% more productive. Our company should therefore introduce mandatory break times every 90 minutes.&rdquo;</p>
-      </div>
-      <MCQ qKey="ef6" question="If a Watson-Glaser question asked you to evaluate the assumption in this argument, what would you be looking for?" opts={["Whether 20% is a significant improvement", "Whether mandatory breaks will actually increase productivity at this specific company", "Whether the conclusion follows with 100% certainty", "Whether the research is probably reliable"]} correctArr={[1]} expText={"Option A is an Arguments question — testing premise strength. Option B is the assumption — the hidden link between general research and this specific company. Option C is a Deduction question — testing the conclusion. Option D is an Inference question — testing confidence in the evidence.\n\n💡 Pro Tip: The same passage can generate questions for all five sections. Knowing which part of the machine you're poking tells you exactly what to look for."} />
-    </div> },
-
-    // Slide 10/10 — Cheat Sheet
+    // Slide 9/9 — Cheat Sheet
     { render: () => <div>
       <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Ergo Fundamentals Cheat Sheet</h2>
       <div style={{ display: "grid", gap: 8 }}>
