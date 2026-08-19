@@ -535,7 +535,6 @@ export default function LearnPage() {
           { rule: "Deduction", tip: "\"Does this follow with 100% certainty?\" (Strict)" },
           { rule: "Interpretation", tip: "\"Does this follow beyond reasonable doubt?\" (Soft)" },
           { rule: "Inference", tip: "\"How confident should I be?\" (Spectrum)" },
-          { rule: "The Key Insight", tip: "Same framework, five different lenses. Know which lens you're using." },
         ].map((r, i) => (
           <div key={i} style={{ display: "grid", gridTemplateColumns: "155px 1fr", padding: "11px 14px", background: c.mtBg, borderRadius: 10, border: "1px solid " + c.bd, alignItems: "start", gap: 16 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: fc, fontFamily: fonts.m }}>{r.rule}</span>
