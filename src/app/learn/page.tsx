@@ -365,11 +365,11 @@ export default function LearnPage() {
         </div>
         <div style={{ padding: 16, background: fc + "0A", borderRadius: 12, border: "1px solid " + fc + "20" }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: fc, marginBottom: 6 }}>Why This Matters</h3>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Think of this section as the instruction manual. The five test sections are just <strong style={{ color: c.fg }}>five different ways of stress-testing the same machine</strong>.</p>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: c.fgS }}>Students who understand the underlying framework score higher because they know <strong style={{ color: c.fg }}>what they&apos;re being tested on</strong> — not just how to answer.</p>
         </div>
       </div>
       <div style={{ marginTop: 16, padding: "10px 14px", background: c.acS, borderRadius: 10, border: "1px solid " + c.ac + "20" }}>
-        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> Students who understand the underlying framework score higher because they know <em>what</em> they&apos;re being tested on — not just <em>how</em> to answer.</p>
+        <p style={{ fontSize: 13, lineHeight: 1.6, color: c.fgS }}>💡 <strong style={{ color: c.fg }}>Pro Tip:</strong> In formal logic, any passage containing premises and a conclusion is called an &ldquo;argument.&rdquo; Don&apos;t confuse this with the Arguments section of the Watson-Glaser test — that&apos;s a specific question type. Throughout these lessons, when we say &ldquo;argument,&rdquo; we mean any logical statement, not the test section.</p>
       </div>
     </div> },
 
