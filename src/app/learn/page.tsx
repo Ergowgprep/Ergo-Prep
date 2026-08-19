@@ -46,6 +46,7 @@ export default function LearnPage() {
   const [showExp, setSE] = useState(false);
   const [, setSI] = useState(false);
   const [exitConfirm, setEC] = useState(false);
+  const [openTerm, setOpenTerm] = useState<{ id: string; align: "left" | "right" } | null>(null);
 
   // TODO: Replace with real state from Supabase
   const { profile } = useAuth();
@@ -61,6 +62,66 @@ export default function LearnPage() {
   // ============================================================================
   // INTERACTIVE COMPONENTS
   // ============================================================================
+
+  // Inline glossary term: dotted-underlined word that toggles a small popover
+  // definition on tap/click. State lives in the parent (openTerm) so only one
+  // is open at a time and it survives re-renders. No hover — mobile-friendly.
+  const Term = ({ word, def, accent }: { word: string; def: string; accent?: string }) => {
+    const col = accent ?? (sel ? secInfo[sel].color : c.ac);
+    const id = word;
+    const isOpen = openTerm?.id === id;
+    const toggle = (e: { currentTarget: EventTarget; stopPropagation: () => void; preventDefault?: () => void }) => {
+      e.stopPropagation();
+      if (isOpen) { setOpenTerm(null); return; }
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      // Right-anchor the popover if a left-anchored 260px box would run off-screen.
+      const align: "left" | "right" = rect.left + 260 > window.innerWidth - 12 ? "right" : "left";
+      setOpenTerm({ id, align });
+    };
+    return (
+      <span style={{ position: "relative", display: "inline-block" }}>
+        <span
+          role="button"
+          tabIndex={0}
+          aria-expanded={isOpen}
+          onClick={toggle}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(e); } }}
+          style={{ cursor: "pointer", color: "inherit", borderBottom: "1.5px dotted " + col }}
+        >{word}</span>
+        {isOpen && openTerm && (
+          <>
+            {/* Full-screen backdrop: a tap anywhere else closes the popover. */}
+            <span
+              onClick={(e) => { e.stopPropagation(); setOpenTerm(null); }}
+              style={{ position: "fixed", inset: 0, zIndex: 9 }}
+            />
+            <span
+              role="tooltip"
+              style={{
+                position: "absolute",
+                top: "calc(100% + 6px)",
+                left: openTerm.align === "left" ? 0 : "auto",
+                right: openTerm.align === "right" ? 0 : "auto",
+                background: c.card,
+                border: "1px solid " + c.bd,
+                borderRadius: 8,
+                padding: 10,
+                fontSize: 12,
+                lineHeight: 1.55,
+                fontWeight: 400,
+                color: c.fgS,
+                textAlign: "left",
+                maxWidth: 260,
+                width: "max-content",
+                boxShadow: "0 6px 20px rgba(0,0,0,.18)",
+                zIndex: 10,
+              }}
+            >{def}</span>
+          </>
+        )}
+      </span>
+    );
+  };
 
   const MCQ = ({
     qKey, question, subtitle, opts, correctArr, expText, multi,
@@ -377,7 +438,7 @@ export default function LearnPage() {
     { render: () => <div>
       <span style={{ fontSize: 11, fontWeight: 700, color: fc, textTransform: "uppercase", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 100, background: fc + "15", display: "inline-block", marginBottom: 16 }}>slide 2 of 9</span>
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>The Three Building Blocks</h2>
-      <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Every argument you will encounter in the Watson-Glaser test — no matter which section — is built from the same three components. If you can spot each one, you already know what the question is really asking.</p>
+      <p style={{ fontSize: 14, color: c.fgS, lineHeight: 1.7, marginBottom: 14 }}>Every <Term word="argument" def="In formal logic, any passage containing premises and a conclusion is called an 'argument.' This is different from the Arguments section of the Watson-Glaser test, which is a specific question type." /> you will encounter in the Watson-Glaser test — no matter which section — is built from the same three components. If you can spot each one, you already know what the question is really asking.</p>
       <div style={{ padding: 12, background: fc + "0A", borderRadius: 10, border: "1px solid " + fc + "20", marginBottom: 14, textAlign: "center" }}>
         <p style={{ fontSize: 14, fontWeight: 700, color: c.fg }}>Premises + Assumptions → Conclusion</p>
       </div>
